@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.es.js)
-* Version: 22.1.6
-* Build date: Tue Oct 18 2022
+* Version: 22.1.4
+* Build date: Fri Jul 22 2022
 *
 * Copyright (c) 2012 - 2022 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,7 +24,6 @@
             Yes: "S\xed",
             No: "No",
             Cancel: "Cancelar",
-            Close: "Cerca",
             Clear: "Limpiar",
             Done: "Hecho",
             Loading: "Cargando...",
@@ -66,12 +65,12 @@
             "dxScrollView-pulledDownText": "Suelta para actualizar...",
             "dxScrollView-refreshingText": "Actualizando...",
             "dxScrollView-reachBottomText": "Cargando...",
-            "dxDateBox-simulatedDataPickerTitleTime": "Seleccione hora",
-            "dxDateBox-simulatedDataPickerTitleDate": "Seleccione fecha",
-            "dxDateBox-simulatedDataPickerTitleDateTime": "Seleccione fecha y hora",
+            "dxDateBox-simulatedDataPickerTitleTime": "Selecciona hora",
+            "dxDateBox-simulatedDataPickerTitleDate": "Selecciona fecha",
+            "dxDateBox-simulatedDataPickerTitleDateTime": "Selecciona fecha y hora",
             "dxDateBox-validation-datetime": "Valor debe ser una fecha u hora",
             "dxFileUploader-selectFile": "Seleccionar archivo",
-            "dxFileUploader-dropFile": "o arrastre un archivo aqu\xed",
+            "dxFileUploader-dropFile": "o arrastra un archivo aqu\xed",
             "dxFileUploader-bytes": "bytes",
             "dxFileUploader-kb": "kb",
             "dxFileUploader-Mb": "Mb",
@@ -151,8 +150,8 @@
             "dxDataGrid-exporting": "Exportar...",
             "dxDataGrid-excelFormat": "Archivo Excel",
             "dxDataGrid-selectedRows": "Filas seleccionadas",
-            "dxDataGrid-exportSelectedRows": "Exportar filas seleccionadas a {0}",
-            "dxDataGrid-exportAll": "Exportar todo a {0}",
+            "dxDataGrid-exportSelectedRows": "Exportar filas seleccionadas",
+            "dxDataGrid-exportAll": "Exportar todo",
             "dxDataGrid-headerFilterEmptyValue": "(Vacio)",
             "dxDataGrid-headerFilterOK": "Aceptar",
             "dxDataGrid-headerFilterCancel": "Cancelar",

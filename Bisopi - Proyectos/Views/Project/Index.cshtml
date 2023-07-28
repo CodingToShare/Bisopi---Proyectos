@@ -1,0 +1,154 @@
+﻿
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+<h4>Proyectos</h4>
+<hr />
+<br />
+
+<div class="row">
+    <div class="col-12">
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-primary" href="/Project/Create">Crear Proyecto</a>
+        </span>
+    </div>
+    <div class="col-12">
+
+        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.Project>()
+            .ID("gridContainer")
+            .AllowColumnReordering(true)
+            .RowAlternationEnabled(true)
+            .AllowColumnResizing(true)
+            .ShowRowLines(true)
+            .ShowBorders(true)
+            .WordWrapEnabled(true)
+            .ColumnAutoWidth(true)
+            .ColumnResizingMode(ColumnResizingMode.Widget)
+            .SearchPanel(s => s
+            .Visible(true)
+            .HighlightCaseSensitive(true))
+            .Grouping(grouping => grouping.AutoExpandAll(true))
+            .GroupPanel(groupPanel => groupPanel.Visible(true))
+            .FilterPanel(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Selection(s => s.Mode(SelectionMode.Multiple))
+            .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+            .OnExporting("exporting")
+            .RemoteOperations(true)
+            .DataSource(ds => ds.Mvc()
+                .Controller("APIProjects")
+                .LoadAction("Get")
+                .Key("ProjectID")
+            )
+            .RemoteOperations(true)
+            .Columns(columns => {
+
+                columns.AddFor(m => m.ProjectID);
+
+                columns.AddFor(m => m.ProjectName);
+
+                columns.AddFor(m => m.CountryID).Lookup(lookup => lookup
+                    .DataSource(ds => ds.WebApi().Controller("APIProjects").LoadAction("CountriesLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.ClientID).Lookup(lookup => lookup
+                    .DataSource(ds => ds.WebApi().Controller("APIProjects").LoadAction("ClientsLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.CustomerManager);
+
+                columns.AddFor(m => m.LeaderID);
+
+                columns.AddFor(m => m.ProjectManagerID);
+
+                columns.AddFor(m => m.ProjectStatusID).Lookup(lookup => lookup
+                    .DataSource(ds => ds.WebApi().Controller("APIProjects").LoadAction("ProjectsStatusLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.ProjectTypeID).Lookup(lookup => lookup
+                    .DataSource(ds => ds.WebApi().Controller("APIProjects").LoadAction("ProjectsTypesLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.SupportStatusID).Lookup(lookup => lookup
+                    .DataSource(ds => ds.WebApi().Controller("APIProjects").LoadAction("SupportsStatusLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.EstimateRequestDate);
+
+                columns.AddFor(m => m.AnswerDate);
+
+                columns.AddFor(m => m.RequestPriority);
+
+                columns.AddFor(m => m.ScalerCode);
+
+                columns.AddFor(m => m.ClarityCode);
+
+                columns.AddFor(m => m.EstimatedHours);
+
+                columns.AddFor(m => m.StartDate);
+
+                columns.AddFor(m => m.EstimatedDeliveryDate);
+
+                columns.AddFor(m => m.ActualCompletionDate);
+
+                columns.AddFor(m => m.CurrencyID).Lookup(lookup => lookup
+                    .DataSource(ds => ds.WebApi().Controller("APIProjects").LoadAction("CurrenciesLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.ProjectValue);
+
+                columns.AddFor(m => m.ProjectCost);
+
+                columns.AddFor(m => m.TRMProject);
+
+                columns.AddFor(m => m.GrossMargin);
+
+                columns.AddFor(m => m.Billable);
+
+                columns.AddFor(m => m.Justification);
+
+                columns.AddFor(m => m.CreatedBy);
+
+                columns.AddFor(m => m.Created);
+
+                columns.AddFor(m => m.ModifiedBy);
+
+                columns.AddFor(m => m.Modified);
+            })
+        )
+
+    </div>
+
+</div>
+
+<script>
+    function exporting(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('ListaProyectos');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Proyectos.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>

@@ -1,0 +1,74 @@
+﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<h4>Estados Soportes</h4>
+<hr />
+<br />
+@(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.SupportStatus>()
+    .ID("gridContainer")
+    .AllowColumnReordering(true)
+    .RowAlternationEnabled(true)
+    .AllowColumnResizing(true)
+    .ShowRowLines(true)
+    .ShowBorders(true)
+    .WordWrapEnabled(true)
+    .ColumnAutoWidth(true)
+    .ColumnResizingMode(ColumnResizingMode.Widget)
+    .SearchPanel(s => s
+    .Visible(true)
+    .HighlightCaseSensitive(true))
+    .Grouping(grouping => grouping.AutoExpandAll(true))
+    .GroupPanel(groupPanel => groupPanel.Visible(true))
+    .FilterPanel(f => f.Visible(true))
+    .HeaderFilter(h => h.Visible(true))
+    .Selection(s => s.Mode(SelectionMode.Multiple))
+    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+    .OnExporting("exporting")
+    .RemoteOperations(true)
+    .DataSource(ds => ds.Mvc()
+        .Controller("APISupportStatus")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .Key("SupportStatusID")
+    )
+    .RemoteOperations(true)
+    .Columns(columns => {
+
+        columns.AddFor(m => m.SupportStatusName);
+
+        columns.AddFor(m => m.IsActive);
+
+        columns.AddFor(m => m.CreatedBy).AllowEditing(false);
+
+        columns.AddFor(m => m.Created).AllowEditing(false);
+
+        columns.AddFor(m => m.ModifiedBy).AllowEditing(false);
+
+        columns.AddFor(m => m.Modified).AllowEditing(false);
+    })
+    .Editing(e => e
+        .AllowAdding(true)
+        .AllowUpdating(true)
+        .Mode(GridEditMode.Popup)
+    )
+)
+
+<script>
+    function exporting(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('ListaProyectos');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Proyectos.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>

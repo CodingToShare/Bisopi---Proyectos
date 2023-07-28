@@ -1,0 +1,502 @@
+﻿@model Bisopi___Proyectos.Models.Project
+
+<h4>Proyectos</h4>
+<hr />
+<br />
+
+<div class="row">
+    <div class="col-12">
+        <span class="float-right">
+            <a class="btn btn-outline-primary" href="/Project/Index">Volver</a>
+        </span>
+    </div>
+    <div class="col-12">
+        <form asp-controller="Project" asp-action="Create" method="post" enctype="multipart/form-data">
+            @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID" })
+            @using(Html.DevExtreme().ValidationGroup())
+            {
+                <div class="row">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                        <div class="dx-field">
+                            <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectName)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().TextBoxFor(x => x.ProjectName)
+                                    .ID("projectName")
+                                        .Placeholder("Escriba el nombre del proyecto")
+                                    )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                        <div class="dx-field">
+                            <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CountryID)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.CountryID)
+                                        .DisplayExpr("CountryNameAndAbbreviation")
+                                        .ValueExpr("CountryID")
+                                        .ID("countryID")
+                                        .DataSource(d => d.Mvc().Controller("APICountries").LoadAction("GetSelectBox"))
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione un pais...")
+                                    )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ClientID)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.ClientID)
+                                        .DisplayExpr("ClientNameAndAbbreviation")
+                                        .ValueExpr("ClientID")
+                                        .ID("clientID")
+                                        .DataSource(d => d.Mvc().Controller("APIClients").LoadAction("GetSelectBox"))
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione un cliente...")
+                                    )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CustomerManager)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().TextBoxFor(x => x.CustomerManager)
+                                        .ID("customerManager")
+                                        .Placeholder("Escriba el responsable del cliente")
+                                    )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.LeaderID)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.LeaderID)
+                                        .DisplayExpr("ClientNameAndAbbreviation")
+                                        .ValueExpr("ClientID")
+                                        .ID("leaderID")
+                                        .DataSource(d => d.Mvc().Controller("APIClients").LoadAction("GetSelectBox")) //arreglar DataSource
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione un cliente...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectManagerID)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.ProjectManagerID)
+                                        .DisplayExpr("ClientNameAndAbbreviation")
+                                        .ValueExpr("ClientID")
+                                        .ID("projectManagerID")
+                                        .DataSource(d => d.Mvc().Controller("APIClients").LoadAction("GetSelectBox")) //arreglar DataSource
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione un cliente...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectStatusID)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.ProjectStatusID)
+                                        .DisplayExpr("ProjectStatusNameAndAbbreviation")
+                                        .ValueExpr("ProjectStatusID")
+                                        .ID("projectStatusID")
+                                        .DataSource(d => d.Mvc().Controller("APIProjectStatus").LoadAction("GetSelectBox"))
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione un estado del proyecto...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectTypeID)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.ProjectTypeID)
+                                        .DisplayExpr("ProjectTypeName")
+                                        .ValueExpr("ProjectTypeID")
+                                        .ID("projectTypeID")
+                                        .DataSource(d => d.Mvc().Controller("APIProjectTypes").LoadAction("GetSelectBox"))
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione un tipo de proyecto...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.SupportStatusID)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.SupportStatusID)
+                                        .DisplayExpr("SupportStatusName")
+                                        .ValueExpr("SupportStatusID")
+                                        .ID("supportStatusID")
+                                        .DataSource(d => d.Mvc().Controller("APISupportStatus").LoadAction("GetSelectBox"))
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione un tipo de proyecto...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.EstimateRequestDate)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().DateBoxFor(x => x.EstimateRequestDate)
+                                        .InputAttr("aria-label", "Date")
+                                        .Type(DateBoxType.Date)
+                                        .Value(DateTime.Now)
+                                        .Placeholder("Seleccione la fecha de solicitud de estimacion ...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.AnswerDate)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().DateBoxFor(x => x.AnswerDate)
+                                        .InputAttr("aria-label", "Date")
+                                        .Type(DateBoxType.Date)
+                                        .Value(DateTime.Now)
+                                        .Placeholder("Seleccione la fecha de respuesta ...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.RequestPriority)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().TextBoxFor(x => x.RequestPriority)
+                                        .ID("requestPriority")
+                                        .Placeholder("Escriba la prioridad de la solicitud")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ScalerCode)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().TextBoxFor(x => x.ScalerCode)
+                                        .ID("scalerCode")
+                                        .Placeholder("Escriba el codigo baremador")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ClarityCode)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().TextBoxFor(x => x.ClarityCode)
+                                        .ID("clarityCode")
+                                        .Placeholder("Escriba el codigo de clarity")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.EstimatedHours)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.EstimatedHours)
+                                        .ID("estimatedHours")
+                                        .Placeholder("Escriba las horas estimadas")
+                                        .Format("##:##")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.StartDate)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().DateBoxFor(x => x.StartDate)
+                                        .InputAttr("aria-label", "Date")
+                                        .Type(DateBoxType.Date)
+                                        .Value(DateTime.Now)
+                                        .Placeholder("Seleccione la fecha de inicio ...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.EstimatedDeliveryDate)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().DateBoxFor(x => x.EstimatedDeliveryDate)
+                                        .InputAttr("aria-label", "Date")
+                                        .Type(DateBoxType.Date)
+                                        .Value(DateTime.Now)
+                                        .Placeholder("Seleccione la fecha de entrega estimada ...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ActualCompletionDate)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().DateBoxFor(x => x.ActualCompletionDate)
+                                        .InputAttr("aria-label", "Date")
+                                        .Type(DateBoxType.Date)
+                                        .Value(DateTime.Now)
+                                        .Placeholder("Seleccione la fecha real de finalizacion ...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CurrencyID)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.CurrencyID)
+                                        .DisplayExpr("CurrencyNameAndAbbreviation")
+                                        .ValueExpr("CurrencyID")
+                                        .ID("currencyID")
+                                        .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox"))
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione una moneda...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectValue)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.ProjectValue)
+                                        .ID("projectValue")
+                                        .Placeholder("Escriba el valor del proyecto")
+                                        .Format("$ #,##0.##")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectCost)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.ProjectCost)
+                                        .ID("projectCost")
+                                        .Placeholder("Escriba el costo del proyecto")
+                                        .Format("$ #,##0.##")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.TRMProject)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.TRMProject)
+                                        .ID("tRMProject")
+                                        .Placeholder("Escriba la TRM del proyecto")
+                                        .Format("$ #,##0.##")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.GrossMargin)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.GrossMargin)
+                                        .ID("grossMargin")
+                                        .Disabled(true)
+                                        .Format("$ #,##0.##")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Billable)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().CheckBoxFor(x => x.Billable)
+                                        .ID("billable")
+                                        .Value(true)
+                                        .ElementAttr("aria-label", "Checked")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Justification)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().TextAreaFor(x => x.Justification)
+                                        .ID("justification")
+                                        .Placeholder("Escriba la justificacion")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="center">
+                                @(Html.DevExtreme().Button()
+                                    .ElementAttr("class", "validate")
+                                    .Text("Guardar")
+                                    .Type(ButtonType.Normal)
+                                    .UseSubmitBehavior(true)
+                                    .OnClick("saveClick")
+                                    )
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+
+                </div>
+            }    
+        </form>
+    </div>
+
+</div>
+
+<script>
+    DevExpress.config({
+        editorStylingMode: "filled"
+    });
+
+    function saveClick(e) {
+        var result = e.validationGroup.validate();
+        if (!result.isValid) {
+            DevExpress.ui.notify("Debe diligenciar todos los campos obligatorios.", "error");
+            e.cancel;
+        }
+    }
+</script>

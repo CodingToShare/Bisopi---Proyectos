@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.cs.js)
-* Version: 22.1.6
-* Build date: Tue Oct 18 2022
+* Version: 22.1.4
+* Build date: Fri Jul 22 2022
 *
 * Copyright (c) 2012 - 2022 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,7 +24,6 @@
             Yes: "Ano",
             No: "Ne",
             Cancel: "Zru\u0161it",
-            Close: "Zav\u0159\xedt",
             Clear: "Smazat",
             Done: "Hotovo",
             Loading: "Nahr\xe1v\xe1n\xed...",

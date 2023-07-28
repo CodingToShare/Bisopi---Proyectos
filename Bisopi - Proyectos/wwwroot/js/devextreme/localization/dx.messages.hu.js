@@ -1,7 +1,7 @@
 /*!
 * DevExtreme (dx.messages.hu.js)
-* Version: 22.1.6
-* Build date: Tue Oct 18 2022
+* Version: 22.1.4
+* Build date: Fri Jul 22 2022
 *
 * Copyright (c) 2012 - 2022 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -24,7 +24,6 @@
             Yes: "Igen",
             No: "Nem",
             Cancel: "M\xe9gse",
-            Close: "Bez\xe1r\xe1s",
             Clear: "T\xf6rl\xe9s",
             Done: "K\xe9sz",
             Loading: "Bet\xf6lt\xe9s...",
