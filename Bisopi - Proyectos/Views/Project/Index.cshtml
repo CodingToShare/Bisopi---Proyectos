@@ -45,7 +45,9 @@
             .RemoteOperations(true)
             .Columns(columns => {
 
-                columns.AddFor(m => m.ProjectID);
+                columns.AddFor(m => m.ProjectID).Visible(false);
+
+                columns.Add().Width(80).CellTemplate(@<text> <a href="/Project/Edit/<%- data.ProjectID %>" data-toggle="tooltip">Gestionar</a>   </text>);
 
                 columns.AddFor(m => m.ProjectName);
 
@@ -63,9 +65,17 @@
 
                 columns.AddFor(m => m.CustomerManager);
 
-                columns.AddFor(m => m.LeaderID);
+                columns.AddFor(m => m.LeaderID).Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("APIProjects").LoadAction("LeadersLookup").Key("Value"))
+                .ValueExpr("Value")
+                .DisplayExpr("Text")
+                );
 
-                columns.AddFor(m => m.ProjectManagerID);
+                columns.AddFor(m => m.ProjectManagerID).Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("APIProjects").LoadAction("ProjectManagersLookup").Key("Value"))
+                .ValueExpr("Value")
+                .DisplayExpr("Text")
+                );
 
                 columns.AddFor(m => m.ProjectStatusID).Lookup(lookup => lookup
                     .DataSource(ds => ds.WebApi().Controller("APIProjects").LoadAction("ProjectsStatusLookup").Key("Value"))
@@ -109,11 +119,11 @@
                     .DisplayExpr("Text")
                 );
 
-                columns.AddFor(m => m.ProjectValue);
+                columns.AddFor(m => m.ProjectValue).Format("$ #,##0.##");
 
-                columns.AddFor(m => m.ProjectCost);
+                columns.AddFor(m => m.ProjectCost).Format("$ #,##0.##");
 
-                columns.AddFor(m => m.TRMProject);
+                columns.AddFor(m => m.TRMProject).Format("$ #,##0.##");
 
                 columns.AddFor(m => m.GrossMargin);
 
@@ -129,6 +139,7 @@
 
                 columns.AddFor(m => m.Modified);
             })
+            
         )
 
     </div>

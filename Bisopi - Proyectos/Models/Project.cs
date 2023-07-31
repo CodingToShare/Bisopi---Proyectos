@@ -124,6 +124,9 @@ namespace Bisopi___Proyectos.Models
         [Column(TypeName = "varchar(1000)")]
         public string? Justification { get; set; }
 
+        [Display(Name = "¿Activo?")]
+        public bool IsActive { get; set; }
+
         [Display(Name = "Creado por")]
         [Column(TypeName = "varchar(100)")]
         [StringLength(200)]

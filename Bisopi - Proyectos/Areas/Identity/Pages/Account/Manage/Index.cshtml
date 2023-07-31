@@ -5,6 +5,8 @@
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+
 <h3>@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
@@ -50,8 +52,8 @@
                                accept=".png,.jpg,.jpeg,.gif,.tif"
                                asp-for="Input.ProfilePicture"
                                class="form-control"
-                               style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
-                               onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
+                               style="border: 0; padding: 0; padding-top: 10px; padding-bottom: 30px;"
+                               onchange="validateImageSize(this, 'profilePicture')" />
                         <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
                     </div>
                 </div>
@@ -60,6 +62,29 @@
         </form>
     </div>
 </div>
+
+<script>
+    function validateImageSize(input, previewId) {
+        var previewImage = document.getElementById(previewId);
+        var maxFileSizeInBytes = 1 * 1024 * 1024; // 1 MB (ejemplo de tamaño máximo)
+
+        if (input.files && input.files[0]) {
+            var fileSize = input.files[0].size;
+            if (fileSize > maxFileSizeInBytes) {
+                DevExpress.ui.notify("La imagen supera el tamaño máximo permitido (1 MB).");
+                //alert('La imagen supera el tamaño máximo permitido (1 MB).');
+                input.value = ''; // Limpiar el campo de entrada
+                previewImage.style.display = 'none'; // Ocultar la imagen previa
+                return;
+            }
+
+            // Si el tamaño de la imagen es válido, mostrar la imagen previa
+            previewImage.src = window.URL.createObjectURL(input.files[0]);
+            previewImage.style.display = 'inline-block';
+        }
+    }
+</script>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

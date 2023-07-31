@@ -1,17 +1,161 @@
 ﻿
 <h2>Configuraciones</h2>
 
-<div class="container-fluid p-0">
-    <div class="row no-gutters p-0 d-flex justify-content-center align-items-center">
-        <a href="@Url.Action("Countries", "Setup")" class="btn btn-primary configuracion white col-12 col-sm-3 mb-3 mr-3 p-3">Paises</a>
-        <a href="@Url.Action("Clients", "Setup")" class="btn btn-primary configuracion white col-12 col-sm-3 mb-3 mr-3 p-3">Clientes</a>
-        <a href="@Url.Action("ProjectsStatus", "Setup")" class="btn btn-primary  configuracion white col-12 col-sm-3 mb-3 mr-3 p-3">Estados Proyectos</a>
-    </div>
-    <div class="row no-gutters p-0 d-flex justify-content-center align-items-center">
-        <a href="@Url.Action("ProjectsTypes", "Setup")" class="btn btn-primary configuracion white col-12 col-sm-3 mb-3 mr-3 p-3">Tipos Proyectos</a>
-        <a href="@Url.Action("SupportsStatus", "Setup")" class="btn btn-primary configuracion white col-12 col-sm-3 mb-3 mr-3 p-3">Estados Soportes</a>
-        <a href="@Url.Action("Currencies", "Setup")" class="btn btn-primary  configuracion white col-12 col-sm-3 mb-3 mr-3 p-3">Monedas</a>
+<div class="row">
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a asp-area="" asp-controller="Setup" asp-action="Countries" style="text-decoration: none">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Creación / Administración
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Paises</div>
+                        </div>
+                        <div class="col-auto">
+                            @*<i class="fas fa-wrench  fa-2x text-gray-300"></i>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
     </div>
 
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a asp-area="" asp-controller="Setup" asp-action="Clients" style="text-decoration: none">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Creación / Administración
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Clientes</div>
+                        </div>
+                        <div class="col-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a asp-area="" asp-controller="Setup" asp-action="ProjectsStatus" style="text-decoration: none">
+            <div class="card border-left-secondary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                Creación / Administración
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Estados Proyectos</div>
+                        </div>
+                        <div class="col-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a asp-area="" asp-controller="Setup" asp-action="ProjectsTypes" style="text-decoration: none">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Creación / Administración
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Tipos Proyectos</div>
+                        </div>
+                        <div class="col-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a asp-area="" asp-controller="Setup" asp-action="SupportsStatus" style="text-decoration: none">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Creación / Administración
+                            </div>
+                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">Estados Soportes</div>
+                        </div>
+                        <div class="col-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a asp-area="" asp-controller="Setup" asp-action="Currencies" style="text-decoration: none">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Creación / Administración
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Monedas</div>
+                        </div>
+                        <div class="col-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a asp-area="" asp-controller="Setup" asp-action="QuoteStatus" style="text-decoration: none">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Creación / Administración
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Estados Leads</div>
+                        </div>
+                        <div class="col-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a asp-area="" asp-controller="Setup" asp-action="ProposalStatus" style="text-decoration: none">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Creación / Administración
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Estados Deals</div>
+                        </div>
+                        <div class="col-auto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
 
 </div>

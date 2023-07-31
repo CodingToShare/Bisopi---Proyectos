@@ -4,6 +4,7 @@ using Bisopi___Proyectos.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bisopi___Proyectos.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230731044920_AddLeadsModelFix")]
+    partial class AddLeadsModelFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,62 +131,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.HasKey("CurrencyID");
 
                     b.ToTable("Currencies");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.Deal", b =>
-                {
-                    b.Property<Guid>("DealID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ClientID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<Guid?>("CurrencyID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("DealName")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<double?>("LeadValue")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<Guid>("ProposalStatusID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ResponsibleClient")
-                        .HasColumnType("varchar(200)");
-
-                    b.HasKey("DealID");
-
-                    b.HasIndex("ClientID");
-
-                    b.HasIndex("ProposalStatusID");
-
-                    b.ToTable("Deals");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Lead", b =>
@@ -430,52 +377,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.ToTable("ProjectsTypes");
                 });
 
-            modelBuilder.Entity("Bisopi___Proyectos.Models.ProposalStatus", b =>
-                {
-                    b.Property<Guid>("ProposalStatusID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Abbreviation")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProposalStatusName")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<bool>("Visible")
-                        .HasColumnType("bit");
-
-                    b.HasKey("ProposalStatusID");
-
-                    b.ToTable("ProposalsStatus");
-                });
-
             modelBuilder.Entity("Bisopi___Proyectos.Models.QuoteStatus", b =>
                 {
                     b.Property<Guid>("QuoteStatusID")
@@ -552,25 +453,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.HasKey("SupportStatusID");
 
                     b.ToTable("SupportsStatus");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.Deal", b =>
-                {
-                    b.HasOne("Bisopi___Proyectos.Models.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Bisopi___Proyectos.Models.ProposalStatus", "ProposalStatus")
-                        .WithMany()
-                        .HasForeignKey("ProposalStatusID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("ProposalStatus");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Lead", b =>

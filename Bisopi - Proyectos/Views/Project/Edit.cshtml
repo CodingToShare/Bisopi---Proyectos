@@ -1,17 +1,8 @@
-﻿@model Bisopi___Proyectos.Models.Project
+﻿<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
 
-<div class="row">
-    <div class="col-12">
-        <span class="float-right">
-            <a class="btn btn-sm btn-outline-primary" href="/Leads/Create">Crear Lead</a>
-        </span>
-        <span class="float-right">
-            <a class="btn btn-sm btn-outline-primary" href="/Leads/List">Listado de Leads</a>
-        </span>
-    </div>
-</div>
+@model Bisopi___Proyectos.Models.Project
 
-<h4>Crear Proyecto</h4>
+<h4>Editar Proyecto</h4>
 <hr />
 <br />
 
@@ -22,22 +13,24 @@
         </span>
     </div>
     <div class="col-12">
-        <form asp-controller="Project" asp-action="Create" method="post" enctype="multipart/form-data">
+        <form asp-controller="Project" asp-action="Edit" method="post" enctype="multipart/form-data">
             @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID" })
-            @using(Html.DevExtreme().ValidationGroup())
+            @Html.HiddenFor(x => x.Created, new { @class = "Created" })
+            @Html.HiddenFor(x => x.CreatedBy, new { @class = "CreatedBy" })
+            @using (Html.DevExtreme().ValidationGroup())
             {
                 <div class="row">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <div class="col-md-12">
                         <div class="form-group">
-                        <div class="dx-field">
-                            <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectName)</div>
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectName)</div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().TextBoxFor(x => x.ProjectName)
-                                    .ID("projectName")
+                                        .ID("projectName")
                                         .Placeholder("Escriba el nombre del proyecto")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -45,14 +38,14 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                        <div class="dx-field">
-                            <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CountryID)</div>
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CountryID)</div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().SelectBoxFor(x => x.CountryID)
                                         .DisplayExpr("CountryNameAndAbbreviation")
                                         .ValueExpr("CountryID")
                                         .ID("countryID")
-                                        .DataSource(d => d.Mvc().Controller("APICountries").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APICountries").LoadAction("GetSelectBox").Key("CountryID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -60,7 +53,7 @@
                                         .ShowDropDownButton(true)
                                         .DeferRendering(false)
                                         .Placeholder("Seleccione un pais...")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -75,7 +68,7 @@
                                         .DisplayExpr("ClientNameAndAbbreviation")
                                         .ValueExpr("ClientID")
                                         .ID("clientID")
-                                        .DataSource(d => d.Mvc().Controller("APIClients").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APIClients").LoadAction("GetSelectBox").Key("ClientID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -83,7 +76,7 @@
                                         .ShowDropDownButton(true)
                                         .DeferRendering(false)
                                         .Placeholder("Seleccione un cliente...")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -97,7 +90,7 @@
                                     @(Html.DevExtreme().TextBoxFor(x => x.CustomerManager)
                                         .ID("customerManager")
                                         .Placeholder("Escriba el responsable del cliente")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -112,7 +105,7 @@
                                         .DisplayExpr("FirstNameAndLastNAme")
                                         .ValueExpr("UserDataID")
                                         .ID("leaderID")
-                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Admin" }))
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Admin" }).Key("LeaderID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -135,7 +128,7 @@
                                         .DisplayExpr("FirstNameAndLastNAme")
                                         .ValueExpr("UserDataID")
                                         .ID("projectManagerID")
-                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Admin" }))
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Admin" }).Key("LeaderID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -158,7 +151,7 @@
                                         .DisplayExpr("ProjectStatusNameAndAbbreviation")
                                         .ValueExpr("ProjectStatusID")
                                         .ID("projectStatusID")
-                                        .DataSource(d => d.Mvc().Controller("APIProjectStatus").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APIProjectStatus").LoadAction("GetSelectBox").Key("ProjectStatusID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -181,7 +174,7 @@
                                         .DisplayExpr("ProjectTypeName")
                                         .ValueExpr("ProjectTypeID")
                                         .ID("projectTypeID")
-                                        .DataSource(d => d.Mvc().Controller("APIProjectTypes").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APIProjectTypes").LoadAction("GetSelectBox").Key("ProjectTypeID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -204,7 +197,7 @@
                                         .DisplayExpr("SupportStatusName")
                                         .ValueExpr("SupportStatusID")
                                         .ID("supportStatusID")
-                                        .DataSource(d => d.Mvc().Controller("APISupportStatus").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APISupportStatus").LoadAction("GetSelectBox").Key("SupportStatusID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -364,7 +357,7 @@
                                         .DisplayExpr("CurrencyNameAndAbbreviation")
                                         .ValueExpr("CurrencyID")
                                         .ID("currencyID")
-                                        .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox").Key("CurrencyID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -475,6 +468,50 @@
                     <br />
 
                     <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-1" style="width:5%;">
+                                @(Html.DevExtreme().Button()
+                                    .Icon("edit")
+                                    .OnClick("redirectToEdit")
+                                    )
+                            </div>
+                            <div class="col-md-1" style="width:5%;">
+                                @(Html.DevExtreme().Button()
+                                    .Icon("event")
+                                    )
+                            </div>
+                            <div class="col-md-1" style="width:5%;">
+                                @(Html.DevExtreme().Button()
+                                    .Icon("money")
+                                    )
+                            </div>
+                            <div class="col-md-1" style="width:5%;">
+                                @(Html.DevExtreme().Button()
+                                    .Icon("group")
+                                    )
+                            </div>
+                            <div class="col-md-1" style="width:5%;">
+                                @(Html.DevExtreme().Button()
+                                    .Icon("todo")
+                                    )
+                            </div>
+                            <div class="col-md-1" style="width:5%;">
+                                @(Html.DevExtreme().Button()
+                                    .Icon("plus")
+                                    )
+                            </div>
+                            <div class="col-md-1" style="width:5%;">
+                                @(Html.DevExtreme().Button()
+                                    .Icon("clear")
+                                    .OnClick("confirmDelete")
+                                    )
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="col-md-12">
                         <div class="form-group">
                             <div class="center">
                                 @(Html.DevExtreme().Button()
@@ -492,7 +529,7 @@
                     <br />
 
                 </div>
-            }    
+            }
         </form>
     </div>
 
@@ -509,5 +546,25 @@
             DevExpress.ui.notify("Debe diligenciar todos los campos obligatorios.", "error");
             e.cancel;
         }
+    }
+
+    function redirectToEdit() {
+        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
+        var url = '/project/edit/' + projectId; // Construye la URL con el ProjectID
+        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
+    }
+
+    function confirmDelete() {
+        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
+
+        DevExpress.ui.dialog.confirm("¿Estás seguro de que deseas eliminar este proyecto?", "Confirmar eliminación").done(function (dialogResult) {
+            if (dialogResult) {
+                // Si el usuario selecciona "Aceptar", redirecciona a la vista project/delete con el ProjectID en la URL
+                var url = '/project/delete/' + projectId;
+                window.location.href = url;
+            } else {
+                // Si el usuario selecciona "Cancelar", no se hace nada
+            }
+        });
     }
 </script>

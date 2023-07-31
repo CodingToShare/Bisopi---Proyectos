@@ -40,5 +40,15 @@ namespace Bisopi___Proyectos.Controllers
         {
             return View();
         }
+
+        public IActionResult QuoteStatus()
+        {
+            return View();
+        }
+
+        public IActionResult ProposalStatus()
+        {
+            return View();
+        }
     }
 }

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bisopi___Proyectos.Data;
 using Bisopi___Proyectos.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bisopi___Proyectos.Controllers
 {
@@ -19,14 +20,16 @@ namespace Bisopi___Proyectos.Controllers
     public class APIProjectsController : Controller
     {
         private DataContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public APIProjectsController(DataContext context) {
+        public APIProjectsController(DataContext context, UserManager<ApplicationUser> userManager) {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get(DataSourceLoadOptions loadOptions) {
-            var projects = _context.Projects.Select(i => new {
+            var projects = _context.Projects.Where(x => x.IsActive).Select(i => new {
                 i.ProjectID,
                 i.ProjectName,
                 i.CountryID,
@@ -126,6 +129,32 @@ namespace Bisopi___Proyectos.Controllers
                          select new {
                              Value = i.ClientID,
                              Text = i.ClientName
+                         };
+            return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LeadersLookup(DataSourceLoadOptions loadOptions)
+        {
+            var lookup = from i in _userManager.Users
+                         orderby i.UserName
+                         select new
+                         {
+                             Value = i.Id,
+                             Text = $"{i.FirstName} {i.LastName}"
+                         };
+            return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ProjectManagersLookup(DataSourceLoadOptions loadOptions)
+        {
+            var lookup = from i in _userManager.Users
+                         orderby i.UserName
+                         select new
+                         {
+                             Value = i.Id,
+                             Text = $"{i.FirstName} {i.LastName}"
                          };
             return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
         }

@@ -1,0 +1,128 @@
+﻿
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<div class="row">
+    <div class="col-12">
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-danger" href="/Leads/Create">Crear Lead</a>
+        </span>
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-danger" href="/Leads/List">Listado de Leads</a>
+        </span>
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-danger" href="/Leads/Index">Leads</a>
+        </span>
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-primary" href="/Deals/Create">Crear Deal</a>
+        </span>
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-primary" href="/Deals/List">Listado de Deals</a>
+        </span>
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-primary" href="/Deals/Index">Deals</a>
+        </span>
+    </div>
+</div>
+
+<h4>Leads</h4>
+<hr />
+<br />
+
+<div class="row">
+
+    <div class="col-12">
+
+        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.Lead>()
+            .ID("gridContainer")
+            .AllowColumnReordering(true)
+            .RowAlternationEnabled(true)
+            .AllowColumnResizing(true)
+            .ShowRowLines(true)
+            .ShowBorders(true)
+            .WordWrapEnabled(true)
+            .ColumnAutoWidth(true)
+            .ColumnResizingMode(ColumnResizingMode.Widget)
+            .SearchPanel(s => s
+            .Visible(true)
+            .HighlightCaseSensitive(true))
+            .Grouping(grouping => grouping.AutoExpandAll(true))
+            .GroupPanel(groupPanel => groupPanel.Visible(true))
+            .FilterPanel(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Selection(s => s.Mode(SelectionMode.Multiple))
+            .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+            .OnExporting("exporting")
+            .RemoteOperations(true)
+            .DataSource(ds => ds.Mvc()
+                .Controller("APILeads")
+                .LoadAction("Get")
+                .Key("LeadID")
+            )
+            .RemoteOperations(true)
+            .Columns(columns => {
+
+                columns.AddFor(m => m.LeadID).Visible(false);
+
+                columns.Add().Width(80).CellTemplate(@<text> <a href="/Leads/Edit/<%- data.LeadID %>" data-toggle="tooltip">Gestionar</a>   </text>);
+
+                columns.AddFor(m => m.LeadName);
+
+                columns.AddFor(m => m.ClientID).Lookup(lookup => lookup
+                    .DataSource(ds => ds.WebApi().Controller("APILeads").LoadAction("ClientsLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.ResponsibleClient);
+
+                columns.AddFor(m => m.QuoteStatusID).Lookup(lookup => lookup
+                    .DataSource(ds => ds.WebApi().Controller("APILeads").LoadAction("QuotesStatusLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.CurrencyID).Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("APILeads").LoadAction("CurrenciesLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text")
+                );;
+
+                columns.AddFor(m => m.LeadValue);
+
+                columns.AddFor(m => m.Comments);
+
+                columns.AddFor(m => m.IsActive);
+
+                columns.AddFor(m => m.CreatedBy);
+
+                columns.AddFor(m => m.Created);
+
+                columns.AddFor(m => m.ModifiedBy);
+
+                columns.AddFor(m => m.Modified);
+            })
+        )
+
+    </div>
+
+</div>
+
+<script>
+    function exporting(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('ListaProyectos');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Proyectos.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>

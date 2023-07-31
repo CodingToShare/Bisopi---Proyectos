@@ -1,0 +1,57 @@
+﻿@model Bisopi___Proyectos.ViewModels.KanbanLeadViewModel
+@using Bisopi___Proyectos.ViewModels
+@using Bisopi___Proyectos.Models
+
+<div class="row">
+    <div class="col-12">
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-danger" href="/Leads/Create">Crear Lead</a>
+        </span>
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-danger" href="/Leads/List">Listado de Leads</a>
+        </span>
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-danger" href="/Leads/Index">Leads</a>
+        </span>
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-primary" href="/Deals/Create">Crear Deal</a>
+        </span>
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-primary" href="/Deals/List">Listado de Deals</a>
+        </span>
+        <span class="float-right">
+            <a class="btn btn-sm btn-outline-primary" href="/Deals/Index">Deals</a>
+        </span>
+    </div>
+</div>
+
+<h4>Leads</h4>
+<hr />
+<br />
+
+<div id="kanban">
+    @(Html.DevExtreme().ScrollView()
+            .ElementAttr("class", "scrollable-board")
+            .Direction(ScrollDirection.Horizontal)
+            .ShowScrollbar(ShowScrollbarMode.Always)
+            .Content(
+                Html.DevExtreme().Sortable()
+                    .ElementAttr("class", "sortable-lists")
+                    .ItemOrientation(Orientation.Horizontal)
+                    .MoveItemOnDrop(true)
+                    .Handle(".list-title")
+                    .Content(@<text>
+                        @foreach (var status in Model.QuotesStatus)
+                        {
+                            var listModel = new KanbanLeadViewModel()
+                            {
+                                Status = status.QuoteStatusName,
+                                Color = status.Color,
+                                LeadsIEnumerable = Model.Leads.Where(t => t.QuoteStatusID == status.QuoteStatusID)
+                            };
+                            @await Html.PartialAsync("_KanbanLead", listModel)
+                        }
+                        </text>).ToString()
+            )
+        )
+</div>

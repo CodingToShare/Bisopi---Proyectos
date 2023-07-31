@@ -148,7 +148,7 @@ namespace Bisopi___Proyectos.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "El perfil a sido actualizado";
             return RedirectToPage();
         }
     }

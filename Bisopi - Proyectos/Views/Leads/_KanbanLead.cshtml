@@ -1,0 +1,40 @@
+﻿@model Bisopi___Proyectos.ViewModels.KanbanLeadViewModel
+@using Microsoft.AspNetCore.Html
+@using Bisopi___Proyectos.Models
+
+@functions {
+    class CardTasks {
+        public Lead Task { get; set; }
+    }
+}
+
+@{
+    Func<CardTasks, IHtmlContent> CreateCards = @<div class="card dx-card dx-theme-text-color dx-theme-background-color">
+        <div class="card-priority priority-2"></div>
+        <div class="card-subject">@item.Task.LeadName</div>
+        <div class="card-assignee">Fecha: @item.Task.Created</div>
+    </div>;
+}
+
+<div class="list">
+    <div class="list-title dx-theme-text-color" style="background-color:@Model.Color ;">@Model.Status</div>
+    @(Html.DevExtreme().ScrollView()
+        .ElementAttr("class", "scrollable-list")
+        .Direction(ScrollDirection.Vertical)
+        .ShowScrollbar(ShowScrollbarMode.Always)
+        .Content(
+            Html.DevExtreme().Sortable()
+                .ElementAttr("class", "sortable-cards")
+                .ItemOrientation(Orientation.Vertical)
+                .MoveItemOnDrop(true)
+                .Group("tasksGroup")
+                .Content(@<text>
+                    @foreach (var task in @Model.LeadsIEnumerable) {
+                        @CreateCards(new CardTasks { Task = task })
+                    }
+                </text>).ToString()
+        )
+    )
+</div>
+
+
