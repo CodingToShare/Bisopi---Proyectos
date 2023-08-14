@@ -9,6 +9,9 @@ namespace Bisopi___Proyectos.Models
         [Key]
         public Guid DealID { get; set; }
 
+        [Display(Name = "Lead")]
+        public Guid? LeadID { get; set; }
+
         [Display(Name = "Deal")]
         [Column(TypeName = "varchar(200)")]
         [Required(ErrorMessage = "El campo {0} es requerido")]

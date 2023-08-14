@@ -3,25 +3,35 @@
 @using Bisopi___Proyectos.Models
 
 <div class="row">
-    <div class="col-12">
-        <span class="float-right">
-            <a class="btn btn-sm btn-outline-danger" href="/Leads/Create">Crear Lead</a>
-        </span>
-        <span class="float-right">
-            <a class="btn btn-sm btn-outline-danger" href="/Leads/List">Listado de Leads</a>
-        </span>
-        <span class="float-right">
-            <a class="btn btn-sm btn-outline-danger" href="/Leads/Index">Leads</a>
-        </span>
-        <span class="float-right">
-            <a class="btn btn-sm btn-outline-primary" href="/Deals/Create">Crear Deal</a>
-        </span>
-        <span class="float-right">
-            <a class="btn btn-sm btn-outline-primary" href="/Deals/List">Listado de Deals</a>
-        </span>
-        <span class="float-right">
-            <a class="btn btn-sm btn-outline-primary" href="/Deals/Index">Deals</a>
-        </span>
+    <div class="col-6">
+        <div class="row m-3">
+    	    <div class="btn-group" role="group" aria-label="Acciones">
+                <a type="button" class="btn p-1 btn-outline-secondary" href="/Leads/Create" >
+                	<img title="Nuevo"  style="width:24px;cursor:pointer;" src="~/img/add.png" />
+                	Nuevo Lead
+    			</a>
+                <a type="button" class="btn p-1 btn-outline-secondary" href="/Deals/Create" >
+                    <img title="Nuevo" style="width:24px;cursor:pointer;" src="~/img/add.png" />
+                	Nuevo Deal
+    			</a>
+                <a type="button" class="btn p-1 btn-outline-secondary" href="/Leads/List" >
+                    <img title="Listado" style="width:24px;cursor:pointer;" src="~/img/list.png" />
+                	Listado Leads
+    			</a>
+                <a type="button" class="btn p-1 btn-outline-secondary" href="/Deals/List" >
+                    <img title="Listado" style="width:24px;cursor:pointer;" src="~/img/list.png" />
+                	Listado Deals
+    			</a>
+                <a type="button" class="btn p-1 btn-outline-secondary" href="/Leads/Index" >
+                    <img title="Kanban" style="width:24px;cursor:pointer;" src="~/img/kanban.png" />
+                	Leads
+    			</a>
+                <a type="button" class="btn p-1 btn-outline-secondary" href="/Deals/Index" >
+                    <img title="Kanban" style="width:24px;cursor:pointer;" src="~/img/kanban.png" />
+                	Deals
+    			</a>
+			</div>			
+		</div>
     </div>
 </div>
 
@@ -40,6 +50,7 @@
                     .ItemOrientation(Orientation.Horizontal)
                     .MoveItemOnDrop(true)
                     .Handle(".list-title")
+                    .OnDragEnd("function(e) { handleDragEnd(e); }")
                     .Content(@<text>
                         @foreach (var status in Model.QuotesStatus)
                         {
@@ -55,3 +66,13 @@
             )
         )
 </div>
+
+<script>
+    function handleDragEnd(e) {
+        var targetId = e.itemElement.data("target-id");
+        var targetStatus = $(e.itemElement).closest(".list").find(".list-title").text();
+
+        console.log(targetId);
+        console.log(targetStatus);
+    }
+</script>

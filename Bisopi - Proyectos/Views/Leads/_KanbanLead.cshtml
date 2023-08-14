@@ -9,7 +9,7 @@
 }
 
 @{
-    Func<CardTasks, IHtmlContent> CreateCards = @<div class="card dx-card dx-theme-text-color dx-theme-background-color">
+    Func<CardTasks, IHtmlContent> CreateCards = @<div class="card dx-card dx-theme-text-color dx-theme-background-color" data-target-id="@item.Task.LeadID" >
         <div class="card-priority priority-2"></div>
         <div class="card-subject">@item.Task.LeadName</div>
         <div class="card-assignee">Fecha: @item.Task.Created</div>
@@ -17,7 +17,7 @@
 }
 
 <div class="list">
-    <div class="list-title dx-theme-text-color" style="background-color:@Model.Color ;">@Model.Status</div>
+    <div class="list-title dx-theme-text-color" style="background-color:@Model.Color ;" >@Model.Status</div>
     @(Html.DevExtreme().ScrollView()
         .ElementAttr("class", "scrollable-list")
         .Direction(ScrollDirection.Vertical)
@@ -28,6 +28,8 @@
                 .ItemOrientation(Orientation.Vertical)
                 .MoveItemOnDrop(true)
                 .Group("tasksGroup")
+                .OnDragEnd("function(e) { handleDragEnd(e); }")
+                .OnAdd("handleScrollViewOptionChanged")
                 .Content(@<text>
                     @foreach (var task in @Model.LeadsIEnumerable) {
                         @CreateCards(new CardTasks { Task = task })
@@ -36,5 +38,27 @@
         )
     )
 </div>
+
+<script>
+    function handleDragEnd(e) {
+        var targetId = e.itemElement.data("target-id");
+        var targetStatus = $(e.itemElement).closest(".list").find(".list-title").text();
+
+        console.log(targetId);
+        console.log(targetStatus);
+    }
+
+    function handleScrollViewOptionChanged(e) {
+        console.log("Contenido del ScrollView ha cambiado");
+        console.log("Nuevos elementos:", e);
+
+        $(".sortable-cards").each(function() {
+            var cardText = $(this).find(".card-subject").text();
+            console.log("Texto de la tarjeta:", cardText);
+        });
+    }
+
+</script>
+
 
 
