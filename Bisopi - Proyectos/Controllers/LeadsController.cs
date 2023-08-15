@@ -46,6 +46,20 @@ namespace Bisopi___Proyectos.Controllers
             return View(model);
         }
 
+        public IActionResult Delete(Guid id)
+        {
+            var model = _context.Leads.Where(x => x.LeadID == id).FirstOrDefault();
+
+            model.Modified = DateTime.UtcNow.AddHours(-5);
+            model.ModifiedBy = User.Identity.Name;
+            model.IsActive = false;
+
+            _context.Update(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Leads").WithSuccess("El registro ha sido eliminado");
+        }
+
         [HttpPost]
         public IActionResult Create(Lead model)
         {
