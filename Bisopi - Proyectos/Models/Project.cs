@@ -102,11 +102,11 @@ namespace Bisopi___Proyectos.Models
 
         [Display(Name = "Moneda")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid CurrencyID { get; set; }
+        public Guid? CurrencyID { get; set; }
 
         [Display(Name = "Valor Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public double ProjectValue { get; set; }
+        public double? ProjectValue { get; set; }
 
         [Display(Name = "Costo Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]

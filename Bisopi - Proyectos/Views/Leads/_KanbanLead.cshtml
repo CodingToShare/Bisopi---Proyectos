@@ -9,8 +9,16 @@
     }
     
     .btn-icon {
-        width: 50px; /* Ancho fijo para los botones */
-        height: 50px; /* Alto fijo para los botones */
+        width: 30px; /* Ancho fijo para los botones */
+        height: 30px; /* Alto fijo para los botones */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .icon {
+        width: 25px; /* Ancho fijo para los botones */
+        height: 25px; /* Alto fijo para los botones */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -37,15 +45,15 @@
         <div class="card-buttons">
             <div class="btn-group-horizontal">
                 <button class="btn btn-white btn-icon" onclick="redirectToEdit('@item.Task.LeadID.ToString()')">
-                    <img src ="~/img/edit.png">
+                    <img class="icon" src="~/img/edit.png">
                 </button>
 
-                <button class="btn btn-white btn-icon">
-                    <img src="~/img/convert.png">
+                <button class="btn btn-white btn-icon" onclick="redirectToLeadToDeal('@item.Task.LeadID.ToString()')">
+                    <img class="icon" src="~/img/convert.png">
                 </button>
 
                 <button class="btn btn-white btn-icon" onclick="confirmDelete('@item.Task.LeadID.ToString()')">
-                    <img src="~/img/trash.png">
+                    <img class="icon" src="~/img/trash.png">
                 </button>
             </div>
         </div>
@@ -112,6 +120,13 @@
         console.log(id);
 
         var url = '/Leads/edit/' + id; // Construye la URL con el ProjectID
+        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
+    }
+
+    function redirectToLeadToDeal(id) {
+        console.log(id);
+
+        var url = '/Leads/LeadToDeal/' + id; // Construye la URL con el ProjectID
         window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
     }
 

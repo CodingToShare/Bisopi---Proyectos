@@ -1,33 +1,39 @@
-﻿@model Bisopi___Proyectos.Models.Lead
+﻿@model Bisopi___Proyectos.Models.Deal
 
-<h4>Crear Lead</h4>
+<h4>Lead to Deal</h4>
 <hr />
 <br />
 
 <div class="row">
     <div class="col-12">
         <span class="float-right">
-            <a class="btn btn-outline-primary" href="/Leads/Index">Volver</a>
+            <a class="btn btn-outline-primary" href="/Deals/List">Volver</a>
         </span>
     </div>
     <div class="col-12">
-        <form asp-controller="Leads" asp-action="Create" method="post" enctype="multipart/form-data">
+        <form asp-controller="Leads" asp-action="LeadToDeal" method="post" enctype="multipart/form-data">
+            @Html.HiddenFor(x => x.DealID, new { @class = "DealID" })
             @Html.HiddenFor(x => x.LeadID, new { @class = "LeadID" })
-            @using(Html.DevExtreme().ValidationGroup())
+            @Html.HiddenFor(x => x.IsActive, new { @class = "IsActive" })
+            @Html.HiddenFor(x => x.Created, new { @class = "Created" })
+            @Html.HiddenFor(x => x.CreatedBy, new { @class = "CreatedBy" })
+            @Html.HiddenFor(x => x.Modified, new { @class = "Modified" })
+            @Html.HiddenFor(x => x.ModifiedBy, new { @class = "ModifiedBy" })
+
+            @using (Html.DevExtreme().ValidationGroup())
             {
-                @Html.AntiForgeryToken()
                 <div class="row">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <div class="col-md-12">
                         <div class="form-group">
-                        <div class="dx-field">
-                            <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.LeadName)</div>
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.DealName)</div>
                                 <div class="dx-field-item-content-location-bottom">
-                                    @(Html.DevExtreme().TextBoxFor(x => x.LeadName)
-                                    .ID("projectName")
-                                        .Placeholder("Escriba el nombre del Lead")
-                                    )
+                                    @(Html.DevExtreme().TextBoxFor(x => x.DealName)
+                                        .ID("dealName")
+                                        .Placeholder("Escriba el nombre del Deal")
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -41,8 +47,8 @@
                                     @(Html.DevExtreme().SelectBoxFor(x => x.ClientID)
                                         .DisplayExpr("ClientNameAndAbbreviation")
                                         .ValueExpr("ClientID")
-                                        .ID("ClientID")
-                                        .DataSource(d => d.Mvc().Controller("APIClients").LoadAction("GetSelectBox"))
+                                        .ID("clientID")
+                                        .DataSource(d => d.Mvc().Controller("APIClients").LoadAction("GetSelectBox").Key("ClientID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -50,7 +56,7 @@
                                         .ShowDropDownButton(true)
                                         .DeferRendering(false)
                                         .Placeholder("Seleccione un cliente...")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -64,7 +70,7 @@
                                     @(Html.DevExtreme().TextBoxFor(x => x.ResponsibleClient)
                                         .ID("customerManager")
                                         .Placeholder("Escriba el responsable del cliente")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -73,13 +79,13 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.QuoteStatusID)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProposalStatusID)</div>
                                 <div class="dx-field-item-content-location-bottom">
-                                    @(Html.DevExtreme().SelectBoxFor(x => x.QuoteStatusID)
-                                        .DisplayExpr("QuoteStatusNameAndAbbreviation")
-                                        .ValueExpr("QuoteStatusID")
-                                        .ID("QuoteStatusID")
-                                        .DataSource(d => d.Mvc().Controller("APIQuoteStatus").LoadAction("GetSelectBox"))
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.ProposalStatusID)
+                                        .DisplayExpr("ProposalStatusNameAndAbbreviation")
+                                        .ValueExpr("ProposalStatusID")
+                                        .ID("proposalStatusID")
+                                        .DataSource(d => d.Mvc().Controller("APIProposalStatus").LoadAction("GetSelectBox").Key("ProposalStatusID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -87,7 +93,7 @@
                                         .ShowDropDownButton(true)
                                         .DeferRendering(false)
                                         .Placeholder("Seleccione un estado...")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -98,11 +104,11 @@
                             <div class="dx-field">
                                 <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CurrencyID)</div>
                                 <div class="dx-field-item-content-location-bottom">
-                                @(Html.DevExtreme().SelectBoxFor(x => x.CurrencyID)
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.CurrencyID)
                                         .DisplayExpr("CurrencyNameAndAbbreviation")
                                         .ValueExpr("CurrencyID")
                                         .ID("currencyID")
-                                        .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox").Key("CurrencyID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -168,28 +174,29 @@
                             .Selection(s => s.Mode(SelectionMode.Multiple))
                             .RemoteOperations(true)
                             .DataSource(ds => ds.Mvc()
-                                .LoadParams(new { id = Model.LeadID })
-                                .Controller("APIMilestoneTemps")
-                                .LoadAction("Get")
-                                .InsertAction("Post")
-                                .UpdateAction("Put")
-                                .DeleteAction("Delete")
-                                .Key("MilestoneTempID")
+                            .LoadParams(new { id = Model.DealID })
+                            .Controller("APIMilestoneTemps")
+                            .LoadAction("Get")
+                            .InsertAction("Post")
+                            .UpdateAction("Put")
+                            .DeleteAction("Delete")
+                            .Key("MilestoneTempID")
                             )
                             .OnInitNewRow(@<text>
                                 function(e) {
-                                e.data.LeadID = $('.LeadID').val();
+                                e.data.DealID = $('.DealID').val();
                                 }
                             </text>)
                             .RemoteOperations(true)
-                            .Columns(columns => {
+                            .Columns(columns =>
+                            {
 
                                 columns.AddFor(m => m.MilestoneDate);
 
                                 columns.AddFor(m => m.CurrencyID).Lookup(lookup => lookup
-                                    .DataSource(ds => ds.WebApi().Controller("APIMilestoneTemps").LoadAction("CurrenciesLookup").Key("Value"))
-                                    .ValueExpr("Value")
-                                    .DisplayExpr("Text")
+                                .DataSource(ds => ds.WebApi().Controller("APIMilestoneTemps").LoadAction("CurrenciesLookup").Key("Value"))
+                                .ValueExpr("Value")
+                                .DisplayExpr("Text")
                                 );
 
                                 columns.AddFor(m => m.Percentage);
@@ -203,12 +210,12 @@
                                 columns.AddFor(m => m.Comment);
                             })
                             .Editing(e => e
-                                .AllowAdding(true)
-                                .AllowUpdating(true)
-                                .AllowDeleting(true)
-                                .Mode(GridEditMode.Popup)
+                            .AllowAdding(true)
+                            .AllowUpdating(true)
+                            .AllowDeleting(true)
+                            .Mode(GridEditMode.Popup)
                             )
-                        )
+                            )
                     </div>
 
                     <br />

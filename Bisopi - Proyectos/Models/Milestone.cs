@@ -1,41 +1,50 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using DevExtreme.AspNet.Mvc;
 
 namespace Bisopi___Proyectos.Models
 {
-    public class Lead
+    public class Milestone
     {
         [Key]
-        public Guid LeadID { get; set; }
+        public Guid MilestoneID { get; set; }
+
+        [Display(Name = "Proyecto")]
+        public Guid? ProjectID { get; set; }
+
+        [Display(Name = "Deal")]
+        public Guid? DealID { get; set; }
 
         [Display(Name = "Lead")]
-        [Column(TypeName = "varchar(200)")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string LeadName { get; set; }
+        public Guid? LeadID { get; set; }
 
-        [Display(Name = "Cliente")]
+        [Display(Name = "Fecha Hito")]
+        [DataType(DataType.DateTime)]
+        [ScaffoldColumn(false)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid ClientID { get; set; }
-
-        [Display(Name = "Responsable Cliente")]
-        [Column(TypeName = "varchar(200)")]
-        public string? ResponsibleClient { get; set; }
-
-        [Display(Name = "Estado ")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid QuoteStatusID { get; set; }
+        public DateTime MilestoneDate { get; set; }
 
         [Display(Name = "Moneda")]
         public Guid? CurrencyID { get; set; }
 
-        [Display(Name = "Valor")]
-        public double? LeadValue { get; set; }
+        [Display(Name = "Porcentaje")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        public int Percentage { get; set; }
 
-        [Display(Name = "Comentarios")]
+        [Display(Name = "Valor")]
+        public double? Value { get; set; }
+
+        [Display(Name = "Nro. Hito")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        public int MilestoneNumber { get; set; }
+
+        [Display(Name = "¿Es control de Cambio?")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        public bool IsItChangeControl { get; set; }
+
+        [Display(Name = "Comentario")]
         [Column(TypeName = "varchar(1000)")]
-        public string? Comments { get; set; }
+        public string? Comment { get; set; }
 
         [Display(Name = "¿Activo?")]
         public bool IsActive { get; set; }
@@ -62,12 +71,5 @@ namespace Bisopi___Proyectos.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Modified { get; set; }
 
-        [ForeignKey("ClientID")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Client Client { get; set; }
-
-        [ForeignKey("QuoteStatusID")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public QuoteStatus QuoteStatus { get; set; }
     }
 }

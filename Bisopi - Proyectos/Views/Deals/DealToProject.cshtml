@@ -1,6 +1,8 @@
-﻿@model Bisopi___Proyectos.Models.Project
+﻿<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
 
-<h4>Crear Proyecto</h4>
+@model Bisopi___Proyectos.Models.Project
+
+<h4>Deal to Project</h4>
 <hr />
 <br />
 
@@ -11,23 +13,25 @@
         </span>
     </div>
     <div class="col-12">
-        <form asp-controller="Project" asp-action="Create" method="post" enctype="multipart/form-data">
+        <form asp-controller="Deals" asp-action="DealToProject" method="post" enctype="multipart/form-data">
             @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID" })
             @Html.HiddenFor(x => x.DealID, new { @class = "DealID" })
-            @using(Html.DevExtreme().ValidationGroup())
+            @Html.HiddenFor(x => x.Created, new { @class = "Created" })
+            @Html.HiddenFor(x => x.CreatedBy, new { @class = "CreatedBy" })
+            @using (Html.DevExtreme().ValidationGroup())
             {
                 <div class="row">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <div class="col-md-12">
                         <div class="form-group">
-                        <div class="dx-field">
-                            <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectName)</div>
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectName)</div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().TextBoxFor(x => x.ProjectName)
-                                    .ID("projectName")
+                                        .ID("projectName")
                                         .Placeholder("Escriba el nombre del proyecto")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -35,14 +39,14 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                        <div class="dx-field">
-                            <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CountryID)</div>
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CountryID)</div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().SelectBoxFor(x => x.CountryID)
                                         .DisplayExpr("CountryNameAndAbbreviation")
                                         .ValueExpr("CountryID")
                                         .ID("countryID")
-                                        .DataSource(d => d.Mvc().Controller("APICountries").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APICountries").LoadAction("GetSelectBox").Key("CountryID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -50,7 +54,7 @@
                                         .ShowDropDownButton(true)
                                         .DeferRendering(false)
                                         .Placeholder("Seleccione un pais...")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -65,7 +69,7 @@
                                         .DisplayExpr("ClientNameAndAbbreviation")
                                         .ValueExpr("ClientID")
                                         .ID("clientID")
-                                        .DataSource(d => d.Mvc().Controller("APIClients").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APIClients").LoadAction("GetSelectBox").Key("ClientID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -73,7 +77,7 @@
                                         .ShowDropDownButton(true)
                                         .DeferRendering(false)
                                         .Placeholder("Seleccione un cliente...")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -87,7 +91,7 @@
                                     @(Html.DevExtreme().TextBoxFor(x => x.CustomerManager)
                                         .ID("customerManager")
                                         .Placeholder("Escriba el responsable del cliente")
-                                    )
+                                        )
                                 </div>
                             </div>
                         </div>
@@ -102,7 +106,7 @@
                                         .DisplayExpr("FirstNameAndLastNAme")
                                         .ValueExpr("UserDataID")
                                         .ID("leaderID")
-                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Admin" }))
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Admin" }).Key("LeaderID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -125,7 +129,7 @@
                                         .DisplayExpr("FirstNameAndLastNAme")
                                         .ValueExpr("UserDataID")
                                         .ID("projectManagerID")
-                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Admin" }))
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Admin" }).Key("LeaderID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -148,7 +152,7 @@
                                         .DisplayExpr("ProjectStatusNameAndAbbreviation")
                                         .ValueExpr("ProjectStatusID")
                                         .ID("projectStatusID")
-                                        .DataSource(d => d.Mvc().Controller("APIProjectStatus").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APIProjectStatus").LoadAction("GetSelectBox").Key("ProjectStatusID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -171,7 +175,7 @@
                                         .DisplayExpr("ProjectTypeName")
                                         .ValueExpr("ProjectTypeID")
                                         .ID("projectTypeID")
-                                        .DataSource(d => d.Mvc().Controller("APIProjectTypes").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APIProjectTypes").LoadAction("GetSelectBox").Key("ProjectTypeID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -194,7 +198,7 @@
                                         .DisplayExpr("SupportStatusName")
                                         .ValueExpr("SupportStatusID")
                                         .ID("supportStatusID")
-                                        .DataSource(d => d.Mvc().Controller("APISupportStatus").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APISupportStatus").LoadAction("GetSelectBox").Key("SupportStatusID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -354,7 +358,7 @@
                                         .DisplayExpr("CurrencyNameAndAbbreviation")
                                         .ValueExpr("CurrencyID")
                                         .ID("currencyID")
-                                        .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox").Key("CurrencyID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -547,7 +551,7 @@
                     <br />
 
                 </div>
-            }    
+            }
         </form>
     </div>
 

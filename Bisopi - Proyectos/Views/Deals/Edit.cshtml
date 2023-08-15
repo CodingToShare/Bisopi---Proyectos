@@ -13,6 +13,7 @@
     <div class="col-12">
         <form asp-controller="Deals" asp-action="Edit" method="post" enctype="multipart/form-data">
             @Html.HiddenFor(x => x.DealID, new { @class = "DealID" })
+            @Html.HiddenFor(x => x.LeadID, new { @class = "LeadID" })
             @Html.HiddenFor(x => x.IsActive, new { @class = "IsActive" })
             @Html.HiddenFor(x => x.Created, new { @class = "Created" })
             @Html.HiddenFor(x => x.CreatedBy, new { @class = "CreatedBy" })
@@ -150,6 +151,71 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.MilestoneTemp>()
+                            .ID("gridContainer")
+                            .AllowColumnReordering(true)
+                            .RowAlternationEnabled(true)
+                            .AllowColumnResizing(true)
+                            .ShowRowLines(true)
+                            .ShowBorders(true)
+                            .WordWrapEnabled(true)
+                            .ColumnAutoWidth(true)
+                            .ColumnResizingMode(ColumnResizingMode.Widget)
+                            .SearchPanel(s => s
+                            .Visible(true)
+                            .HighlightCaseSensitive(true))
+                            .Grouping(grouping => grouping.AutoExpandAll(true))
+                            .GroupPanel(groupPanel => groupPanel.Visible(true))
+                            .FilterPanel(f => f.Visible(true))
+                            .HeaderFilter(h => h.Visible(true))
+                            .Selection(s => s.Mode(SelectionMode.Multiple))
+                            .RemoteOperations(true)
+                            .DataSource(ds => ds.Mvc()
+                            .LoadParams(new { id = Model.DealID })
+                            .Controller("APIMilestoneTemps")
+                            .LoadAction("Get")
+                            .InsertAction("Post")
+                            .UpdateAction("Put")
+                            .DeleteAction("Delete")
+                            .Key("MilestoneTempID")
+                            )
+                            .OnInitNewRow(@<text>
+                                function(e) {
+                                e.data.DealID = $('.DealID').val();
+                                }
+                            </text>)
+                            .RemoteOperations(true)
+                            .Columns(columns =>
+                            {
+
+                                columns.AddFor(m => m.MilestoneDate);
+
+                                columns.AddFor(m => m.CurrencyID).Lookup(lookup => lookup
+                                .DataSource(ds => ds.WebApi().Controller("APIMilestoneTemps").LoadAction("CurrenciesLookup").Key("Value"))
+                                .ValueExpr("Value")
+                                .DisplayExpr("Text")
+                                );
+
+                                columns.AddFor(m => m.Percentage);
+
+                                columns.AddFor(m => m.Value);
+
+                                columns.AddFor(m => m.MilestoneNumber);
+
+                                columns.AddFor(m => m.IsItChangeControl);
+
+                                columns.AddFor(m => m.Comment);
+                            })
+                            .Editing(e => e
+                            .AllowAdding(true)
+                            .AllowUpdating(true)
+                            .AllowDeleting(true)
+                            .Mode(GridEditMode.Popup)
+                            )
+                            )
                     </div>
 
                     <br />

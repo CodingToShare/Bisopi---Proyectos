@@ -1,4 +1,5 @@
 ﻿using Bisopi___Proyectos.Models;
+using Bisopi___Proyectos.ModelsTemps;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bisopi___Proyectos.Data
@@ -15,6 +16,8 @@ namespace Bisopi___Proyectos.Data
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Deal> Deals { get; set; }
         public DbSet<Lead> Leads { get; set; }
+        public DbSet<Milestone> Milestones { get; set; }
+        public DbSet<MilestoneTemp> MilestonesTemps { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectStatus> ProjectsStatus { get; set; }
         public DbSet<ProjectType> ProjectsTypes { get; set; }
