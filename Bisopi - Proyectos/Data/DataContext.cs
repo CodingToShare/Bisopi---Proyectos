@@ -20,10 +20,15 @@ namespace Bisopi___Proyectos.Data
         public DbSet<Milestone> Milestones { get; set; }
         public DbSet<MilestoneTemp> MilestonesTemps { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectCommitment> ProjectCommitments { get; set; }
         public DbSet<ProjectStatus> ProjectsStatus { get; set; }
         public DbSet<ProjectType> ProjectsTypes { get; set; }
         public DbSet<ProposalStatus> ProposalsStatus { get; set; }
+        public DbSet<ProjectTaskStatus> ProjectTaskStatus { get; set; }
         public DbSet<QuoteStatus> QuotesStatus { get; set; }
         public DbSet<SupportStatus> SupportsStatus { get; set; }
+        public DbSet<Position> Positions{ get; set; }
+        public DbSet<ProjectTask> ProjectTask{ get; set; }
+        public DbSet<TaskGroup> TaskGroup{ get; set; }
     }
 }

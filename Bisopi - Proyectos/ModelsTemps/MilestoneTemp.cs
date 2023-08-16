@@ -30,14 +30,14 @@ namespace Bisopi___Proyectos.ModelsTemps
 
         [Display(Name = "Porcentaje")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public int Percentage { get; set; }
+        public int? Percentage { get; set; }
 
         [Display(Name = "Valor")]
         public double? Value { get; set; }
 
         [Display(Name = "Nro. Hito")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public int MilestoneNumber { get; set; }
+        public int? MilestoneNumber { get; set; }
 
         [Display(Name = "¿Es control de Cambio?")]
         [Required(ErrorMessage = "El campo {0} es requerido")]

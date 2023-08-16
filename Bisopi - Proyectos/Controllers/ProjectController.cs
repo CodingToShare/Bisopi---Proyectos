@@ -3,18 +3,21 @@ using Bisopi___Proyectos.Data;
 using Bisopi___Proyectos.Models;
 using Bisopi___Proyectos.ModelsTemps;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bisopi___Proyectos.Controllers
 {
     [Authorize]
     public class ProjectController : Controller
     {
-        private DataContext _context;
-
-        public ProjectController(DataContext context)
+        private readonly DataContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ProjectController(DataContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -138,6 +141,157 @@ namespace Bisopi___Proyectos.Controllers
 
 
             return RedirectToAction("Index", "Project").WithSuccess("El registro ha sido actualizado exitosamente");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Task(Guid id)
+        {
+            Project? project = await _context.Projects
+                .Include(x=> x.Client)
+                .Include(x=> x.Country)
+                .Include(x=> x.ProjectStatus)
+                .Include(x=> x.ProjectType)
+                .Include(x=> x.Currency)
+                .FirstOrDefaultAsync(x=> x.ProjectID == id);
+            if (project == null)
+                return RedirectToAction(nameof(Index));
+            var leader = await _userManager.FindByIdAsync(project.LeaderID.ToString());
+            if (leader != null)
+            {
+                if(leader.NormalizedUserName != null)
+                    project.LeaderName = leader.NormalizedUserName;
+            }
+            var projectManager = await _userManager.FindByIdAsync(project.ProjectManagerID.ToString());
+            if (projectManager != null)
+            {
+                if(projectManager.NormalizedUserName != null)
+                    project.ProjectManagerName = projectManager.NormalizedUserName;
+            }
+            ProjectTask model = new()
+            {
+                Project = project
+            };
+            var status = await _context.ProjectTaskStatus.Where(x => x.StatusName.ToLower().Contains("activa")).FirstOrDefaultAsync();
+            if (status != null)
+            {
+                TempData["Status"] = status.ProjectTaskStatusID;
+            }
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Task(ProjectTask model)
+        {
+
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Milestone(Guid id)
+        {
+            Project? project = await _context.Projects
+                .Include(x => x.Client)
+                .Include(x => x.Country)
+                .Include(x => x.ProjectStatus)
+                .Include(x => x.ProjectType)
+                .Include(x => x.Currency)
+                .FirstOrDefaultAsync(x => x.ProjectID == id);
+
+            if (project == null)
+                return RedirectToAction(nameof(Index));
+
+            var leader = await _userManager.FindByIdAsync(project.LeaderID.ToString());
+
+            if (leader != null)
+            {
+                if (leader.NormalizedUserName != null)
+                    project.LeaderName = leader.NormalizedUserName;
+            }
+
+            var projectManager = await _userManager.FindByIdAsync(project.ProjectManagerID.ToString());
+
+            if (projectManager != null)
+            {
+                if (projectManager.NormalizedUserName != null)
+                    project.ProjectManagerName = projectManager.NormalizedUserName;
+            }
+
+            Milestone model = new()
+            {
+                Project = project,
+                ProjectID = id,
+                DealID = project.DealID
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Milestone(Milestone model)
+        {
+            model.MilestoneID = Guid.NewGuid();
+            model.Created = DateTime.UtcNow.AddHours(-5);
+            model.CreatedBy = User.Identity.Name;
+            model.Modified = DateTime.UtcNow.AddHours(-5);
+            model.ModifiedBy = User.Identity.Name;
+
+            _context.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("Milestone", "Project").WithSuccess("El registro ha sido exitoso");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Commitment(Guid id)
+        {
+            Project? project = await _context.Projects
+                .Include(x => x.Client)
+                .Include(x => x.Country)
+                .Include(x => x.ProjectStatus)
+                .Include(x => x.ProjectType)
+                .Include(x => x.Currency)
+                .FirstOrDefaultAsync(x => x.ProjectID == id);
+
+            if (project == null)
+                return RedirectToAction(nameof(Index));
+
+            var leader = await _userManager.FindByIdAsync(project.LeaderID.ToString());
+
+            if (leader != null)
+            {
+                if (leader.NormalizedUserName != null)
+                    project.LeaderName = leader.NormalizedUserName;
+            }
+
+            var projectManager = await _userManager.FindByIdAsync(project.ProjectManagerID.ToString());
+
+            if (projectManager != null)
+            {
+                if (projectManager.NormalizedUserName != null)
+                    project.ProjectManagerName = projectManager.NormalizedUserName;
+            }
+
+            ProjectCommitment model = new()
+            {
+                Project = project,
+                ProjectID = id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Commitment(ProjectCommitment model)
+        {
+            model.ProjectCommitmentID = Guid.NewGuid();
+            model.Created = DateTime.UtcNow.AddHours(-5);
+            model.CreatedBy = User.Identity.Name;
+            model.Modified = DateTime.UtcNow.AddHours(-5);
+            model.ModifiedBy = User.Identity.Name;
+
+            _context.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("Commitment", "Project").WithSuccess("El registro ha sido exitoso");
         }
     }
 }

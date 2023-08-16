@@ -1,0 +1,235 @@
+﻿@model Milestone
+
+<a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Create">
+    <img title="Nuevo" style="width:24px;cursor:pointer;" src="~/img/add.png" />
+    Nuevo
+</a>
+<a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Index">
+    <img title="Listado" style="width:24px;cursor:pointer;" src="~/img/list.png" />
+    Listado
+</a>
+
+<div class="p-3" style='font-size:14px'>
+    <div class="h3">Hito</div>
+    <partial name="_ProjectInfo" model="Model.Project" />
+    <div class="p-3">
+        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.Milestone>()
+            .ID("gridContainer")
+            .AllowColumnReordering(true)
+            .RowAlternationEnabled(true)
+            .AllowColumnResizing(true)
+            .ShowRowLines(true)
+            .ShowBorders(true)
+            .WordWrapEnabled(true)
+            .ColumnAutoWidth(true)
+            .ColumnResizingMode(ColumnResizingMode.Widget)
+            .SearchPanel(s => s
+            .Visible(true)
+            .HighlightCaseSensitive(true))
+            .Grouping(grouping => grouping.AutoExpandAll(true))
+            .GroupPanel(groupPanel => groupPanel.Visible(true))
+            .FilterPanel(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Selection(s => s.Mode(SelectionMode.Multiple))
+            .RemoteOperations(true)
+            .DataSource(ds => ds.Mvc()
+            .LoadParams(new { id = Model.ProjectID })
+            .Controller("APIMilestones")
+            .LoadAction("Get")
+            .UpdateAction("Put")
+            .DeleteAction("Delete")
+            .Key("MilestoneID")
+            )
+            .OnInitNewRow(@<text>
+                function(e) {
+                e.data.ProjectID = $('.ProjectID').val();
+                }
+            </text>)
+            .RemoteOperations(true)
+            .Columns(columns =>
+            {
+
+                columns.AddFor(m => m.MilestoneDate);
+
+                columns.AddFor(m => m.CurrencyID).Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("APIMilestones").LoadAction("CurrenciesLookup").Key("Value"))
+                .ValueExpr("Value")
+                .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.Percentage);
+
+                columns.AddFor(m => m.Value);
+
+                columns.AddFor(m => m.MilestoneNumber);
+
+                columns.AddFor(m => m.IsItChangeControl);
+
+                columns.AddFor(m => m.Comment);
+            })
+            .Editing(e => e
+            .AllowUpdating(true)
+            .AllowDeleting(true)
+            .Mode(GridEditMode.Popup)
+            )
+        )
+    </div>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalHito" name="openTarea" id="openTarea">Agregar Hito</button>
+    <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
+</div>
+
+@using (Html.BeginForm("Project", "Milestone", FormMethod.Post))
+{
+    @using (Html.DevExtreme().ValidationGroup())
+    {
+        @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID" })
+        @Html.HiddenFor(x => x.DealID, new { @class = "DealID" })
+        <!-- Modal -->
+        <div class="modal fade" id="ModalHito" tabindex="-1" data-backdrop="static" data-keyboard="true" role="dialog" aria-labelledby="ModalHito" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style='font-size:14px'>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tareaModalLabel">Agregar Tarea</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.MilestoneDate)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().DateBoxFor(x => x.MilestoneDate)
+                                            .InputAttr("aria-label", "Date")
+                                            .Type(DateBoxType.Date)
+                                            .Value("")
+                                            .ID("MilestoneDate")
+                                            )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CurrencyID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.CurrencyID)
+                                                .DisplayExpr("CurrencyNameAndAbbreviation")
+                                                .ValueExpr("CurrencyID")
+                                                .ID("currencyID")
+                                                .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox").Key("CurrencyID"))
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione una moneda...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Percentage)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.Percentage)
+                                                .ID("Percentage")
+                                                .Placeholder("Escriba el porcentaje")
+                                                .Format("## %")
+                                                .InputAttr("aria-label", "Currency Format")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Value)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.Value)
+                                                .ID("Value")
+                                                .Placeholder("Escriba el valor")
+                                                .Format("$ #,##0.##")
+                                                .InputAttr("aria-label", "Currency Format")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.MilestoneNumber)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.MilestoneNumber)
+                                                .ID("MilestoneNumber")
+                                                .Placeholder("Escriba el numero del hito")
+                                                .InputAttr("aria-label", "Currency Format")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.IsItChangeControl)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().CheckBoxFor(x => x.IsItChangeControl)
+                                                .ID("IsItChangeControl")
+                                                .Value(true)
+                                                .ElementAttr("aria-label", "Checked")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Comment)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().TextAreaFor(x => x.Comment)
+                                                .ID("Comment")
+                                                .Placeholder("Escriba los comentarios")
+                                                .AutoResizeEnabled(true)
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="id_proyecto_tarea" name="id_proyecto_tarea" value="">
+                        <input type="hidden" id="cod_proyecto" name="cod_proyecto" value="">
+                        @(Html.DevExtreme().Button()
+                            .ElementAttr("class", "validate")
+                            .Text("Guardar")
+                            .Type(ButtonType.Success)
+                            .UseSubmitBehavior(true)
+                            )
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<script>
+    DevExpress.config({
+        editorStylingMode: "filled"
+    });
+
+    $("#cancel").click(function () {
+        history.back();
+        return false;
+    });
+</script>
