@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Actualizar perfil";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
@@ -34,7 +34,11 @@
                         <label asp-for="Input.PhoneNumber" class="form-label"></label>
                         <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                     </div>
-                    <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+                    <div class="form-floating mb-3">
+                        @Html.DropDownListFor( m => m.Input.CityId, (IEnumerable<SelectListItem>)ViewBag.Cities, "Seleccione una ciudad", new { @class="form-control" })
+                        <label asp-for="Input.CityId" class="control-label"></label>
+                    </div>
+                    <button id="update-profile-button" type="submit" class="w-100 btn btn-success">Guardar</button>
                 </div>
                 <div class="col-md-6">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>

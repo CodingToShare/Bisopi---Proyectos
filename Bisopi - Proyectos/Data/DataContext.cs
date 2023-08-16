@@ -13,6 +13,7 @@ namespace Bisopi___Proyectos.Data
 
         public DbSet<Client> Clients { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<City> Cities { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Deal> Deals { get; set; }
         public DbSet<Lead> Leads { get; set; }

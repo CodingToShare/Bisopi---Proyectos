@@ -76,17 +76,28 @@ namespace Bisopi___Proyectos.Controllers
             {
                 return View();
             }
+
+            var selectedCount = model.Where(x => x.Selected).Count();
+            if (selectedCount > 1)
+            {
+                ModelState.AddModelError("","Un usuario no puede pertenecer a varios roles");
+                ViewBag.UserName = user.UserName;
+                return View(model);
+            }
+
             var roles = await _userManager.GetRolesAsync(user);
             var result = await _userManager.RemoveFromRolesAsync(user, roles);
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot remove user existing roles");
+                ViewBag.UserName = user.UserName;
                 return View(model);
             }
             result = await _userManager.AddToRolesAsync(user, model.Where(x => x.Selected).Select(y => y.RoleName));
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot add selected roles to user");
+                ViewBag.UserName = user.UserName;
                 return View(model);
             }
             return RedirectToAction("Index");
