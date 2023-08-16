@@ -1,4 +1,14 @@
 ﻿@model ProjectTask
+
+<a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Create">
+    <img title="Nuevo" style="width:24px;cursor:pointer;" src="~/img/add.png" />
+    Nuevo
+</a>
+<a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Index">
+    <img title="Listado" style="width:24px;cursor:pointer;" src="~/img/list.png" />
+    Listado
+</a>
+
 <div class="p-3" style='font-size:14px'>
     <div class="h3">Tareas</div>
     <partial name="_ProjectInfo" model="Model.Project" />
@@ -53,7 +63,6 @@
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalTarea" name="openTarea" id="openTarea">Agregar Tarea</button>
     <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
 </div>
-@*<form asp-controller="Project" asp-action="Task" method="post">*@
     @using (Html.BeginForm("Project", "Task", FormMethod.Post))
 {
     @using (Html.DevExtreme().ValidationGroup())
@@ -193,7 +202,6 @@
                             .Text("Guardar")
                             .Type(ButtonType.Success)
                             .UseSubmitBehavior(true)
-                            @*.OnClick("saveClick")*@
                             )
                         <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
                     </div>
@@ -201,56 +209,14 @@
             </div>
         </div>
     }
-@*</form>*@
 }
 <script>
     DevExpress.config({
         editorStylingMode: "filled"
     });
 
-    function saveClick(e) {
-        var result = e.validationGroup.validate();
-        if (!result.isValid) {
-            DevExpress.ui.notify("Debe diligenciar todos los campos obligatorios.", "error");
-            e.cancel;
-        }
-    }
     $("#cancel").click(function () {
         history.back();
         return false;
     });
-    @*    $(function () {
-        $("#fecha_inicio").datepicker({
-        dateFormat: "yy-mm-dd",
-        monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-        firstDay: 1,
-        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
-        });
-        $("#fecha_fin").datepicker({
-        dateFormat: "yy-mm-dd",
-        monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-        firstDay: 1,
-        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
-        });
-        });
-        $("#openTarea").click(function () {
-        $("#fecha_inicio").val('');
-        $("#fecha_fin").val('');
-        $("#proyecto_tarea").val('');
-        $("#cod_grupo_tarea").val('0');
-        $("#cod_cargo").val('-');
-        $("#cod_estado_tarea").val('1');
-        $('#cod_estado_tarea').prop('disabled', 'disabled');
-        $("#comentario").val('');
-        $("#cod_responsable").val('-');
-        $('#cod_responsable').prop('disabled', '');
-        $("#id_proyecto_tarea").val('');
-        });
-        $("#savetarea").click(function () {
-        //xajax_guardarTarea(xajax.getFormValues(this.form, true));
-        });
-        $("#porcentaje").change(function () {
-        valor = ($("#porcentaje").val() * $("#valor_proyecto").val()) / 100;
-        $("#valor").val(valor);
-        });*@
 </script>

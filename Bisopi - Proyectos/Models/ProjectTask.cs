@@ -69,13 +69,11 @@ namespace Bisopi___Proyectos.Models
         public Guid? PositionID { get; set; }
 
         [ForeignKey(nameof(PositionID))]
-        public Position Position { get; set; }
+        public Position? Position { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Display(Name = "Responsable")]
         public Guid? ResponsibleID { get; set; }
-
-
 
         [Display(Name = "¿Activo?")]
         public bool IsActive { get; set; }

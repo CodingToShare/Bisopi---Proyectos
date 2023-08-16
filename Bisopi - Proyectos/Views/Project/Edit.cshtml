@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-12">
         <span class="float-right">
-            <a class="btn btn-outline-primary" href="/Project/Index">Volver</a>
+            <a class="btn btn-dark" href="/Project/Index">Volver</a>
         </span>
     </div>
     <div class="col-12">
@@ -468,59 +468,40 @@
                     <br />
 
                     <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-1" style="width:5%;">
-                                @(Html.DevExtreme().Button()
-                                    .Icon("edit")
-                                    .OnClick("redirectToEdit")
-                                    )
-                            </div>
-                            <div class="col-md-1" style="width:5%;">
-                                @(Html.DevExtreme().Button()
-                                    .Icon("event")
-                                    )
-                            </div>
-                            <div class="col-md-1" style="width:5%;">
-                                @(Html.DevExtreme().Button()
-                                    .Icon("money")
-                                    )
-                            </div>
-                            <div class="col-md-1" style="width:5%;">
-                                @(Html.DevExtreme().Button()
-                                    .Icon("group")
-                                    )
-                            </div>
-                            <div class="col-md-1" style="width:5%;">
-                                @(Html.DevExtreme().Button()
-                                    .Icon("bulletlist")
-                                    .Hint("Listado de tareas")
-                                    .OnClick("redirectToTask")
-                                    )
-                            </div>
-                            <div class="col-md-1" style="width:5%;">
-                                @(Html.DevExtreme().Button()
-                                    .Icon("plus")
-                                    )
-                            </div>
-                            <div class="col-md-1" style="width:5%;">
-                                @(Html.DevExtreme().Button()
-                                    .Icon("clear")
-                                    .Hint("Eliminar")
-                                    .OnClick("confirmDelete")
-                                    )
-                            </div>
+                        <div class="form-group">
+                            <a class="btn btn-outline-secondary p-1" onclick="redirectToEdit()">
+                                <img src="~/img/edit.png" style="width:24px" title="Editar" />
+                            </a>
+                            <a class="btn btn-outline-secondary p-1">
+                                <img src="~/img/schedule.png" style="width:24px" title="Programaci�n" />
+                            </a>
+                            <a class="btn btn-outline-secondary p-1" onclick="redirectToMilestone()">
+                                <img src="~/img/hito.png" style="width:24px" title="Hitos" />
+                            </a>
+                            <a class="btn btn-outline-secondary p-1">
+                                <img src="~/img/recursos.png" style="width:24px" title="Uso Recursos" />
+                            </a>
+                            <a class="btn btn-outline-secondary p-1" onclick="redirectToTask()">
+                                <img src="~/img/task.png" style="width:24px" title="Listado de Tareas" />
+                            </a>
+                            <a class="btn btn-outline-secondary p-1" onclick="redirectToCommitment()">
+                                <img src="~/img/compromise.png" style="width:24px" title="Compromisos" />
+                            </a>
+                            <a class='btn btn-outline-secondary p-1' onclick="confirmDelete()">
+                                <img src="~/img/trash.png" style="width:24px" title="Eliminar" />
+                            </a>
                         </div>
                     </div>
 
                     <br />
 
-                    <div class="col-md-12">
+                    <div class="col-md-12 p-4">
                         <div class="form-group">
                             <div class="center">
                                 @(Html.DevExtreme().Button()
                                     .ElementAttr("class", "validate")
                                     .Text("Guardar")
-                                    .Type(ButtonType.Normal)
+                                    .Type(ButtonType.Success)
                                     .UseSubmitBehavior(true)
                                     .OnClick("saveClick")
                                     )
@@ -557,9 +538,21 @@
         window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
     }
 
+    function redirectToMilestone() {
+        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
+        var url = '/project/milestone/' + projectId; // Construye la URL con el ProjectID
+        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
+    }
+
     function redirectToTask() {
         var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
         var url = '/project/task/' + projectId; // Construye la URL con el ProjectID
+        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
+    }
+
+    function redirectToCommitment() {
+        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
+        var url = '/project/Commitment/' + projectId; // Construye la URL con el ProjectID
         window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
     }
 

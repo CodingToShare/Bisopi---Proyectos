@@ -29,14 +29,14 @@ namespace Bisopi___Proyectos.Models
 
         [Display(Name = "Porcentaje")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public int Percentage { get; set; }
+        public int? Percentage { get; set; }
 
         [Display(Name = "Valor")]
         public double? Value { get; set; }
 
         [Display(Name = "Nro. Hito")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public int MilestoneNumber { get; set; }
+        public int? MilestoneNumber { get; set; }
 
         [Display(Name = "¿Es control de Cambio?")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
@@ -70,6 +70,9 @@ namespace Bisopi___Proyectos.Models
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Modified { get; set; }
+
+        [NotMapped]
+        public Project Project { get; set; }
 
     }
 }

@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-12">
         <span class="float-right">
-            <a class="btn btn-outline-primary" href="/Deals/Index">Volver</a>
+            <a class="btn btn-dark" href="/Deals/Index">Volver</a>
         </span>
     </div>
     <div class="col-12">
@@ -213,13 +213,13 @@
 
                     <br />
 
-                    <div class="col-md-12">
+                    <div class="col-md-12 p-4">
                         <div class="form-group">
                             <div class="center">
                                 @(Html.DevExtreme().Button()
                                     .ElementAttr("class", "validate")
                                     .Text("Guardar")
-                                    .Type(ButtonType.Normal)
+                                    .Type(ButtonType.Success)
                                     .UseSubmitBehavior(true)
                                     .OnClick("saveClick")
                                     )
