@@ -365,3 +365,12 @@ video {
 .text-primary {
     color: #6C757D !important;
 }
+
+.nav-link-dark {
+    color: #23272b !important;
+}
+
+.nav-link-dark.active {
+    color: white !important;
+    background-color: #23272b !important;
+}
