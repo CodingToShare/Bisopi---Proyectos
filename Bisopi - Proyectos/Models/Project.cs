@@ -36,9 +36,15 @@ namespace Bisopi___Proyectos.Models
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid LeaderID { get; set; }
 
+        [NotMapped]
+        public string? LeaderName { get; set; }
+
         [Display(Name = "Gerente de Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid ProjectManagerID { get; set; }
+
+        [NotMapped]
+        public string? ProjectManagerName{ get; set; }
 
         [Display(Name = "Estado Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
@@ -169,5 +175,7 @@ namespace Bisopi___Proyectos.Models
 
         [ForeignKey("CurrencyID")]
         public Currency Currency { get; set; }
+
+        public List<ProjectTask>? Tasks { get; set; }
     }
 }

@@ -50,5 +50,9 @@ namespace Bisopi___Proyectos.Controllers
         {
             return View();
         }
+        public IActionResult ProjectTaskStatus()
+        {
+            return View();
+        }
     }
 }

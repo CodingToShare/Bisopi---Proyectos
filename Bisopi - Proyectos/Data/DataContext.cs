@@ -24,5 +24,9 @@ namespace Bisopi___Proyectos.Data
         public DbSet<ProposalStatus> ProposalsStatus { get; set; }
         public DbSet<QuoteStatus> QuotesStatus { get; set; }
         public DbSet<SupportStatus> SupportsStatus { get; set; }
+        public DbSet<Position> Positions{ get; set; }
+        public DbSet<ProjectTask> ProjectTask{ get; set; }
+        public DbSet<TaskGroup> TaskGroup{ get; set; }
+        public DbSet<ProjectTaskStatus> ProjectTaskStatus{ get; set; }
     }
 }

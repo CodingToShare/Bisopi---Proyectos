@@ -1,0 +1,256 @@
+﻿@model ProjectTask
+<div class="p-3" style='font-size:14px'>
+    <div class="h3">Tareas</div>
+    <partial name="_ProjectInfo" model="Model.Project" />
+    <div class="p-3">
+        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.ProjectTask>()
+            .DataSource(ds => ds.Mvc()
+            .Controller("APIProjectTasks")
+            .LoadAction("Get")
+            .Key("TaskID")
+            )
+            .RemoteOperations(true)
+            .Columns(columns =>
+            {
+
+                columns.AddFor(m => m.TaskName);
+
+                columns.AddFor(m => m.TaskGroupID).Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("APIProjectTasks").LoadAction("TaskGroupLookup").Key("Value"))
+                .ValueExpr("Value")
+                .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.Comment);
+
+                columns.AddFor(m => m.TaskStatusID).Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("APIProjectTasks").LoadAction("ProjectTaskStatusLookup").Key("Value"))
+                .ValueExpr("Value")
+                .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.StartDate);
+
+                columns.AddFor(m => m.EndDate);
+
+                columns.AddFor(m => m.EstimateTime);
+
+                columns.AddFor(m => m.ExecutionTime);
+
+                columns.AddFor(m => m.PositionID).Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("APIProjectTasks").LoadAction("PositionsLookup").Key("Value"))
+                .ValueExpr("Value")
+                .DisplayExpr("Text")
+                );
+
+                columns.AddFor(m => m.ResponsibleID);
+
+                columns.AddFor(m => m.Created);
+
+            })
+            )
+    </div>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalTarea" name="openTarea" id="openTarea">Agregar Tarea</button>
+    <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
+</div>
+@*<form asp-controller="Project" asp-action="Task" method="post">*@
+    @using (Html.BeginForm("Project", "Task", FormMethod.Post))
+{
+    @using (Html.DevExtreme().ValidationGroup())
+    {
+        <!-- Modal -->
+        <div class="modal fade" id="ModalTarea" tabindex="-1" data-backdrop="static" data-keyboard="true" role="dialog" aria-labelledby="ModalTarea" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style='font-size:14px'>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tareaModalLabel">Agregar Tarea</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.TaskName)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().TextBoxFor(x => x.TaskName).ID("proyecto_tarea"))
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-8">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.TaskGroupID)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().SelectBoxFor(x => x.TaskGroupID)
+                                            .DisplayExpr("Text")
+                                            .ValueExpr("Value")
+                                            .Placeholder("Seleccione un grupo de tareas")
+                                            .DataSource(ds => ds.Mvc().Controller("APIProjectTask").LoadAction("TaskGroupLookup").Key("Value"))
+                                            .ID("TaskGroupID")
+                                            
+                                            )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.PositionID)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().SelectBoxFor(x => x.PositionID)
+                                            .DisplayExpr("Text")
+                                            .ValueExpr("Value")
+                                            .Placeholder("Seleccione")
+                                            .DataSource(ds => ds.Mvc().Controller("APIProjectTask").LoadAction("PositionsLookup").Key("Value"))
+                                            .ID("cod_cargo")
+                                            )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.StartDate)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().DateBoxFor(x => x.StartDate)
+                                            .InputAttr("aria-label", "Date")
+                                            .Type(DateBoxType.Date)
+                                            .Value("")
+                                            .ID("fecha_inicio")
+                                            )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.EndDate)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().DateBoxFor(x => x.EndDate)
+                                            .InputAttr("aria-label", "Date")
+                                            .Type(DateBoxType.Date)
+                                            .Value("")
+                                            .ID("fecha_fin")
+                                            )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.TaskStatusID)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().SelectBoxFor(x => x.TaskStatusID)
+                                            .DisplayExpr("Text")
+                                            .ValueExpr("Value")
+                                            .DataSource(ds => ds.Mvc().Controller("APIProjectTasks").LoadAction("ProjectTaskStatusLookup").Key("Value"))
+                                            .ID("cod_estado_tarea")
+                                            .Value($"{TempData["Status"]}")
+                                            .Disabled(true)
+                                            )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="hora">Tiempo Estimado</label>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        @(Html.DevExtreme().NumberBoxFor(x => x.EstimateTime).Mode(NumberBoxMode.Number).Min(0.0).ID("hora"))
+                                    </div>
+                                    <div class="form-group col-md-2"><label for="hora">Horas</label></div>
+                                    <div class="form-group col-md-4">
+                                        @(Html.DevExtreme().NumberBoxFor(x => x.ExecutionTime).Mode(NumberBoxMode.Number).Min(0.0).ID("minuto"))
+                                    </div>
+                                    <div class="form-group col-md-2"><label for="minuto">Minutos</label></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResponsibleID)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().SelectBoxFor(x => x.ResponsibleID)
+                                            .DisplayExpr("FirstNameAndLastNAme")
+                                            .ValueExpr("UserDataID")
+                                            .DataSource(ds => ds.Mvc().Controller("APIProjectTasks").LoadAction("ResponsibleLookup").Key("UserDataID"))
+                                            .ID("cod_responsable")
+                                            )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Comment)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().TextAreaFor(x => x.Comment).ID("comentario"))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="id_proyecto_tarea" name="id_proyecto_tarea" value="">
+                        <input type="hidden" id="cod_proyecto" name="cod_proyecto" value="">
+                        @(Html.DevExtreme().Button()
+                            .ElementAttr("class", "validate")
+                            .Text("Guardar")
+                            .Type(ButtonType.Success)
+                            .UseSubmitBehavior(true)
+                            @*.OnClick("saveClick")*@
+                            )
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+@*</form>*@
+}
+<script>
+    DevExpress.config({
+        editorStylingMode: "filled"
+    });
+
+    function saveClick(e) {
+        var result = e.validationGroup.validate();
+        if (!result.isValid) {
+            DevExpress.ui.notify("Debe diligenciar todos los campos obligatorios.", "error");
+            e.cancel;
+        }
+    }
+    $("#cancel").click(function () {
+        history.back();
+        return false;
+    });
+    @*    $(function () {
+        $("#fecha_inicio").datepicker({
+        dateFormat: "yy-mm-dd",
+        monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        firstDay: 1,
+        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
+        });
+        $("#fecha_fin").datepicker({
+        dateFormat: "yy-mm-dd",
+        monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        firstDay: 1,
+        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
+        });
+        });
+        $("#openTarea").click(function () {
+        $("#fecha_inicio").val('');
+        $("#fecha_fin").val('');
+        $("#proyecto_tarea").val('');
+        $("#cod_grupo_tarea").val('0');
+        $("#cod_cargo").val('-');
+        $("#cod_estado_tarea").val('1');
+        $('#cod_estado_tarea').prop('disabled', 'disabled');
+        $("#comentario").val('');
+        $("#cod_responsable").val('-');
+        $('#cod_responsable').prop('disabled', '');
+        $("#id_proyecto_tarea").val('');
+        });
+        $("#savetarea").click(function () {
+        //xajax_guardarTarea(xajax.getFormValues(this.form, true));
+        });
+        $("#porcentaje").change(function () {
+        valor = ($("#porcentaje").val() * $("#valor_proyecto").val()) / 100;
+        $("#valor").val(valor);
+        });*@
+</script>

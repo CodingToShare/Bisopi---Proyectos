@@ -1,0 +1,38 @@
+﻿@model Project
+
+<div class="border border-secondary rounded px-3 pt-3">
+    <dl class="row">
+        <dt class="col-sm-2">Proyecto</dt>
+        <dd class="col-sm-10">@Model.ProjectName</dd>
+        <dt class="col-sm-2">Cliente</dt>
+        <dd class="col-sm-4">@Model.Client.ClientName</dd>
+        <dt class="col-sm-2">Responsable Cliente</dt>
+        <dd class="col-sm-4">@Model.CustomerManager</dd>
+        <dt class="col-sm-2">Fecha Inicio</dt>
+        <dd class="col-sm-4">@Model.StartDate</dd>
+        <dt class="col-sm-2">Fecha Entrega</dt>
+        <dd class="col-sm-4">@Model.EstimatedDeliveryDate</dd>
+        <dt class="col-sm-2">Líder</dt>
+        <dd class="col-sm-4">@Model.LeaderName</dd>
+        <dt class="col-sm-2">Gerente</dt>
+        <dd class="col-sm-4">@Model.ProjectManagerName</dd>
+        <dt class="col-sm-2">País</dt>
+        <dd class="col-sm-4">@Model.Country.CountryName</dd>
+        <dt class="col-sm-2">Estado Proyecto</dt>
+        <dd class="col-sm-4">@Model.ProjectStatus.ProjectStatusName</dd>
+        <dt class="col-sm-2">Tipo Proyecto</dt>
+        <dd class="col-sm-4">@Model.ProjectType.ProjectTypeName</dd>
+        <dt class="col-sm-2">Horas Estimadas</dt>
+        <dd class="col-sm-4">@Model.EstimatedHours</dd>
+        <dt class="col-sm-2">Moneda</dt>
+        <dd class="col-sm-1">@Model.Currency.Abbreviation</dd>
+        <dt class="col-sm-2">Valor Proyecto</dt>
+        <dd class="col-sm-1">@Model.ProjectValue</dd>
+        <dt class="col-sm-2">Costo Proyecto</dt>
+        <dd class="col-sm-1">@Model.ProjectCost</dd>
+        <dt class="col-sm-2">TRM Proyecto</dt>
+        <dd class="col-sm-1">@Model.TRMProject</dd>
+        <dt class="col-sm-12">
+        </dt>
+    </dl>
+</div>

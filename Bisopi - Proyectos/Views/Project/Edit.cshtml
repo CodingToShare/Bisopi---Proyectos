@@ -492,7 +492,9 @@
                             </div>
                             <div class="col-md-1" style="width:5%;">
                                 @(Html.DevExtreme().Button()
-                                    .Icon("todo")
+                                    .Icon("bulletlist")
+                                    .Hint("Listado de tareas")
+                                    .OnClick("redirectToTask")
                                     )
                             </div>
                             <div class="col-md-1" style="width:5%;">
@@ -503,6 +505,7 @@
                             <div class="col-md-1" style="width:5%;">
                                 @(Html.DevExtreme().Button()
                                     .Icon("clear")
+                                    .Hint("Eliminar")
                                     .OnClick("confirmDelete")
                                     )
                             </div>
@@ -551,6 +554,12 @@
     function redirectToEdit() {
         var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
         var url = '/project/edit/' + projectId; // Construye la URL con el ProjectID
+        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
+    }
+
+    function redirectToTask() {
+        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
+        var url = '/project/task/' + projectId; // Construye la URL con el ProjectID
         window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
     }
 
