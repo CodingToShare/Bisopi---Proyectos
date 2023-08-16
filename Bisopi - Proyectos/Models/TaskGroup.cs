@@ -23,7 +23,7 @@ namespace Bisopi___Proyectos.Models
         public int Order { get; set; }
 
         [Display(Name = "¿Activo?")]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         [Display(Name = "Creado por")]
         [Column(TypeName = "varchar(100)")]

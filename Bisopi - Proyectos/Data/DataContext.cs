@@ -29,12 +29,12 @@ namespace Bisopi___Proyectos.Data
         public DbSet<ProjectTaskStatus> ProjectTaskStatus { get; set; }
         public DbSet<QuoteStatus> QuotesStatus { get; set; }
         public DbSet<SupportStatus> SupportsStatus { get; set; }
-        public DbSet<Position> Positions{ get; set; }
         public DbSet<ProjectTask> ProjectTask{ get; set; }
         public DbSet<TaskGroup> TaskGroup{ get; set; }
 
         public DbSet<AllowedView> AllowedViews { get; set; }
         public DbSet<AllowedViewForRole> AllowedViewsForRoles { get; set; }
         public DbSet<AllowedViewForGroup> AllowedViewsForGroups { get; set; }
+        public DbSet<ProjectTaskRegistry> TaskRegistry { get; set; }
     }
 }

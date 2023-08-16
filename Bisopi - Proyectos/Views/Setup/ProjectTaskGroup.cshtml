@@ -2,10 +2,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
-<h4>Estados Tareas</h4>
+<h4>Grupos Tareas</h4>
 <hr />
 <br />
-@(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.ProjectTaskStatus>()
+@(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.TaskGroup>()
     .ID("gridContainer")
     .AllowColumnReordering(true)
     .RowAlternationEnabled(true)
@@ -26,29 +26,27 @@
     .Export(e => e.Enabled(true).AllowExportSelectedData(true))
     .OnExporting("exporting")
     .DataSource(ds => ds.Mvc()
-        .Controller("APIProjectTaskStatus")
+        .Controller("APITaskGroups")
         .LoadAction("Get")
         .InsertAction("Post")
         .UpdateAction("Put")
-        .Key("ProjectTaskStatusID")
+        .Key("TaskGroupID")
     )
     .RemoteOperations(true)
-    .Columns(columns =>
-    {
-
-        columns.AddFor(m => m.StatusName);
+    .Columns(columns => {
+        columns.AddFor(m => m.Name);
 
         columns.AddFor(m => m.Abbreviation);
 
         columns.AddFor(m => m.IsActive);
 
-        columns.AddFor(m => m.CreatedBy).AllowEditing(false); ;
+        columns.AddFor(m => m.CreatedBy).AllowEditing(false);
 
-        columns.AddFor(m => m.Created).AllowEditing(false); ;
+        columns.AddFor(m => m.Created).AllowEditing(false);
 
-        columns.AddFor(m => m.ModifiedBy).AllowEditing(false); ;
+        columns.AddFor(m => m.ModifiedBy).AllowEditing(false);
 
-        columns.AddFor(m => m.Modified).AllowEditing(false); ;
+        columns.AddFor(m => m.Modified).AllowEditing(false);
     })
     .Editing(e => e
         .AllowAdding(true)
@@ -56,10 +54,11 @@
         .Mode(GridEditMode.Popup)
     )
 )
+
 <script>
     function exporting(e) {
         var workbook = new ExcelJS.Workbook();
-        var worksheet = workbook.addWorksheet('ListaEstadoTareas');
+        var worksheet = workbook.addWorksheet('ListaGruposTareas');
 
         DevExpress.excelExporter.exportDataGrid({
             component: e.component,
@@ -67,7 +66,7 @@
             autoFilterEnabled: true
         }).then(function () {
             workbook.xlsx.writeBuffer().then(function (buffer) {
-                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'EstadoTarea.xlsx');
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'GruposTareas.xlsx');
             });
         });
         e.cancel = true;

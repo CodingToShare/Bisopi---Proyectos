@@ -2,6 +2,7 @@
 using Bisopi___Proyectos.Data;
 using Bisopi___Proyectos.Models;
 using Bisopi___Proyectos.ModelsTemps;
+using Humanizer.Localisation.TimeToClockNotation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -169,20 +170,30 @@ namespace Bisopi___Proyectos.Controllers
             }
             ProjectTask model = new()
             {
-                Project = project
+                Project = project,
+                ProjectID = project.ProjectID
             };
             var status = await _context.ProjectTaskStatus.Where(x => x.StatusName.ToLower().Contains("activa")).FirstOrDefaultAsync();
             if (status != null)
             {
-                TempData["Status"] = status.ProjectTaskStatusID;
+                model.TaskStatusID = status.ProjectTaskStatusID;
             }
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> Task(ProjectTask model)
         {
+            int estimateTime = model.EstimateTime * 3600 + model.ExecutionTime * 60;
+            model.EstimateTime = estimateTime;
+            model.IsActive = true;
+            model.Created = DateTime.UtcNow.AddHours(-5);
+            model.CreatedBy = User.Identity.Name;
+            model.Modified = DateTime.UtcNow.AddHours(-5);
+            model.ModifiedBy = User.Identity.Name;
 
-            return Ok();
+            await _context.ProjectTask.AddAsync(model);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Task", "Project").WithSuccess("El registro ha sido exitoso");
         }
 
         [HttpGet]

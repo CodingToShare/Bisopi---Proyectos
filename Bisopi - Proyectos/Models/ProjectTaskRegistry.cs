@@ -1,27 +1,34 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Metadata.Ecma335;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bisopi___Proyectos.Models
 {
-    public class Position
+    public class ProjectTaskRegistry
     {
         [Key]
-        public Guid PositionID { get; set; }
+        public Guid ProjectTaskRegistryID { get; set; }
 
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        [Column(TypeName = "varchar(200)")]
-        [MaxLength(length: 200, ErrorMessage = "El campo {0} no puede tener más de {1} carácteres")]
-        public string Name { get; set; }
+        [Display(Name = "Tarea")]
+        [Required(ErrorMessage = "El campo {0 es requerido}")]
+        public Guid ProjectTaskID { get; set; }
 
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string Mca_Lider { get; set; }
+        [ForeignKey(nameof(ProjectTaskID))]
+        public ProjectTask? ProjectTask { get; set; }
 
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string Mca_Gerente { get; set; }
+        [Display(Name = "Fecha de registro")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime RegistryDate { get; set; }
 
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid UserCode { get; set; }
+        public int ExecutionTime { get; set; } = 0;
+
+        public bool? McaExecution { get; set; }
+        public bool? McaManual { get; set; }
+        public bool? McaHistorico { get; set; }
+
+        [Display(Name = "Comentario")]
+        public string? Comment { get; set; }
 
         [Display(Name = "¿Activo?")]
         public bool IsActive { get; set; }

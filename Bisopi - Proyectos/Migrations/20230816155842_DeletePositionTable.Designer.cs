@@ -4,6 +4,7 @@ using Bisopi___Proyectos.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bisopi___Proyectos.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230816155842_DeletePositionTable")]
+    partial class DeletePositionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,52 +24,6 @@ namespace Bisopi___Proyectos.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.AllowedView", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AllowedViews");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.AllowedViewForGroup", b =>
-                {
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AllowedViewId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("GroupId", "AllowedViewId");
-
-                    b.HasIndex("AllowedViewId");
-
-                    b.ToTable("AllowedViewsForGroups");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.AllowedViewForRole", b =>
-                {
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AllowedViewId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("RoleId", "AllowedViewId");
-
-                    b.HasIndex("AllowedViewId");
-
-                    b.ToTable("AllowedViewsForRoles");
-                });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.City", b =>
                 {
@@ -256,22 +213,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.HasIndex("ProposalStatusID");
 
                     b.ToTable("Deals");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.Group", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Lead", b =>
@@ -694,57 +635,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.ToTable("ProjectTask");
                 });
 
-            modelBuilder.Entity("Bisopi___Proyectos.Models.ProjectTaskRegistry", b =>
-                {
-                    b.Property<Guid>("ProjectTaskRegistryID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<int>("ExecutionTime")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("McaExecution")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("McaHistorico")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("McaManual")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<Guid>("ProjectTaskID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("RegistryDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ProjectTaskRegistryID");
-
-                    b.HasIndex("ProjectTaskID");
-
-                    b.ToTable("TaskRegistry");
-                });
-
             modelBuilder.Entity("Bisopi___Proyectos.Models.ProjectTaskStatus", b =>
                 {
                     b.Property<Guid>("ProjectTaskStatusID")
@@ -977,20 +867,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.ToTable("TaskGroup");
                 });
 
-            modelBuilder.Entity("Bisopi___Proyectos.Models.UserGroup", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar");
-
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "GroupId");
-
-                    b.ToTable("UserGroups");
-                });
-
             modelBuilder.Entity("Bisopi___Proyectos.ModelsTemps.MilestoneTemp", b =>
                 {
                     b.Property<Guid>("MilestoneTempID")
@@ -1051,28 +927,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.HasKey("MilestoneTempID");
 
                     b.ToTable("MilestonesTemps");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.AllowedViewForGroup", b =>
-                {
-                    b.HasOne("Bisopi___Proyectos.Models.AllowedView", "AllowedView")
-                        .WithMany()
-                        .HasForeignKey("AllowedViewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AllowedView");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.AllowedViewForRole", b =>
-                {
-                    b.HasOne("Bisopi___Proyectos.Models.AllowedView", "AllowedView")
-                        .WithMany()
-                        .HasForeignKey("AllowedViewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AllowedView");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Deal", b =>
@@ -1208,17 +1062,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.Navigation("TaskGroup");
 
                     b.Navigation("TaskStatus");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.ProjectTaskRegistry", b =>
-                {
-                    b.HasOne("Bisopi___Proyectos.Models.ProjectTask", "ProjectTask")
-                        .WithMany()
-                        .HasForeignKey("ProjectTaskID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProjectTask");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Project", b =>

@@ -21,16 +21,18 @@ namespace Bisopi___Proyectos.Controllers
     {
         private DataContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public APIProjectTasksController(DataContext context,UserManager<ApplicationUser> userManager)
+        public APIProjectTasksController(DataContext context,UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(DataSourceLoadOptions loadOptions) {
-            var projecttask = _context.ProjectTask.Select(i => new {
+        public async Task<IActionResult> Get(DataSourceLoadOptions loadOptions, Guid projectID) {
+            var projecttask = _context.ProjectTask.Where(x=> x.ProjectID == projectID && x.IsActive == true).Select(i => new {
                 i.TaskID,
                 i.TaskName,
                 i.TaskGroupID,
@@ -67,7 +69,12 @@ namespace Bisopi___Proyectos.Controllers
 
             if(!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
-
+            model.TaskID = new Guid();
+            model.IsActive = true;
+            model.Created = DateTime.UtcNow.AddHours(-5);
+            model.CreatedBy = User.Identity.Name;
+            model.Modified = DateTime.UtcNow.AddHours(-5);
+            model.ModifiedBy = User.Identity.Name;
             var result = _context.ProjectTask.Add(model);
             await _context.SaveChangesAsync();
 
@@ -94,7 +101,11 @@ namespace Bisopi___Proyectos.Controllers
         public async Task Delete(Guid key) {
             var model = await _context.ProjectTask.FirstOrDefaultAsync(item => item.TaskID == key);
 
+            model.IsActive = false;
+            model.Modified = DateTime.UtcNow.AddHours(-5);
+            model.ModifiedBy = User.Identity.Name;
             _context.ProjectTask.Remove(model);
+
             await _context.SaveChangesAsync();
         }
 
@@ -154,13 +165,8 @@ namespace Bisopi___Proyectos.Controllers
 
         [HttpGet]
         public async Task<IActionResult> PositionsLookup(DataSourceLoadOptions loadOptions) {
-            var lookup = from i in _context.Positions
-                         orderby i.Name
-                         select new {
-                             Value = i.PositionID,
-                             Text = i.Name
-                         };
-            return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
+            var roles =  _roleManager.Roles.OrderBy(x => x.Name).Select(x => new { Value = x.Id, Text = x.Name });
+            return Json(await DataSourceLoader.LoadAsync(roles, loadOptions));
         }
 
         private void PopulateModel(ProjectTask model, IDictionary values) {

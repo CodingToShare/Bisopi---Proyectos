@@ -33,14 +33,14 @@ namespace Bisopi___Proyectos.Models
         public Guid ProjectID { get; set; }
 
         [ForeignKey(nameof(ProjectID))]
-        public Project Project { get; set; }
+        public Project? Project { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Display(Name = "Estado")]
         public Guid? TaskStatusID { get; set; }
 
         [ForeignKey(nameof(TaskStatusID))]
-        public ProjectTaskStatus TaskStatus { get; set; }
+        public ProjectTaskStatus? TaskStatus { get; set; }
 
         [Display(Name = "Fecha inicio")]
         [DataType(DataType.DateTime)]
@@ -67,9 +67,6 @@ namespace Bisopi___Proyectos.Models
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Display(Name = "Cargo")]
         public Guid? PositionID { get; set; }
-
-        [ForeignKey(nameof(PositionID))]
-        public Position? Position { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Display(Name = "Responsable")]
@@ -99,5 +96,6 @@ namespace Bisopi___Proyectos.Models
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? Modified { get; set; }
+
     }
 }
