@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Bisopi___Proyectos.Extensions;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -51,10 +52,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Leads" asp-action="Index">CRM</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Setup" asp-action="Index">Configuración</a>
-                        </li>
-                        
+                        @if (await User.IsViewAvaliableForRole("Configuracion"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Setup" asp-action="Index">Configuración</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
