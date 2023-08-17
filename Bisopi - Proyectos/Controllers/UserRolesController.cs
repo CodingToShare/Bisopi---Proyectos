@@ -48,8 +48,7 @@ namespace Bisopi___Proyectos.Controllers
             }
             ViewBag.UserName = user.UserName;
             var model = new List<ManageUserRolesViewModel>();
-            var roles = await _roleManager.Roles.ToListAsync();
-            foreach (var role in roles)
+            foreach (var role in await _roleManager.Roles.ToListAsync())
             {
                 var userRolesViewModel = new ManageUserRolesViewModel
                 {

@@ -10,10 +10,14 @@
 
 <div class="row">
     <div class="col-12">
-        <span class="float-right">
-            <a class="btn btn-sm btn-outline-primary" href="/Project/Create">Crear Proyecto</a>
-        </span>
+        <a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Create">
+            <img title="Nuevo" style="width:24px;cursor:pointer;" src="~/img/add.png" />
+            Crear Proyecto
+        </a>
     </div>
+
+    <br />
+
     <div class="col-12">
 
         @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.Project>()

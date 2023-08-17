@@ -21,11 +21,11 @@ namespace Bisopi___Proyectos.Models
 
         [Display(Name = "Pais")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid CountryID { get; set; }
+        public Guid? CountryID { get; set; }
 
         [Display(Name = "Cliente")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid ClientID { get; set; }
+        public Guid? ClientID { get; set; }
 
         [Display(Name = "Responsable Cliente")]
         [Column(TypeName = "varchar(500)")]
@@ -34,23 +34,29 @@ namespace Bisopi___Proyectos.Models
 
         [Display(Name = "Lider")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid LeaderID { get; set; }
+        public Guid? LeaderID { get; set; }
+
+        [NotMapped]
+        public string? LeaderName { get; set; }
 
         [Display(Name = "Gerente de Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid ProjectManagerID { get; set; }
+        public Guid? ProjectManagerID { get; set; }
+
+        [NotMapped]
+        public string? ProjectManagerName{ get; set; }
 
         [Display(Name = "Estado Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid ProjectStatusID { get; set; }
+        public Guid? ProjectStatusID { get; set; }
 
         [Display(Name = "Tipo Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid ProjectTypeID { get; set; }
+        public Guid? ProjectTypeID { get; set; }
 
         [Display(Name = "Entregado a soporte")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid SupportStatusID { get; set; }
+        public Guid? SupportStatusID { get; set; }
 
         [Display(Name = "Fecha de Solicitud de Estimación")]
         [DataType(DataType.DateTime)]
@@ -169,5 +175,7 @@ namespace Bisopi___Proyectos.Models
 
         [ForeignKey("CurrencyID")]
         public Currency Currency { get; set; }
+
+        public List<ProjectTask>? Tasks { get; set; }
     }
 }

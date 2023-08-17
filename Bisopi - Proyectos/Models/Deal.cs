@@ -19,15 +19,15 @@ namespace Bisopi___Proyectos.Models
 
         [Display(Name = "Cliente")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid ClientID { get; set; }
+        public Guid? ClientID { get; set; }
 
         [Display(Name = "Responsable Cliente")]
         [Column(TypeName = "varchar(200)")]
         public string? ResponsibleClient { get; set; }
 
-        [Display(Name = "Estado ")]
+        [Display(Name = "Estado")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid ProposalStatusID { get; set; }
+        public Guid? ProposalStatusID { get; set; }
 
         [Display(Name = "Moneda")]
         public Guid? CurrencyID { get; set; }
