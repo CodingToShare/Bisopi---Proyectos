@@ -1,4 +1,5 @@
-﻿using Bisopi___Proyectos.Data;
+﻿using Bisopi___Proyectos.Attributes;
+using Bisopi___Proyectos.Data;
 using Bisopi___Proyectos.Extensions;
 using Bisopi___Proyectos.Models;
 using Bisopi___Proyectos.ViewModels;
@@ -8,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bisopi___Proyectos.Controllers
 {
+    [BisopiRoleAuth("UserGroups")]
+    [BisopiGroupAuth("UserGroups")]
     public class UserGroupsController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
