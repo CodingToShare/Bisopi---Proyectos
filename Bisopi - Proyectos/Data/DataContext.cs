@@ -14,6 +14,8 @@ namespace Bisopi___Proyectos.Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Deal> Deals { get; set; }
         public DbSet<Lead> Leads { get; set; }
@@ -30,5 +32,9 @@ namespace Bisopi___Proyectos.Data
         public DbSet<Position> Positions{ get; set; }
         public DbSet<ProjectTask> ProjectTask{ get; set; }
         public DbSet<TaskGroup> TaskGroup{ get; set; }
+
+        public DbSet<AllowedView> AllowedViews { get; set; }
+        public DbSet<AllowedViewForRole> AllowedViewsForRoles { get; set; }
+        public DbSet<AllowedViewForGroup> AllowedViewsForGroups { get; set; }
     }
 }
