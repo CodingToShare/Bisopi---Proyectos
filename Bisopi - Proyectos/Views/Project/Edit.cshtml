@@ -478,7 +478,7 @@
                             <a class="btn btn-outline-secondary p-1" onclick="redirectToMilestone()">
                                 <img src="~/img/hito.png" style="width:24px" title="Hitos" />
                             </a>
-                            <a class="btn btn-outline-secondary p-1">
+                            <a class="btn btn-outline-secondary p-1" onclick="redirectToResourcePlanning()">
                                 <img src="~/img/recursos.png" style="width:24px" title="Uso Recursos" />
                             </a>
                             <a class="btn btn-outline-secondary p-1" onclick="redirectToTask()">
@@ -541,6 +541,12 @@
     function redirectToMilestone() {
         var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
         var url = '/project/milestone/' + projectId; // Construye la URL con el ProjectID
+        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
+    }
+
+    function redirectToResourcePlanning() {
+        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
+        var url = '/project/resourceplanning/' + projectId; // Construye la URL con el ProjectID
         window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
     }
 

@@ -4,6 +4,7 @@ using Bisopi___Proyectos.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bisopi___Proyectos.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230818200858_FixCityGroup")]
+    partial class FixCityGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -480,16 +483,13 @@ namespace Bisopi___Proyectos.Migrations
                     b.Property<DateTime?>("EstimateRequestDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("EstimatedDeliveryDate")
-                        .IsRequired()
+                    b.Property<DateTime>("EstimatedDeliveryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EstimatedHours")
-                        .IsRequired()
+                    b.Property<int>("EstimatedHours")
                         .HasColumnType("int");
 
-                    b.Property<double?>("GrossMargin")
-                        .IsRequired()
+                    b.Property<double>("GrossMargin")
                         .HasColumnType("float");
 
                     b.Property<bool>("IsActive")
@@ -510,8 +510,7 @@ namespace Bisopi___Proyectos.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<double?>("ProjectCost")
-                        .IsRequired()
+                    b.Property<double>("ProjectCost")
                         .HasColumnType("float");
 
                     b.Property<Guid?>("ProjectManagerID")
@@ -541,8 +540,7 @@ namespace Bisopi___Proyectos.Migrations
                     b.Property<string>("ScalerCode")
                         .HasColumnType("varchar(200)");
 
-                    b.Property<DateTime?>("StartDate")
-                        .IsRequired()
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("SupportStatusID")
@@ -949,58 +947,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.ToTable("QuotesStatus");
                 });
 
-            modelBuilder.Entity("Bisopi___Proyectos.Models.ResourcePlanning", b =>
-                {
-                    b.Property<Guid>("ResourcePlanningID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<Guid?>("DealID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double?>("EtcHour")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("LeadID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<double>("PlannedHours")
-                        .HasColumnType("float");
-
-                    b.Property<Guid?>("PositionID")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ProjectID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ResourceID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ResourcePlanningID");
-
-                    b.ToTable("ResourcesPlannings");
-                });
-
             modelBuilder.Entity("Bisopi___Proyectos.Models.SupportStatus", b =>
                 {
                     b.Property<Guid>("SupportStatusID")
@@ -1146,58 +1092,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.HasKey("MilestoneTempID");
 
                     b.ToTable("MilestonesTemps");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.ModelsTemps.ResourcePlanningTemp", b =>
-                {
-                    b.Property<Guid>("ResourcePlanningTempID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<Guid?>("DealID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double?>("EtcHour")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("LeadID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<double>("PlannedHours")
-                        .HasColumnType("float");
-
-                    b.Property<Guid?>("PositionID")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ProjectID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ResourceID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ResourcePlanningTempID");
-
-                    b.ToTable("ResourcesPlanningsTemps");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.AllowedViewForGroup", b =>

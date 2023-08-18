@@ -58,5 +58,15 @@ namespace Bisopi___Proyectos.Controllers
         {
             return View();
         }
+
+        public IActionResult City()
+        {
+            return View();
+        }
+
+        public IActionResult Group()
+        {
+            return View();
+        }
     }
 }

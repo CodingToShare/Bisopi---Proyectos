@@ -1,18 +1,36 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace Bisopi___Proyectos.Models
+namespace Bisopi___Proyectos.ModelsTemps
 {
-    public class Group
+    public class ResourcePlanningTemp
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid ResourcePlanningTempID { get; set; }
 
-        [MaxLength(100)]
-        [Display(Name = "Grupo")]
+        [Display(Name = "Proyecto")]
+        public Guid? ProjectID { get; set; }
+
+        [Display(Name = "Deal")]
+        public Guid? DealID { get; set; }
+
+        [Display(Name = "Lead")]
+        public Guid? LeadID { get; set; }
+
+        [Display(Name = "Recurso")]
+        public Guid? ResourceID { get; set; }
+
+        [Display(Name = "Cargo")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string Name { get; set; } = string.Empty;
+        public Guid? PositionID { get; set; }
+
+        [Display(Name = "Horas Planificadas")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        public double? PlannedHours { get; set; }
+
+        [Display(Name = "Horas Etc")]
+        public double? EtcHour { get; set; }
 
         [Display(Name = "¿Activo?")]
         public bool IsActive { get; set; }

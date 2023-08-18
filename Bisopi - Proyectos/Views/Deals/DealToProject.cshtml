@@ -466,6 +466,8 @@
                         </div>
                     </div>
 
+                    <h5>Hitos</h5>
+
                     <div class="col-md-12">
                         @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.MilestoneTemp>()
                             .ID("gridContainer")
@@ -521,6 +523,70 @@
                                 columns.AddFor(m => m.IsItChangeControl);
 
                                 columns.AddFor(m => m.Comment);
+                            })
+                            .Editing(e => e
+                            .AllowAdding(true)
+                            .AllowUpdating(true)
+                            .AllowDeleting(true)
+                            .Mode(GridEditMode.Popup)
+                            )
+                            )
+                    </div>
+
+                    <h5>Planificacion Recursos</h5>
+
+                    <div class="col-md-12">
+                        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.ResourcePlanningTemp>()
+                            .ID("gridContainer2")
+                            .AllowColumnReordering(true)
+                            .RowAlternationEnabled(true)
+                            .AllowColumnResizing(true)
+                            .ShowRowLines(true)
+                            .ShowBorders(true)
+                            .WordWrapEnabled(true)
+                            .ColumnAutoWidth(true)
+                            .ColumnResizingMode(ColumnResizingMode.Widget)
+                            .SearchPanel(s => s
+                            .Visible(true)
+                            .HighlightCaseSensitive(true))
+                            .Grouping(grouping => grouping.AutoExpandAll(true))
+                            .GroupPanel(groupPanel => groupPanel.Visible(true))
+                            .FilterPanel(f => f.Visible(true))
+                            .HeaderFilter(h => h.Visible(true))
+                            .Selection(s => s.Mode(SelectionMode.Multiple))
+                            .RemoteOperations(true)
+                            .DataSource(ds => ds.Mvc()
+                            .LoadParams(new { id = Model.ProjectID })
+                            .Controller("APIResourcePlanningTemps")
+                            .LoadAction("Get")
+                            .InsertAction("Post")
+                            .UpdateAction("Put")
+                            .DeleteAction("Delete")
+                            .Key("ResourcePlanningTempID")
+                            )
+                            .OnInitNewRow(@<text>
+                                function(e) {
+                                e.data.ProjectID = $('.ProjectID').val();
+                                }
+                            </text>)
+                            .RemoteOperations(true)
+                            .Columns(columns =>
+                            {
+
+                                columns.AddFor(m => m.ResourceID)
+                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
+                                .DisplayExpr("FirstNameAndLastNAme")
+                                .ValueExpr("UserDataID"));
+
+                                columns.AddFor(m => m.PositionID)
+                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles"))
+                                .DisplayExpr("Name")
+                                .ValueExpr("RolesDataID"));
+
+                                columns.AddFor(m => m.PlannedHours);
+
+                                columns.AddFor(m => m.EtcHour);
+
                             })
                             .Editing(e => e
                             .AllowAdding(true)

@@ -76,6 +76,33 @@ namespace Bisopi___Proyectos.Controllers
 
             }
 
+            var detailsResource = _context.ResourcesPlannings.Where(x => x.DealID == model.DealID).ToList();
+
+            foreach (var item in detailsResource)
+            {
+                var detailsCheck = _context.ResourcesPlanningsTemps.Where(x => x.ResourcePlanningTempID == item.ResourcePlanningID).FirstOrDefault();
+
+                if (detailsCheck == null)
+                {
+                    var newDetail = new ResourcePlanningTemp();
+                    newDetail.DealID = item.DealID;
+                    newDetail.LeadID = item.LeadID;
+                    newDetail.ResourcePlanningTempID = item.ResourcePlanningID;
+                    newDetail.ResourceID = item.ResourceID;
+                    newDetail.PositionID = item.PositionID;
+                    newDetail.PlannedHours = item.PlannedHours;
+                    newDetail.EtcHour = item.EtcHour;
+                    newDetail.IsActive = item.IsActive;
+                    newDetail.Created = item.Created;
+                    newDetail.CreatedBy = item.CreatedBy;
+                    newDetail.Modified = item.Modified;
+                    newDetail.ModifiedBy = item.ModifiedBy;
+
+                    _context.Add(newDetail);
+                }
+
+            }
+
             _context.SaveChanges();
 
             return View(model);
@@ -96,7 +123,7 @@ namespace Bisopi___Proyectos.Controllers
             modelProject.ProjectValue = model.LeadValue;
             modelProject.Justification = model.Comments;
 
-            var details = _context.Milestones.Where(x => x.LeadID == model.LeadID).ToList();
+            var details = _context.Milestones.Where(x => x.DealID == model.DealID).ToList();
 
             foreach (var item in details)
             {
@@ -127,6 +154,38 @@ namespace Bisopi___Proyectos.Controllers
                 else
                 {
                     detailsCheck.ProjectID = modelProject.ProjectID;
+                }
+
+            }
+
+            var detailsResources = _context.ResourcesPlannings.Where(x => x.DealID == model.DealID).ToList();
+
+            foreach (var item in detailsResources)
+            {
+                var detailsCheckResource = _context.ResourcesPlanningsTemps.Where(x => x.ResourcePlanningTempID == item.ResourcePlanningID).FirstOrDefault();
+
+                if (detailsCheckResource == null)
+                {
+                    var newDetail = new ResourcePlanningTemp();
+                    newDetail.ProjectID = item.ProjectID;
+                    newDetail.DealID = item.DealID;
+                    newDetail.LeadID = item.LeadID;
+                    newDetail.ResourcePlanningTempID = item.ResourcePlanningID;
+                    newDetail.ResourceID = item.ResourceID;
+                    newDetail.PositionID = item.PositionID;
+                    newDetail.PlannedHours = item.PlannedHours;
+                    newDetail.EtcHour = item.EtcHour;
+                    newDetail.IsActive = item.IsActive;
+                    newDetail.Created = item.Created;
+                    newDetail.CreatedBy = item.CreatedBy;
+                    newDetail.Modified = item.Modified;
+                    newDetail.ModifiedBy = item.ModifiedBy;
+
+                    _context.Add(newDetail);
+                }
+                else
+                {
+                    detailsCheckResource.DealID = modelProject.DealID;
                 }
 
             }
@@ -185,6 +244,29 @@ namespace Bisopi___Proyectos.Controllers
 
             _context.MilestonesTemps.RemoveRange(details);
 
+            var detailsResourcePlaning = _context.ResourcesPlanningsTemps.Where(x => x.DealID == model.DealID).ToList();
+
+            foreach (var item in detailsResourcePlaning)
+            {
+                var newDetail = new ResourcePlanning();
+                newDetail.DealID = item.DealID;
+                newDetail.LeadID = item.LeadID;
+                newDetail.ResourcePlanningID = item.ResourcePlanningTempID;
+                newDetail.ResourceID = item.ResourceID;
+                newDetail.PositionID = item.PositionID;
+                newDetail.PlannedHours = item.PlannedHours;
+                newDetail.EtcHour = item.EtcHour;
+                newDetail.IsActive = item.IsActive;
+                newDetail.Created = item.Created;
+                newDetail.CreatedBy = item.CreatedBy;
+                newDetail.Modified = item.Modified;
+                newDetail.ModifiedBy = item.ModifiedBy;
+
+                _context.Add(newDetail);
+            }
+
+            _context.ResourcesPlanningsTemps.RemoveRange(detailsResourcePlaning);
+
             _context.Add(model);
             _context.SaveChanges();
 
@@ -227,6 +309,33 @@ namespace Bisopi___Proyectos.Controllers
             }
 
             _context.MilestonesTemps.RemoveRange(details);
+
+            var detailsOldResource = _context.ResourcesPlannings.Where(x => x.DealID == model.DealID).ToList();
+
+            _context.ResourcesPlannings.RemoveRange(detailsOldResource);
+
+            var detailsResourcePlaning = _context.ResourcesPlanningsTemps.Where(x => x.DealID == model.DealID).ToList();
+
+            foreach (var item in detailsResourcePlaning)
+            {
+                var newDetail = new ResourcePlanning();
+                newDetail.DealID = item.DealID;
+                newDetail.LeadID = item.LeadID;
+                newDetail.ResourcePlanningID = item.ResourcePlanningTempID;
+                newDetail.ResourceID = item.ResourceID;
+                newDetail.PositionID = item.PositionID;
+                newDetail.PlannedHours = item.PlannedHours;
+                newDetail.EtcHour = item.EtcHour;
+                newDetail.IsActive = item.IsActive;
+                newDetail.Created = item.Created;
+                newDetail.CreatedBy = item.CreatedBy;
+                newDetail.Modified = item.Modified;
+                newDetail.ModifiedBy = item.ModifiedBy;
+
+                _context.Add(newDetail);
+            }
+
+            _context.ResourcesPlanningsTemps.RemoveRange(detailsResourcePlaning);
 
             _context.Update(model);
             _context.SaveChanges();
@@ -279,6 +388,34 @@ namespace Bisopi___Proyectos.Controllers
             }
 
             _context.MilestonesTemps.RemoveRange(details);
+
+            var detailsOldResource = _context.ResourcesPlannings.Where(x => x.DealID == model.DealID).ToList();
+
+            _context.ResourcesPlannings.RemoveRange(detailsOldResource);
+
+            var detailsResources = _context.ResourcesPlanningsTemps.Where(x => x.DealID == model.DealID).ToList();
+
+            foreach (var item in detailsResources)
+            {
+                var newDetail = new ResourcePlanning();
+                newDetail.ProjectID = item.ProjectID;
+                newDetail.DealID = item.DealID;
+                newDetail.LeadID = item.LeadID;
+                newDetail.ResourcePlanningID = item.ResourcePlanningTempID;
+                newDetail.ResourceID = item.ResourceID;
+                newDetail.PositionID = item.PositionID;
+                newDetail.PlannedHours = item.PlannedHours;
+                newDetail.EtcHour = item.EtcHour;
+                newDetail.IsActive = item.IsActive;
+                newDetail.Created = item.Created;
+                newDetail.CreatedBy = item.CreatedBy;
+                newDetail.Modified = item.Modified;
+                newDetail.ModifiedBy = item.ModifiedBy;
+
+                _context.Add(newDetail);
+            }
+
+            _context.ResourcesPlanningsTemps.RemoveRange(detailsResources);
 
             _context.Add(model);
 

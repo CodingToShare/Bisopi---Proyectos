@@ -1,4 +1,4 @@
-using DevExtreme.AspNet.Data;
+﻿using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -16,24 +16,25 @@ using Bisopi___Proyectos.Models;
 namespace Bisopi___Proyectos.Controllers
 {
     [Route("api/[controller]/[action]")]
-    public class APIProjectCommitmentsController : Controller
+    public class APIResourcePlanningsController : Controller
     {
         private DataContext _context;
 
-        public APIProjectCommitmentsController(DataContext context) {
+        public APIResourcePlanningsController(DataContext context) {
             _context = context;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get(Guid id, DataSourceLoadOptions loadOptions) {
-            var projectcommitments = _context.ProjectCommitments.Where(x => x.ProjectID == id && x.IsActive).Select(i => new {
-                i.ProjectCommitmentID,
+            var resourcesplannings = _context.ResourcesPlannings.Where(x => x.ProjectID == id && x.IsActive).Select(i => new {
+                i.ResourcePlanningID,
                 i.ProjectID,
-                i.ProjectCommitmentName,
-                i.CommitmentNumber,
-                i.Responsible,
-                i.TaskStatusID,
-                i.PlannedDate,
+                i.DealID,
+                i.LeadID,
+                i.ResourceID,
+                i.PositionID,
+                i.PlannedHours,
+                i.EtcHour,
                 i.IsActive,
                 i.CreatedBy,
                 i.Created,
@@ -44,19 +45,19 @@ namespace Bisopi___Proyectos.Controllers
             // If underlying data is a large SQL table, specify PrimaryKey and PaginateViaPrimaryKey.
             // This can make SQL execution plans more efficient.
             // For more detailed information, please refer to this discussion: https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/336.
-            // loadOptions.PrimaryKey = new[] { "ProjectCommitmentID" };
+            // loadOptions.PrimaryKey = new[] { "ResourcePlanningID" };
             // loadOptions.PaginateViaPrimaryKey = true;
 
-            return Json(await DataSourceLoader.LoadAsync(projectcommitments, loadOptions));
+            return Json(await DataSourceLoader.LoadAsync(resourcesplannings, loadOptions));
         }
 
         [HttpPost]
         public async Task<IActionResult> Post(string values) {
-            var model = new ProjectCommitment();
+            var model = new ResourcePlanning();
             var valuesDict = JsonConvert.DeserializeObject<IDictionary>(values);
             PopulateModel(model, valuesDict);
 
-            model.ProjectCommitmentID = Guid.NewGuid();
+            model.ResourcePlanningID = Guid.NewGuid();
             model.IsActive = true;
             model.Created = DateTime.UtcNow.AddHours(-5);
             model.CreatedBy = User.Identity.Name;
@@ -66,15 +67,15 @@ namespace Bisopi___Proyectos.Controllers
             if (!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
 
-            var result = _context.ProjectCommitments.Add(model);
+            var result = _context.ResourcesPlannings.Add(model);
             await _context.SaveChangesAsync();
 
-            return Json(new { result.Entity.ProjectCommitmentID });
+            return Json(new { result.Entity.ResourcePlanningID });
         }
 
         [HttpPut]
         public async Task<IActionResult> Put(Guid key, string values) {
-            var model = await _context.ProjectCommitments.FirstOrDefaultAsync(item => item.ProjectCommitmentID == key);
+            var model = await _context.ResourcesPlannings.FirstOrDefaultAsync(item => item.ResourcePlanningID == key);
             if(model == null)
                 return StatusCode(409, "Object not found");
 
@@ -93,9 +94,10 @@ namespace Bisopi___Proyectos.Controllers
 
         [HttpDelete]
         public async Task Delete(Guid key) {
-            var model = await _context.ProjectCommitments.FirstOrDefaultAsync(item => item.ProjectCommitmentID == key);
+            var model = await _context.ResourcesPlannings.FirstOrDefaultAsync(item => item.ResourcePlanningID == key);
 
-            _context.ProjectCommitments.Remove(model);
+            model.IsActive = false;
+
             await _context.SaveChangesAsync();
         }
 
@@ -111,57 +113,51 @@ namespace Bisopi___Proyectos.Controllers
             return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ProjectTaskStatusLookup(DataSourceLoadOptions loadOptions) {
-            var lookup = from i in _context.ProjectTaskStatus
-                         orderby i.StatusName
-                         select new {
-                             Value = i.ProjectTaskStatusID,
-                             Text = i.StatusName
-                         };
-            return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
-        }
+        private void PopulateModel(ResourcePlanning model, IDictionary values) {
+            string RESOURCE_PLANNING_ID = nameof(ResourcePlanning.ResourcePlanningID);
+            string PROJECT_ID = nameof(ResourcePlanning.ProjectID);
+            string DEAL_ID = nameof(ResourcePlanning.DealID);
+            string LEAD_ID = nameof(ResourcePlanning.LeadID);
+            string RESOURCE_ID = nameof(ResourcePlanning.ResourceID);
+            string POSITION_ID = nameof(ResourcePlanning.PositionID);
+            string PLANNED_HOURS = nameof(ResourcePlanning.PlannedHours);
+            string ETC_HOUR = nameof(ResourcePlanning.EtcHour);
+            string IS_ACTIVE = nameof(ResourcePlanning.IsActive);
+            string CREATED_BY = nameof(ResourcePlanning.CreatedBy);
+            string CREATED = nameof(ResourcePlanning.Created);
+            string MODIFIED_BY = nameof(ResourcePlanning.ModifiedBy);
+            string MODIFIED = nameof(ResourcePlanning.Modified);
 
-        private void PopulateModel(ProjectCommitment model, IDictionary values) {
-            string PROJECT_COMMITMENT_ID = nameof(ProjectCommitment.ProjectCommitmentID);
-            string PROJECT_ID = nameof(ProjectCommitment.ProjectID);
-            string PROJECT_COMMITMENT_NAME = nameof(ProjectCommitment.ProjectCommitmentName);
-            string COMMITMENT_NUMBER = nameof(ProjectCommitment.CommitmentNumber);
-            string RESPONSIBLE = nameof(ProjectCommitment.Responsible);
-            string TASK_STATUS_ID = nameof(ProjectCommitment.TaskStatusID);
-            string PLANNED_DATE = nameof(ProjectCommitment.PlannedDate);
-            string IS_ACTIVE = nameof(ProjectCommitment.IsActive);
-            string CREATED_BY = nameof(ProjectCommitment.CreatedBy);
-            string CREATED = nameof(ProjectCommitment.Created);
-            string MODIFIED_BY = nameof(ProjectCommitment.ModifiedBy);
-            string MODIFIED = nameof(ProjectCommitment.Modified);
-
-            if(values.Contains(PROJECT_COMMITMENT_ID)) {
-                model.ProjectCommitmentID = ConvertTo<System.Guid>(values[PROJECT_COMMITMENT_ID]);
+            if(values.Contains(RESOURCE_PLANNING_ID)) {
+                model.ResourcePlanningID = ConvertTo<System.Guid>(values[RESOURCE_PLANNING_ID]);
             }
 
             if(values.Contains(PROJECT_ID)) {
-                model.ProjectID = ConvertTo<System.Guid>(values[PROJECT_ID]);
+                model.ProjectID = values[PROJECT_ID] != null ? ConvertTo<System.Guid>(values[PROJECT_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(PROJECT_COMMITMENT_NAME)) {
-                model.ProjectCommitmentName = Convert.ToString(values[PROJECT_COMMITMENT_NAME]);
+            if(values.Contains(DEAL_ID)) {
+                model.DealID = values[DEAL_ID] != null ? ConvertTo<System.Guid>(values[DEAL_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(COMMITMENT_NUMBER)) {
-                model.CommitmentNumber = Convert.ToInt32(values[COMMITMENT_NUMBER]);
+            if(values.Contains(LEAD_ID)) {
+                model.LeadID = values[LEAD_ID] != null ? ConvertTo<System.Guid>(values[LEAD_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(RESPONSIBLE)) {
-                model.Responsible = Convert.ToString(values[RESPONSIBLE]);
+            if(values.Contains(RESOURCE_ID)) {
+                model.ResourceID = values[RESOURCE_ID] != null ? ConvertTo<System.Guid>(values[RESOURCE_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(TASK_STATUS_ID)) {
-                model.TaskStatusID = values[TASK_STATUS_ID] != null ? ConvertTo<System.Guid>(values[TASK_STATUS_ID]) : (Guid?)null;
+            if(values.Contains(POSITION_ID)) {
+                model.PositionID = values[POSITION_ID] != null ? ConvertTo<System.Guid>(values[POSITION_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(PLANNED_DATE)) {
-                model.PlannedDate = Convert.ToDateTime(values[PLANNED_DATE]);
+            if(values.Contains(PLANNED_HOURS)) {
+                model.PlannedHours = Convert.ToDouble(values[PLANNED_HOURS], CultureInfo.InvariantCulture);
+            }
+
+            if(values.Contains(ETC_HOUR)) {
+                model.EtcHour = values[ETC_HOUR] != null ? Convert.ToDouble(values[ETC_HOUR], CultureInfo.InvariantCulture) : (double?)null;
             }
 
             if(values.Contains(IS_ACTIVE)) {
@@ -173,7 +169,7 @@ namespace Bisopi___Proyectos.Controllers
             }
 
             if(values.Contains(CREATED)) {
-                model.Created = values[CREATED] != null ? Convert.ToDateTime(values[CREATED]) : (DateTime?)null;
+                model.Created = Convert.ToDateTime(values[CREATED]);
             }
 
             if(values.Contains(MODIFIED_BY)) {
@@ -181,7 +177,7 @@ namespace Bisopi___Proyectos.Controllers
             }
 
             if(values.Contains(MODIFIED)) {
-                model.Modified = values[MODIFIED] != null ? Convert.ToDateTime(values[MODIFIED]) : (DateTime?)null;
+                model.Modified = Convert.ToDateTime(values[MODIFIED]);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿@model Milestone
+﻿@model ResourcePlanning
 
 <a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Create">
     <img title="Nuevo" style="width:24px;cursor:pointer;" src="~/img/add.png" />
@@ -10,11 +10,11 @@
 </a>
 
 <div class="p-3" style='font-size:14px'>
-    <div class="h3">Hito</div>
+    <div class="h3">Planificacion de Recursos</div>
     <partial name="_ProjectInfo" model="Model.Project" />
     <div class="p-3">
-        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.Milestone>()
-            .ID("gridContainer")
+        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.ResourcePlanning>()
+            .ID("gridContainer2")
             .AllowColumnReordering(true)
             .RowAlternationEnabled(true)
             .AllowColumnResizing(true)
@@ -34,11 +34,11 @@
             .RemoteOperations(true)
             .DataSource(ds => ds.Mvc()
             .LoadParams(new { id = Model.ProjectID })
-            .Controller("APIMilestones")
+            .Controller("APIResourcePlannings")
             .LoadAction("Get")
             .UpdateAction("Put")
             .DeleteAction("Delete")
-            .Key("MilestoneID")
+            .Key("ResourcePlanningID")
             )
             .OnInitNewRow(@<text>
                 function(e) {
@@ -49,36 +49,33 @@
             .Columns(columns =>
             {
 
-                columns.AddFor(m => m.MilestoneDate);
+                columns.AddFor(m => m.ResourceID)
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
+                .DisplayExpr("FirstNameAndLastNAme")
+                .ValueExpr("UserDataID"));
 
-                columns.AddFor(m => m.CurrencyID).Lookup(lookup => lookup
-                .DataSource(ds => ds.WebApi().Controller("APIMilestones").LoadAction("CurrenciesLookup").Key("Value"))
-                .ValueExpr("Value")
-                .DisplayExpr("Text")
-                );
+                columns.AddFor(m => m.PositionID)
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles"))
+                .DisplayExpr("Name")
+                .ValueExpr("RolesDataID"));
 
-                columns.AddFor(m => m.Percentage);
+                columns.AddFor(m => m.PlannedHours);
 
-                columns.AddFor(m => m.Value);
+                columns.AddFor(m => m.EtcHour);
 
-                columns.AddFor(m => m.MilestoneNumber);
-
-                columns.AddFor(m => m.IsItChangeControl);
-
-                columns.AddFor(m => m.Comment);
             })
             .Editing(e => e
             .AllowUpdating(true)
             .AllowDeleting(true)
             .Mode(GridEditMode.Popup)
             )
-        )
+            )
     </div>
-    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalHito" name="openTarea" id="openTarea">Agregar Hito</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalHito" name="openTarea" id="openTarea">Agregar Planificacion</button>
     <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
 </div>
 
-@using (Html.BeginForm("Project", "Milestone", FormMethod.Post))
+@using (Html.BeginForm("Project", "ResourcePlanning", FormMethod.Post))
 {
     @using (Html.DevExtreme().ValidationGroup())
     {
@@ -89,7 +86,7 @@
             <div class="modal-dialog modal-lg" style='font-size:14px'>
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="tareaModalLabel">Agregar Hito</h5>
+                        <h5 class="modal-title" id="tareaModalLabel">Agregar Planificacion de Recursos</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -97,36 +94,43 @@
                     <div class="modal-body">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-row">
-                            <div class="form-group col-md-3">
-                                <div class="dx-field">
-                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.MilestoneDate)</div>
-                                    <div class="dx-field-item-content-location-bottom">
-                                        @(Html.DevExtreme().DateBoxFor(x => x.MilestoneDate)
-                                            .InputAttr("aria-label", "Date")
-                                            .Type(DateBoxType.Date)
-                                            .Value("")
-                                            .ID("MilestoneDate")
-                                            )
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CurrencyID)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourceID)</div>
                                         <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().SelectBoxFor(x => x.CurrencyID)
-                                                .DisplayExpr("CurrencyNameAndAbbreviation")
-                                                .ValueExpr("CurrencyID")
-                                                .ID("currencyID")
-                                                .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox").Key("CurrencyID"))
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.ResourceID)
+                                                .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                                                .DisplayExpr("FirstNameAndLastNAme")
+                                                .ValueExpr("UserDataID")
                                                 .SearchMode(DropDownSearchMode.Contains)
                                                 .SearchEnabled(true)
                                                 .MinSearchLength(3)
                                                 .ShowDataBeforeSearch(true)
                                                 .ShowDropDownButton(true)
                                                 .DeferRendering(false)
-                                                .Placeholder("Seleccione una moneda...")
+                                                .Placeholder("Seleccione un usuario...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.PositionID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.PositionID)
+                                                .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
+                                                .DisplayExpr("Name")
+                                                .ValueExpr("RolesDataID")
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione un cargo...")
                                                 )
                                         </div>
                                     </div>
@@ -135,12 +139,11 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Percentage)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.PlannedHours)</div>
                                         <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().NumberBoxFor(x => x.Percentage)
-                                                .ID("Percentage")
-                                                .Placeholder("Escriba el porcentaje")
-                                                .Format("## %")
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.PlannedHours)
+                                                .ID("PlannedHours")
+                                                .Placeholder("Escriba las horas planeadas")
                                                 .InputAttr("aria-label", "Currency Format")
                                                 )
                                         </div>
@@ -150,55 +153,12 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Value)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.EtcHour)</div>
                                         <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().NumberBoxFor(x => x.Value)
-                                                .ID("Value")
-                                                .Placeholder("Escriba el valor")
-                                                .Format("$ #,##0.##")
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.EtcHour)
+                                                .ID("VaEtcHourlue")
+                                                .Placeholder("Escriba las horas etc")
                                                 .InputAttr("aria-label", "Currency Format")
-                                                )
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.MilestoneNumber)</div>
-                                        <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().NumberBoxFor(x => x.MilestoneNumber)
-                                                .ID("MilestoneNumber")
-                                                .Placeholder("Escriba el numero del hito")
-                                                .InputAttr("aria-label", "Currency Format")
-                                                )
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.IsItChangeControl)</div>
-                                        <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().CheckBoxFor(x => x.IsItChangeControl)
-                                                .ID("IsItChangeControl")
-                                                .Value(true)
-                                                .ElementAttr("aria-label", "Checked")
-                                                )
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Comment)</div>
-                                        <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().TextAreaFor(x => x.Comment)
-                                                .ID("Comment")
-                                                .Placeholder("Escriba los comentarios")
-                                                .AutoResizeEnabled(true)
                                                 )
                                         </div>
                                     </div>

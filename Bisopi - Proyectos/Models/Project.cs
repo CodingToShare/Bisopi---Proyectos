@@ -84,21 +84,21 @@ namespace Bisopi___Proyectos.Models
 
         [Display(Name = "Horas Estimadas")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public int EstimatedHours { get; set; }
+        public int? EstimatedHours { get; set; }
 
         [Display(Name = "Fecha Inicio")]
         [DataType(DataType.DateTime)]
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         [Display(Name = "Fecha Entrega Estimada")]
         [DataType(DataType.DateTime)]
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public DateTime EstimatedDeliveryDate { get; set; }
+        public DateTime? EstimatedDeliveryDate { get; set; }
 
         [Display(Name = "Fecha Real de Finalización")]
         [DataType(DataType.DateTime)]
@@ -116,7 +116,7 @@ namespace Bisopi___Proyectos.Models
 
         [Display(Name = "Costo Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public double ProjectCost { get; set; }
+        public double? ProjectCost { get; set; }
 
         [Display(Name = "TRM Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
@@ -124,7 +124,7 @@ namespace Bisopi___Proyectos.Models
 
         [Display(Name = "Margen Bruto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public double GrossMargin { get; set; }
+        public double? GrossMargin { get; set; }
 
         [Display(Name = "Facturable (Si/No)")]
         public bool Billable { get; set; }

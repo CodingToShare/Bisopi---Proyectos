@@ -4,15 +4,33 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bisopi___Proyectos.Models
 {
-    public class Group
+    public class ResourcePlanning
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid ResourcePlanningID { get; set; }
 
-        [MaxLength(100)]
-        [Display(Name = "Grupo")]
+        [Display(Name = "Proyecto")]
+        public Guid? ProjectID { get; set; }
+
+        [Display(Name = "Deal")]
+        public Guid? DealID { get; set; }
+
+        [Display(Name = "Lead")]
+        public Guid? LeadID { get; set; }
+
+        [Display(Name = "Recurso")]
+        public Guid? ResourceID { get; set; }
+
+        [Display(Name = "Cargo")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string Name { get; set; } = string.Empty;
+        public Guid? PositionID { get; set; }
+
+        [Display(Name = "Horas Planificadas")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        public double? PlannedHours { get; set; }
+
+        [Display(Name = "Horas Etc")]
+        public double? EtcHour { get; set; }
 
         [Display(Name = "¿Activo?")]
         public bool IsActive { get; set; }
@@ -38,5 +56,8 @@ namespace Bisopi___Proyectos.Models
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Modified { get; set; }
+
+        [NotMapped]
+        public Project Project { get; set; }
     }
 }
