@@ -18,6 +18,11 @@
 
     <link rel="stylesheet" href="~/css/site.css" />
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
     <script src="~/js/devextreme/jquery.js"></script>
     <script src="~/js/devextreme/bootstrap.js"></script>
 
@@ -41,23 +46,34 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item dropdown">
-                            <button class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                Operaciones
-                            </button>
-                            <ul class="dropdown-menu">
-                                <a class="dropdown-item" asp-controller="Project" asp-action="Index">Listado Proyectos</a>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Leads" asp-action="Index">CRM</a>
-                        </li>
-                        @if (await User.IsViewAvaliableForRole("Configuracion"))
+                        @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Setup" asp-action="Index">Configuración</a>
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Operaciones
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <a class="dropdown-item" asp-controller="Project" asp-action="Index">Listado Proyectos</a>
+                                </ul>
                             </li>
-                        }
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Leads" asp-action="Index">CRM</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <button class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Administrativo
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <a class="dropdown-item" asp-controller="InvoiceReport" asp-action="Index">Reporte Facturación</a>
+                                </ul>
+                            </li>
+                            @if (await User.IsViewAvaliableForRole("Configuracion"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Setup" asp-action="Index">Configuración</a>
+                                </li>
+                            }
+                        }   
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -80,10 +96,6 @@
             &copy; 2023 - Bisopi___Proyectos - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
 

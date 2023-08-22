@@ -1,0 +1,93 @@
+﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<h4>TRM</h4>
+<hr />
+<br />
+
+@(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.RepresentativeMarketRate>()
+    .ID("gridContainer")
+    .AllowColumnReordering(true)
+    .RowAlternationEnabled(true)
+    .AllowColumnResizing(true)
+    .ShowRowLines(true)
+    .ShowBorders(true)
+    .WordWrapEnabled(true)
+    .ColumnAutoWidth(true)
+    .ColumnResizingMode(ColumnResizingMode.Widget)
+    .SearchPanel(s => s
+    .Visible(true)
+    .HighlightCaseSensitive(true))
+    .Grouping(grouping => grouping.AutoExpandAll(true))
+    .GroupPanel(groupPanel => groupPanel.Visible(true))
+    .FilterPanel(f => f.Visible(true))
+    .HeaderFilter(h => h.Visible(true))
+    .Selection(s => s.Mode(SelectionMode.Multiple))
+    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+    .OnExporting("exporting")
+    .RemoteOperations(true)
+    .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
+    .DataSource(ds => ds.Mvc()
+        .Controller("APIRepresentativeMarketRates")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .Key("RepresentativeMarketRateID")
+    )
+    .RemoteOperations(true)
+    .Columns(columns => {
+
+        columns.Add()
+            .Type(GridCommandColumnType.Buttons)
+            .Width(110)
+            .Buttons(b =>
+            {
+                b.Add().Name(GridColumnButtonName.Edit);
+            });
+
+        columns.AddFor(m => m.ProjectedRm).Format("$ #,##0.##");
+
+        columns.AddFor(m => m.CurrencyID).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("APIRepresentativeMarketRates").LoadAction("CurrenciesLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        );
+
+        columns.AddFor(m => m.Year);
+
+        columns.AddFor(m => m.IsActive);
+
+        columns.AddFor(m => m.CreatedBy).AllowEditing(false);
+
+        columns.AddFor(m => m.Created).AllowEditing(false);
+
+        columns.AddFor(m => m.ModifiedBy).AllowEditing(false);
+
+        columns.AddFor(m => m.Modified).AllowEditing(false);
+    })
+    .Editing(e => e
+        .AllowAdding(true)
+        .AllowUpdating(true)
+        .Mode(GridEditMode.Popup)
+        .UseIcons(true)
+    )
+)
+
+<script>
+    function exporting(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('ListaProyectos');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Proyectos.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>

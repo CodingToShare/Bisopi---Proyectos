@@ -26,24 +26,33 @@ namespace Bisopi___Proyectos.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get(Guid id, DataSourceLoadOptions loadOptions) {
-            var milestones = _context.Milestones.Where(x => x.ProjectID == id && x.IsActive).Select(i => new {
-                i.MilestoneID,
-                i.ProjectID,
-                i.DealID,
-                i.LeadID,
-                i.MilestoneDate,
-                i.CurrencyID,
-                i.Percentage,
-                i.Value,
-                i.MilestoneNumber,
-                i.IsItChangeControl,
-                i.Comment,
-                i.IsActive,
-                i.CreatedBy,
-                i.Created,
-                i.ModifiedBy,
-                i.Modified
-            });
+            var milestones = _context.Milestones.Where(x => x.ProjectID == id && x.IsActive).ToList();
+
+            foreach (var item in milestones)
+            {
+                var modelProject = _context.Projects.AsNoTracking().Where(x => x.ProjectID == item.ProjectID).FirstOrDefault();
+                var modelRetention = _context.RetentionPercentages.AsNoTracking().Where(x => x.CountryID == modelProject.CountryID && x.IsActive && (x.EffectiveStartDate < DateTime.UtcNow.AddHours(-5) || x.ValidEndDate > DateTime.UtcNow.AddHours(-5))).FirstOrDefault();
+                var modelTRM = _context.RepresentativeMarketRates.AsNoTracking().Where(x => x.CurrencyID == item.CurrencyID && x.IsActive).FirstOrDefault();
+
+                item.Retention = modelRetention.Retention;
+                if(item.Value != null)
+                {
+                    item.RetentionValue = item.Value * (modelRetention.Retention/100);
+                    item.TotalBill = item.Value * (modelRetention.Retention/100);
+                    item.TRM = modelProject.TRMProject;
+                    item.SubTotalBillCOP = modelTRM.ProjectedRm * item.Value;
+                    item.RetentionValueCOP = item.SubTotalBillCOP * (modelRetention.Retention / 100);
+                    item.ValueAddedTax = (modelRetention.ValueAddedTax * item.SubTotalBillCOP)/100;
+                    item.ValueAddedTaxWuthholding = (modelRetention.ValueAddedTax * item.ValueAddedTax) /100;
+                    item.TotalBillCOP = item.SubTotalBillCOP - item.RetentionValueCOP + item.ValueAddedTax - item.ValueAddedTaxWuthholding;
+
+                }
+                else
+                {
+                    item.TRM = modelProject.TRMProject;
+                }
+
+            }
 
             // If underlying data is a large SQL table, specify PrimaryKey and PaginateViaPrimaryKey.
             // This can make SQL execution plans more efficient.
@@ -51,7 +60,7 @@ namespace Bisopi___Proyectos.Controllers
             // loadOptions.PrimaryKey = new[] { "MilestoneID" };
             // loadOptions.PaginateViaPrimaryKey = true;
 
-            return Json(await DataSourceLoader.LoadAsync(milestones, loadOptions));
+            return Json(DataSourceLoader.Load(milestones, loadOptions));
         }
 
         [HttpPost]

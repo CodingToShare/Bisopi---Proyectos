@@ -175,6 +175,7 @@
                             .HeaderFilter(h => h.Visible(true))
                             .Selection(s => s.Mode(SelectionMode.Multiple))
                             .RemoteOperations(true)
+                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
                             .DataSource(ds => ds.Mvc()
                             .LoadParams(new { id = Model.DealID })
                             .Controller("APIMilestoneTemps")
@@ -192,6 +193,14 @@
                             .RemoteOperations(true)
                             .Columns(columns =>
                             {
+                                columns.Add()
+                                .Type(GridCommandColumnType.Buttons)
+                                .Width(110)
+                                .Buttons(b =>
+                                {
+                                    b.Add().Name(GridColumnButtonName.Edit);
+                                    b.Add().Name(GridColumnButtonName.Delete);
+                                });
 
                                 columns.AddFor(m => m.MilestoneDate);
 
@@ -201,9 +210,9 @@
                                 .DisplayExpr("Text")
                                 );
 
-                                columns.AddFor(m => m.Percentage);
+                                columns.AddFor(m => m.Percentage).Format("## %");
 
-                                columns.AddFor(m => m.Value);
+                                columns.AddFor(m => m.Value).Format("$ #,##0.##");
 
                                 columns.AddFor(m => m.MilestoneNumber);
 
@@ -216,6 +225,7 @@
                             .AllowUpdating(true)
                             .AllowDeleting(true)
                             .Mode(GridEditMode.Popup)
+                            .UseIcons(true)
                             )
                             )
                     </div>
@@ -242,6 +252,7 @@
                             .HeaderFilter(h => h.Visible(true))
                             .Selection(s => s.Mode(SelectionMode.Multiple))
                             .RemoteOperations(true)
+                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
                             .DataSource(ds => ds.Mvc()
                             .LoadParams(new { id = Model.DealID })
                             .Controller("APIResourcePlanningTemps")
@@ -259,6 +270,15 @@
                             .RemoteOperations(true)
                             .Columns(columns =>
                             {
+
+                                columns.Add()
+                                .Type(GridCommandColumnType.Buttons)
+                                .Width(110)
+                                .Buttons(b =>
+                                {
+                                    b.Add().Name(GridColumnButtonName.Edit);
+                                    b.Add().Name(GridColumnButtonName.Delete);
+                                });
 
                                 columns.AddFor(m => m.ResourceID)
                                 .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
@@ -280,6 +300,7 @@
                             .AllowUpdating(true)
                             .AllowDeleting(true)
                             .Mode(GridEditMode.Popup)
+                            .UseIcons(true)
                             )
                         )
                     </div>

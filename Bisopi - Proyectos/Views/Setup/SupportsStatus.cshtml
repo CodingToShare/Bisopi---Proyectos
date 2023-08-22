@@ -26,6 +26,7 @@
     .Export(e => e.Enabled(true).AllowExportSelectedData(true))
     .OnExporting("exporting")
     .RemoteOperations(true)
+    .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
     .DataSource(ds => ds.Mvc()
         .Controller("APISupportStatus")
         .LoadAction("Get")
@@ -35,6 +36,14 @@
     )
     .RemoteOperations(true)
     .Columns(columns => {
+
+        columns.Add()
+            .Type(GridCommandColumnType.Buttons)
+            .Width(110)
+            .Buttons(b =>
+            {
+                b.Add().Name(GridColumnButtonName.Edit);
+            });
 
         columns.AddFor(m => m.SupportStatusName);
 
@@ -52,6 +61,7 @@
         .AllowAdding(true)
         .AllowUpdating(true)
         .Mode(GridEditMode.Popup)
+        .UseIcons(true)
     )
 )
 

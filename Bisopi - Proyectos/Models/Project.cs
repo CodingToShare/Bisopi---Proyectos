@@ -120,7 +120,7 @@ namespace Bisopi___Proyectos.Models
 
         [Display(Name = "TRM Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public double TRMProject { get; set; }
+        public double? TRMProject { get; set; }
 
         [Display(Name = "Margen Bruto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]

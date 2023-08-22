@@ -23,6 +23,23 @@ namespace Bisopi___Proyectos.Controllers
             var modelQuotesStatus = _context.QuotesStatus.Where(x => x.IsActive && x.Visible).ToList();
             var modelLeads = _context.Leads.Where(x => x.IsActive).ToList();
 
+            foreach(var item in modelLeads)
+            {
+                if (item.CurrencyID != null)
+                {
+                    var modelTRM = _context.RepresentativeMarketRates.Where(x => x.CurrencyID == item.CurrencyID && x.Year.ToString() == item.Created.Year.ToString()).FirstOrDefault();
+                    var modelCurrency = _context.Currencies.Where(x => x.CurrencyID == item.CurrencyID).FirstOrDefault();
+
+                    item.ProjectedRm = modelTRM.ProjectedRm;
+                    item.Abbreviation = modelCurrency.Abbreviation;
+                }
+                else
+                {
+                    item.ProjectedRm = 0;
+                    item.Abbreviation = "";
+                }
+            }
+
             var model = new KanbanLeadViewModel();
 
             model.QuotesStatus = modelQuotesStatus;

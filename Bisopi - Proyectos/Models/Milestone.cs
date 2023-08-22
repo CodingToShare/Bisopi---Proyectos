@@ -29,7 +29,7 @@ namespace Bisopi___Proyectos.Models
 
         [Display(Name = "Porcentaje")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public int? Percentage { get; set; }
+        public double? Percentage { get; set; }
 
         [Display(Name = "Valor")]
         public double? Value { get; set; }
@@ -72,7 +72,43 @@ namespace Bisopi___Proyectos.Models
         public DateTime Modified { get; set; }
 
         [NotMapped]
-        public Project Project { get; set; }
+        public Project? Project { get; set; }
+
+        [NotMapped]
+        [Display(Name = "% Retención")]
+        public double? Retention { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Vr. Retención")]
+        public double? RetentionValue { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Total Factura")]
+        public double? TotalBill { get; set; }
+
+        [NotMapped]
+        [Display(Name = "TRM Proyectada")]
+        public double? TRM { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Subtotal Factura en Pesos")]
+        public double? SubTotalBillCOP { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Vr. Retención en Pesos")]
+        public double? RetentionValueCOP { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Vr. IVA")]
+        public double? ValueAddedTax { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Vr. RETE IVA")]
+        public double? ValueAddedTaxWuthholding { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Total Factura en Pesos")]
+        public double? TotalBillCOP { get; set; }
 
     }
 }

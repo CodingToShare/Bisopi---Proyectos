@@ -69,5 +69,11 @@ namespace Bisopi___Proyectos.Models
 
         [ForeignKey("ProposalStatusID")]
         public ProposalStatus ProposalStatus { get; set; }
+
+        [NotMapped]
+        public double? ProjectedRm { get; set; }
+
+        [NotMapped]
+        public string? Abbreviation { get; set; }
     }
 }

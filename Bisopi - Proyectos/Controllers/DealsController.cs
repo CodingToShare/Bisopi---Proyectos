@@ -21,6 +21,23 @@ namespace Bisopi___Proyectos.Controllers
             var modelProposalsStatus = _context.ProposalsStatus.Where(x => x.IsActive && x.Visible).ToList();
             var modelDeals = _context.Deals.Where(x => x.IsActive).ToList();
 
+            foreach (var item in modelDeals)
+            {
+                if (item.CurrencyID != null)
+                {
+                    var modelTRM = _context.RepresentativeMarketRates.Where(x => x.CurrencyID == item.CurrencyID && x.Year.ToString() == item.Created.Year.ToString()).FirstOrDefault();
+                    var modelCurrency = _context.Currencies.Where(x => x.CurrencyID == item.CurrencyID).FirstOrDefault();
+
+                    item.ProjectedRm = modelTRM.ProjectedRm;
+                    item.Abbreviation = modelCurrency.Abbreviation;
+                }
+                else
+                {
+                    item.ProjectedRm = 0;
+                    item.Abbreviation = "";
+                }
+            }
+
             var model = new KanbanDealViewModel();
 
             model.ProposalsStatus = modelProposalsStatus;
@@ -385,6 +402,41 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.ModifiedBy = item.ModifiedBy;
 
                 _context.Add(newDetail);
+
+                var modelBill = new Bill();
+                modelBill.BillID = new Guid();
+                modelBill.MilestoneID = item.MilestoneTempID;
+                modelBill.StatusBill = Bisopi___Proyectos.Enums.StatusBill.PendingBilling;
+                modelBill.IsActive = item.IsActive;
+                modelBill.Created = DateTime.UtcNow.AddHours(-5);
+                modelBill.CreatedBy = User.Identity.Name;
+                modelBill.Modified = DateTime.UtcNow.AddHours(-5);
+                modelBill.ModifiedBy = User.Identity.Name;
+
+                _context.Add(modelBill);
+
+                var modelInvoiceReport = new InvoiceReport();
+                modelInvoiceReport.InvoiceReportID = new Guid();
+                modelInvoiceReport.BillID = modelBill.BillID;
+                modelInvoiceReport.MilestoneID = item.MilestoneTempID;
+                modelInvoiceReport.ProjectID = model.ProjectID;
+                modelInvoiceReport.ProjectName = model.ProjectName;
+                modelInvoiceReport.CountryID = model.CountryID;
+                modelInvoiceReport.ClientID = model.ClientID;
+                modelInvoiceReport.ProjectStatusID = model.ProjectStatusID;
+                modelInvoiceReport.IsItChangeControl = item.IsItChangeControl;
+                modelInvoiceReport.MilestoneNumber = item.MilestoneNumber;
+                modelInvoiceReport.MilestoneDate = item.MilestoneDate;
+                modelInvoiceReport.StatusBill = modelBill.StatusBill;
+                modelInvoiceReport.CurrencyID = model.CurrencyID;
+                modelInvoiceReport.Value = item.Value;
+                modelInvoiceReport.IsActive = item.IsActive;
+                modelInvoiceReport.Created = DateTime.UtcNow.AddHours(-5);
+                modelInvoiceReport.CreatedBy = User.Identity.Name;
+                modelInvoiceReport.Modified = DateTime.UtcNow.AddHours(-5);
+                modelInvoiceReport.ModifiedBy = User.Identity.Name;
+
+                _context.Add(modelInvoiceReport);
             }
 
             _context.MilestonesTemps.RemoveRange(details);

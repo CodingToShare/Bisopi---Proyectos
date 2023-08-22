@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Bisopi___Proyectos.Attributes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bisopi___Proyectos.Controllers
@@ -6,6 +7,8 @@ namespace Bisopi___Proyectos.Controllers
     [Authorize]
     public class SetupController : Controller
     {
+        [BisopiRoleAuth("Configuracion")]
+        //[BisopiGroupAuth("Configuracion")]
         public IActionResult Index()
         {
             return View();
@@ -65,6 +68,21 @@ namespace Bisopi___Proyectos.Controllers
         }
 
         public IActionResult Group()
+        {
+            return View();
+        }
+
+        public IActionResult RepresentativeMarketRate()
+        {
+            return View();
+        }
+
+        public IActionResult RetentionPercentage()
+        {
+            return View();
+        }
+
+        public IActionResult Users()
         {
             return View();
         }

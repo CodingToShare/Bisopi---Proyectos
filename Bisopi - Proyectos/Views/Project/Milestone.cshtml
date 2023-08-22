@@ -1,5 +1,9 @@
 ﻿@model Milestone
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
 <a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Create">
     <img title="Nuevo" style="width:24px;cursor:pointer;" src="~/img/add.png" />
     Nuevo
@@ -31,7 +35,10 @@
             .FilterPanel(f => f.Visible(true))
             .HeaderFilter(h => h.Visible(true))
             .Selection(s => s.Mode(SelectionMode.Multiple))
+            .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+            .OnExporting("exporting")
             .RemoteOperations(true)
+            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
             .DataSource(ds => ds.Mvc()
             .LoadParams(new { id = Model.ProjectID })
             .Controller("APIMilestones")
@@ -49,6 +56,15 @@
             .Columns(columns =>
             {
 
+                columns.Add()
+                .Type(GridCommandColumnType.Buttons)
+                .Width(110)
+                .Buttons(b =>
+                {
+                    b.Add().Name(GridColumnButtonName.Edit);
+                    b.Add().Name(GridColumnButtonName.Delete);
+                });
+
                 columns.AddFor(m => m.MilestoneDate);
 
                 columns.AddFor(m => m.CurrencyID).Lookup(lookup => lookup
@@ -59,11 +75,29 @@
 
                 columns.AddFor(m => m.Percentage);
 
-                columns.AddFor(m => m.Value);
+                columns.AddFor(m => m.Value).Format("$ #,##0.##");
 
-                columns.AddFor(m => m.MilestoneNumber);
+                columns.AddFor(m => m.MilestoneNumber).SortOrder(SortOrder.Asc);
 
                 columns.AddFor(m => m.IsItChangeControl);
+
+                columns.AddFor(m => m.Retention);
+
+                columns.AddFor(m => m.RetentionValue).Format("$ #,##0.##");
+
+                columns.AddFor(m => m.TotalBill).Format("$ #,##0.##");
+
+                columns.AddFor(m => m.TRM).Format("$ #,##0.##");
+
+                columns.AddFor(m => m.SubTotalBillCOP).Format("$ #,##0.##");
+
+                columns.AddFor(m => m.RetentionValueCOP).Format("$ #,##0.##");
+
+                columns.AddFor(m => m.ValueAddedTax).Format("$ #,##0.##");
+
+                columns.AddFor(m => m.ValueAddedTaxWuthholding).Format("$ #,##0.##");
+
+                columns.AddFor(m => m.TotalBillCOP).Format("$ #,##0.##");
 
                 columns.AddFor(m => m.Comment);
             })
@@ -71,14 +105,98 @@
             .AllowUpdating(true)
             .AllowDeleting(true)
             .Mode(GridEditMode.Popup)
+            .UseIcons(true)
+            )
+            .MasterDetail(m => m
+            .Enabled(true)
+            .Template(new TemplateName("gridContainer-bills"))
             )
         )
+        @using (Html.DevExtreme().NamedTemplate("gridContainer-bills"))
+        {
+            @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.Bill>()
+                .AllowColumnReordering(true)
+                .RowAlternationEnabled(true)
+                .AllowColumnResizing(true)
+                .ShowRowLines(true)
+                .ShowBorders(true)
+                .WordWrapEnabled(true)
+                .ColumnAutoWidth(true)
+                .ColumnResizingMode(ColumnResizingMode.Widget)
+                .SearchPanel(s => s
+                .Visible(true)
+                .HighlightCaseSensitive(true))
+                .Grouping(grouping => grouping.AutoExpandAll(true))
+                .GroupPanel(groupPanel => groupPanel.Visible(true))
+                .FilterPanel(f => f.Visible(true))
+                .HeaderFilter(h => h.Visible(true))
+                .Selection(s => s.Mode(SelectionMode.Multiple))
+                .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                .OnExporting("exporting")
+                .RemoteOperations(true)
+                .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
+                    .DataSource(ds => ds.Mvc()
+                        .Controller("APIBills")
+                        .LoadAction("Get")
+                        .UpdateAction("Put")
+                        .Key("BillID")
+                        .LoadParams(new { id = new JS("data.MilestoneID") })
+                    )
+                    .RemoteOperations(true)
+                    .Columns(columns => {
+
+                        columns.Add()
+                        .Type(GridCommandColumnType.Buttons)
+                        .Width(110)
+                        .Buttons(b =>
+                        {
+                            b.Add().Name(GridColumnButtonName.Edit);
+                            b.Add().Template(@<text> <a href="/Project/UpdateStateBill/<%- data.BillID %>" data-toggle="tooltip"><img src="~/img/approved.png" style="height:20px;width:20px;" /></a>   </text>).Visible(new JS("vEdit"));
+                        });
+                            
+                        columns.AddFor(m => m.StatusBill).Lookup(l => l.DataSource(Html.GetEnumSelectList<Bisopi___Proyectos.Enums.StatusBill>()
+                        .Select(i => new { Value = int.Parse(i.Value), Text = i.Text })
+                        )
+                        .ValueExpr("Value")
+                        .DisplayExpr("Text")).AllowEditing(false);
+
+                        columns.AddFor(m => m.InvoiceShipmentDate);
+
+                        columns.AddFor(m => m.IssuedDocument);
+
+                        columns.AddFor(m => m.RelatedDocument);
+
+                        columns.AddFor(m => m.NoteInvoice);
+
+                        columns.AddFor(m => m.InvoiceData);
+
+                        columns.AddFor(m => m.ConceptInvoice);
+
+                        columns.AddFor(m => m.ProposalDocument);
+
+                        columns.AddFor(m => m.IsActive).AllowEditing(false);
+
+                        columns.AddFor(m => m.CreatedBy).AllowEditing(false);
+
+                        columns.AddFor(m => m.Created).AllowEditing(false);
+
+                        columns.AddFor(m => m.ModifiedBy).AllowEditing(false);
+
+                        columns.AddFor(m => m.Modified).AllowEditing(false);
+                    })
+                    .Editing(e => e
+                        .AllowUpdating(true)
+                        .Mode(GridEditMode.Popup)
+                        .UseIcons(true)
+                    )
+                )
+        }
     </div>
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalHito" name="openTarea" id="openTarea">Agregar Hito</button>
     <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
 </div>
 
-@using (Html.BeginForm("Project", "Milestone", FormMethod.Post))
+@using (Html.BeginForm("Milestone", "Project", FormMethod.Post))
 {
     @using (Html.DevExtreme().ValidationGroup())
     {
@@ -232,4 +350,29 @@
         history.back();
         return false;
     });
+
+    function exporting(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('ListaProyectos');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Proyectos.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+
+    function vEdit(e) {
+        console.log(e);
+        console.log(e.row.data.StatusBill);
+        if (e.row.data.StatusBill == 10) {
+            return true;
+        }
+        return false;
+    }
 </script>

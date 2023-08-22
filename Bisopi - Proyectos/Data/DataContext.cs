@@ -11,10 +11,12 @@ namespace Bisopi___Proyectos.Data
             //Database.Migrate();
         }
 
+        public DbSet<Bill> Bills { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<InvoiceReport> InvoiceReports { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Deal> Deals { get; set; }
@@ -28,8 +30,11 @@ namespace Bisopi___Proyectos.Data
         public DbSet<ProposalStatus> ProposalsStatus { get; set; }
         public DbSet<ProjectTaskStatus> ProjectTaskStatus { get; set; }
         public DbSet<QuoteStatus> QuotesStatus { get; set; }
+        public DbSet<RepresentativeMarketRate> RepresentativeMarketRates { get; set; }
         public DbSet<ResourcePlanning> ResourcesPlannings { get; set; }
+        public DbSet<ResourcePlanningReal> ResourcePlanningReals { get; set; }
         public DbSet<ResourcePlanningTemp> ResourcesPlanningsTemps { get; set; }
+        public DbSet<RetentionPercentage> RetentionPercentages { get; set; }
         public DbSet<SupportStatus> SupportsStatus { get; set; }
         public DbSet<ProjectTask> ProjectTask{ get; set; }
         public DbSet<TaskGroup> TaskGroup{ get; set; }

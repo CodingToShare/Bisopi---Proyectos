@@ -15,9 +15,11 @@
     <div class="col-12">
         <form asp-controller="Deals" asp-action="DealToProject" method="post" enctype="multipart/form-data">
             @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID" })
-            @Html.HiddenFor(x => x.DealID, new { @class = "DealID" })
+            @Html.HiddenFor(x => x.IsActive, new { @class = "IsActive" })
             @Html.HiddenFor(x => x.Created, new { @class = "Created" })
             @Html.HiddenFor(x => x.CreatedBy, new { @class = "CreatedBy" })
+            @Html.HiddenFor(x => x.Modified, new { @class = "Modified" })
+            @Html.HiddenFor(x => x.ModifiedBy, new { @class = "ModifiedBy" })
             @using (Html.DevExtreme().ValidationGroup())
             {
                 <div class="row">
@@ -382,6 +384,7 @@
                                         .Placeholder("Escriba el valor del proyecto")
                                         .Format("$ #,##0.##")
                                         .InputAttr("aria-label", "Currency Format")
+                                        .OnValueChanged("onProjectValueChange")
                                         )
                                 </div>
                             </div>
@@ -398,6 +401,7 @@
                                         .Placeholder("Escriba el costo del proyecto")
                                         .Format("$ #,##0.##")
                                         .InputAttr("aria-label", "Currency Format")
+                                        .OnValueChanged("onProjectCostChange")
                                         )
                                 </div>
                             </div>
@@ -428,7 +432,7 @@
                                     @(Html.DevExtreme().NumberBoxFor(x => x.GrossMargin)
                                         .ID("grossMargin")
                                         .Disabled(true)
-                                        .Format("$ #,##0.##")
+                                        .Format("## %")
                                         .InputAttr("aria-label", "Currency Format")
                                         )
                                 </div>
@@ -488,6 +492,7 @@
                             .HeaderFilter(h => h.Visible(true))
                             .Selection(s => s.Mode(SelectionMode.Multiple))
                             .RemoteOperations(true)
+                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
                             .DataSource(ds => ds.Mvc()
                             .LoadParams(new { id = Model.ProjectID })
                             .Controller("APIMilestoneTemps")
@@ -505,6 +510,15 @@
                             .RemoteOperations(true)
                             .Columns(columns =>
                             {
+
+                                columns.Add()
+                                .Type(GridCommandColumnType.Buttons)
+                                .Width(110)
+                                .Buttons(b =>
+                                {
+                                    b.Add().Name(GridColumnButtonName.Edit);
+                                    b.Add().Name(GridColumnButtonName.Delete);
+                                });
 
                                 columns.AddFor(m => m.MilestoneDate);
 
@@ -529,6 +543,7 @@
                             .AllowUpdating(true)
                             .AllowDeleting(true)
                             .Mode(GridEditMode.Popup)
+                            .UseIcons(true)
                             )
                             )
                     </div>
@@ -555,6 +570,7 @@
                             .HeaderFilter(h => h.Visible(true))
                             .Selection(s => s.Mode(SelectionMode.Multiple))
                             .RemoteOperations(true)
+                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
                             .DataSource(ds => ds.Mvc()
                             .LoadParams(new { id = Model.ProjectID })
                             .Controller("APIResourcePlanningTemps")
@@ -572,6 +588,15 @@
                             .RemoteOperations(true)
                             .Columns(columns =>
                             {
+
+                                columns.Add()
+                                .Type(GridCommandColumnType.Buttons)
+                                .Width(110)
+                                .Buttons(b =>
+                                {
+                                    b.Add().Name(GridColumnButtonName.Edit);
+                                    b.Add().Name(GridColumnButtonName.Delete);
+                                });
 
                                 columns.AddFor(m => m.ResourceID)
                                 .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
@@ -593,6 +618,7 @@
                             .AllowUpdating(true)
                             .AllowDeleting(true)
                             .Mode(GridEditMode.Popup)
+                            .UseIcons(true)
                             )
                             )
                     </div>
@@ -634,5 +660,31 @@
             DevExpress.ui.notify("Debe diligenciar todos los campos obligatorios.", "error");
             e.cancel;
         }
+    }
+
+    function onProjectCostChange(e){
+        console.log(e.value);
+        console.log($("#projectValue").dxNumberBox("instance").option("value"));
+
+        var valorProyecto = $("#projectValue").dxNumberBox("instance").option("value");
+        var costoProyecto = e.value;
+
+        var calculo = ((valorProyecto - costoProyecto)/valorProyecto) * 100
+
+        $("#grossMargin").dxNumberBox("instance").option("value", calculo);
+
+    }
+
+    function onProjectValueChange(e) {
+        console.log(e.value);
+        console.log($("#projectCost").dxNumberBox("instance").option("value"));
+
+        var valorProyecto = e.value;
+        var costoProyecto = $("#projectCost").dxNumberBox("instance").option("value");
+
+        var calculo = ((valorProyecto - costoProyecto) / valorProyecto) * 100
+
+        $("#grossMargin").dxNumberBox("instance").option("value", calculo);
+
     }
 </script>

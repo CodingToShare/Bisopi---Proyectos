@@ -2,11 +2,14 @@
 using Bisopi___Proyectos.Data;
 using Bisopi___Proyectos.Models;
 using Bisopi___Proyectos.ModelsTemps;
+using Bisopi___Proyectos.ViewModels;
 using Humanizer.Localisation.TimeToClockNotation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Project = Bisopi___Proyectos.Models.Project;
 
 namespace Bisopi___Proyectos.Controllers
 {
@@ -99,6 +102,11 @@ namespace Bisopi___Proyectos.Controllers
 
             var details = _context.MilestonesTemps.Where(x => x.ProjectID == model.ProjectID).ToList();
 
+            if (details.Count == 0)
+            {
+                return RedirectToAction("Create", "Project").WithError("Tiene que registrar un Hito por lo menos");
+            }
+
             foreach (var item in details)
             {
                 var newDetail = new Milestone();
@@ -120,6 +128,41 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.ModifiedBy = item.ModifiedBy;
 
                 _context.Add(newDetail);
+
+                var modelBill = new Bill();
+                modelBill.BillID = new Guid();
+                modelBill.MilestoneID = item.MilestoneTempID;
+                modelBill.StatusBill = Bisopi___Proyectos.Enums.StatusBill.PendingBilling;
+                modelBill.IsActive = item.IsActive;
+                modelBill.Created = DateTime.UtcNow.AddHours(-5);
+                modelBill.CreatedBy = User.Identity.Name;
+                modelBill.Modified = DateTime.UtcNow.AddHours(-5);
+                modelBill.ModifiedBy = User.Identity.Name;
+
+                _context.Add(modelBill);
+
+                var modelInvoiceReport = new InvoiceReport();
+                modelInvoiceReport.InvoiceReportID = new Guid();
+                modelInvoiceReport.BillID = modelBill.BillID;
+                modelInvoiceReport.MilestoneID = item.MilestoneTempID;
+                modelInvoiceReport.ProjectID = model.ProjectID;
+                modelInvoiceReport.ProjectName = model.ProjectName;
+                modelInvoiceReport.CountryID = model.CountryID;
+                modelInvoiceReport.ClientID = model.ClientID;
+                modelInvoiceReport.ProjectStatusID = model.ProjectStatusID;
+                modelInvoiceReport.IsItChangeControl = item.IsItChangeControl;
+                modelInvoiceReport.MilestoneNumber = item.MilestoneNumber;
+                modelInvoiceReport.MilestoneDate = item.MilestoneDate;
+                modelInvoiceReport.StatusBill = modelBill.StatusBill;
+                modelInvoiceReport.CurrencyID = model.CurrencyID;
+                modelInvoiceReport.Value = item.Value;
+                modelInvoiceReport.IsActive = item.IsActive;
+                modelInvoiceReport.Created = DateTime.UtcNow.AddHours(-5);
+                modelInvoiceReport.CreatedBy = User.Identity.Name;
+                modelInvoiceReport.Modified = DateTime.UtcNow.AddHours(-5);
+                modelInvoiceReport.ModifiedBy = User.Identity.Name;
+
+                _context.Add(modelInvoiceReport);
             }
 
             _context.MilestonesTemps.RemoveRange(details);
@@ -264,6 +307,7 @@ namespace Bisopi___Proyectos.Controllers
         public async Task<IActionResult> Milestone(Milestone model)
         {
             model.MilestoneID = Guid.NewGuid();
+            model.Percentage = model.Percentage * 100;
             model.IsActive = true;
             model.Created = DateTime.UtcNow.AddHours(-5);
             model.CreatedBy = User.Identity.Name;
@@ -271,6 +315,43 @@ namespace Bisopi___Proyectos.Controllers
             model.ModifiedBy = User.Identity.Name;
 
             _context.Add(model);
+
+            var modelBill = new Bill();
+            modelBill.BillID = new Guid();
+            modelBill.MilestoneID = model.MilestoneID;
+            modelBill.StatusBill = Bisopi___Proyectos.Enums.StatusBill.PendingBilling;
+            modelBill.IsActive = true;
+            modelBill.Created = DateTime.UtcNow.AddHours(-5);
+            modelBill.CreatedBy = User.Identity.Name;
+            modelBill.Modified = DateTime.UtcNow.AddHours(-5);
+            modelBill.ModifiedBy = User.Identity.Name;
+
+            _context.Add(modelBill);
+
+            var modelProject = _context.Projects.Where(x => x.ProjectID == model.ProjectID).FirstOrDefault();
+
+            var modelInvoiceReport = new InvoiceReport();
+            modelInvoiceReport.InvoiceReportID = new Guid();
+            modelInvoiceReport.BillID = modelBill.BillID;
+            modelInvoiceReport.MilestoneID = model.MilestoneID;
+            modelInvoiceReport.ProjectID = model.ProjectID;
+            modelInvoiceReport.ProjectName = modelProject.ProjectName;
+            modelInvoiceReport.CountryID = modelProject.CountryID;
+            modelInvoiceReport.ClientID = modelProject.ClientID;
+            modelInvoiceReport.ProjectStatusID = modelProject.ProjectStatusID;
+            modelInvoiceReport.IsItChangeControl = model.IsItChangeControl;
+            modelInvoiceReport.MilestoneNumber = model.MilestoneNumber;
+            modelInvoiceReport.MilestoneDate = model.MilestoneDate;
+            modelInvoiceReport.StatusBill = modelBill.StatusBill;
+            modelInvoiceReport.CurrencyID = model.CurrencyID;
+            modelInvoiceReport.Value = model.Value;
+            modelInvoiceReport.IsActive = model.IsActive;
+            modelInvoiceReport.Created = DateTime.UtcNow.AddHours(-5);
+            modelInvoiceReport.CreatedBy = User.Identity.Name;
+            modelInvoiceReport.Modified = DateTime.UtcNow.AddHours(-5);
+            modelInvoiceReport.ModifiedBy = User.Identity.Name;
+
+            _context.Add(modelInvoiceReport);
             _context.SaveChanges();
 
             return RedirectToAction("Milestone", "Project").WithSuccess("El registro ha sido exitoso");
@@ -334,7 +415,7 @@ namespace Bisopi___Proyectos.Controllers
         [HttpGet]
         public async Task<IActionResult> ResourcePlanning(Guid id)
         {
-            Project? project = await _context.Projects
+            Models.Project? project = await _context.Projects
                 .Include(x => x.Client)
                 .Include(x => x.Country)
                 .Include(x => x.ProjectStatus)
@@ -361,30 +442,94 @@ namespace Bisopi___Proyectos.Controllers
                     project.ProjectManagerName = projectManager.NormalizedUserName;
             }
 
-            ResourcePlanning model = new()
+            ResourcePlanning modelRP = new()
             {
                 Project = project,
                 ProjectID = id,
                 DealID = project.DealID
             };
 
+            ResourcePlanningReal modelRPR = new()
+            {
+                Project = project,
+                ProjectID = id,
+            };
+
+            var model = new ResourcePlanningViewModel()
+            {
+                ResourcePlannings = modelRP,
+                ResourcePlanningReals = modelRPR
+            };
+
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResourcePlanning(ResourcePlanning model)
+        public async Task<IActionResult> ResourcePlanning(ResourcePlanningViewModel modelVM)
         {
-            model.ResourcePlanningID = Guid.NewGuid();
-            model.IsActive = true;
-            model.Created = DateTime.UtcNow.AddHours(-5);
-            model.CreatedBy = User.Identity.Name;
-            model.Modified = DateTime.UtcNow.AddHours(-5);
-            model.ModifiedBy = User.Identity.Name;
+            var model = new ResourcePlanning()
+            {
+                ResourcePlanningID = Guid.NewGuid(),
+                ProjectID = modelVM.ResourcePlannings.ProjectID,
+                DealID = modelVM.ResourcePlannings.DealID,
+                LeadID = modelVM.ResourcePlannings.LeadID,
+                ResourceID = modelVM.ResourcePlannings.ResourceID,
+                PositionID = modelVM.ResourcePlannings.PositionID,
+                PlannedHours = modelVM.ResourcePlannings.PlannedHours,
+                EtcHour = modelVM.ResourcePlannings.EtcHour,
+                IsActive = true,
+                Created = DateTime.UtcNow.AddHours(-5),
+                CreatedBy = User.Identity.Name,
+                Modified = DateTime.UtcNow.AddHours(-5),
+                ModifiedBy = User.Identity.Name
+            };
 
             _context.Add(model);
             _context.SaveChanges();
 
-            return RedirectToAction("Milestone", "Project").WithSuccess("El registro ha sido exitoso");
+            return RedirectToAction("ResourcePlanning", "Project").WithSuccess("El registro ha sido exitoso");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResourcePlanningReal(ResourcePlanningViewModel modelVM)
+        {
+            var model = new ResourcePlanningReal()
+            {
+                ResourcePlanningRealID = Guid.NewGuid(),
+                ProjectID = modelVM.ResourcePlanningReals.ProjectID,
+                DateAnalysis = modelVM.ResourcePlanningReals.DateAnalysis,
+                ResourceID = modelVM.ResourcePlanningReals.ResourceID,
+                PositionID = modelVM.ResourcePlanningReals.PositionID,
+                PlannedHours = modelVM.ResourcePlanningReals.PlannedHours,
+                PercentComplete = modelVM.ResourcePlanningReals.PercentComplete,
+                ExpectedPercentage = modelVM.ResourcePlanningReals.ExpectedPercentage,
+                IsActive = true,
+                Created = DateTime.UtcNow.AddHours(-5),
+                CreatedBy = User.Identity.Name,
+                Modified = DateTime.UtcNow.AddHours(-5),
+                ModifiedBy = User.Identity.Name
+            };
+
+            _context.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("ResourcePlanning", "Project", new { id = modelVM.ResourcePlanningReals.ProjectID }).WithSuccess("El registro ha sido exitoso");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateStateBill(Guid id)
+        {
+            var model = _context.Bills.Where(x => x.BillID == id).FirstOrDefault();
+
+            var modelProject = _context.Milestones.Where(x => x.MilestoneID == model.MilestoneID).FirstOrDefault();
+
+            model.StatusBill = Bisopi___Proyectos.Enums.StatusBill.ApprovedToBill;
+            model.Modified = DateTime.UtcNow.AddHours(-5);
+            model.ModifiedBy = User.Identity.Name;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Milestone", "Project", new { id = modelProject.ProjectID }).WithSuccess("La factura ha sido aprovada");
         }
     }
 }

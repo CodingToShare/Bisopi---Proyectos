@@ -26,7 +26,7 @@ namespace Bisopi___Proyectos.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get(DataSourceLoadOptions loadOptions) {
-            var deals = _context.Deals.Select(i => new {
+            var deals = _context.Deals.Where(x => x.IsActive).Select(i => new {
                 i.DealID,
                 i.DealName,
                 i.ClientID,

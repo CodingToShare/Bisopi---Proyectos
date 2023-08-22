@@ -1,4 +1,8 @@
-﻿@model ResourcePlanning
+﻿@model Bisopi___Proyectos.ViewModels.ResourcePlanningViewModel
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Create">
     <img title="Nuevo" style="width:24px;cursor:pointer;" src="~/img/add.png" />
@@ -10,11 +14,12 @@
 </a>
 
 <div class="p-3" style='font-size:14px'>
-    <div class="h3">Planificacion de Recursos</div>
-    <partial name="_ProjectInfo" model="Model.Project" />
+    <div class="h3">Uso de Recursos</div>
+    <partial name="_ProjectInfo" model="Model.ResourcePlannings.Project" />
+    <div class="h5">Planificados</div>
     <div class="p-3">
         @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.ResourcePlanning>()
-            .ID("gridContainer2")
+            .ID("gridContainer")
             .AllowColumnReordering(true)
             .RowAlternationEnabled(true)
             .AllowColumnResizing(true)
@@ -31,9 +36,12 @@
             .FilterPanel(f => f.Visible(true))
             .HeaderFilter(h => h.Visible(true))
             .Selection(s => s.Mode(SelectionMode.Multiple))
+            .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+            .OnExporting("exporting")
             .RemoteOperations(true)
+            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
             .DataSource(ds => ds.Mvc()
-            .LoadParams(new { id = Model.ProjectID })
+            .LoadParams(new { id = Model.ResourcePlannings.ProjectID })
             .Controller("APIResourcePlannings")
             .LoadAction("Get")
             .UpdateAction("Put")
@@ -49,13 +57,22 @@
             .Columns(columns =>
             {
 
+                columns.Add()
+                .Type(GridCommandColumnType.Buttons)
+                .Width(110)
+                .Buttons(b =>
+                {
+                    b.Add().Name(GridColumnButtonName.Edit);
+                    b.Add().Name(GridColumnButtonName.Delete);
+                });
+
                 columns.AddFor(m => m.ResourceID)
-                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
                 .DisplayExpr("FirstNameAndLastNAme")
                 .ValueExpr("UserDataID"));
 
                 columns.AddFor(m => m.PositionID)
-                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles"))
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
                 .DisplayExpr("Name")
                 .ValueExpr("RolesDataID"));
 
@@ -68,6 +85,7 @@
             .AllowUpdating(true)
             .AllowDeleting(true)
             .Mode(GridEditMode.Popup)
+            .UseIcons(true)
             )
             )
     </div>
@@ -75,12 +93,12 @@
     <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
 </div>
 
-@using (Html.BeginForm("Project", "ResourcePlanning", FormMethod.Post))
+@using (Html.BeginForm("ResourcePlanning", "Project", FormMethod.Post))
 {
     @using (Html.DevExtreme().ValidationGroup())
     {
-        @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID" })
-        @Html.HiddenFor(x => x.DealID, new { @class = "DealID" })
+        @Html.HiddenFor(x => x.ResourcePlannings.ProjectID, new { @class = "ProjectID" })
+        @Html.HiddenFor(x => x.ResourcePlannings.DealID, new { @class = "DealID" })
         <!-- Modal -->
         <div class="modal fade" id="ModalHito" tabindex="-1" data-backdrop="static" data-keyboard="true" role="dialog" aria-labelledby="ModalHito" aria-hidden="true">
             <div class="modal-dialog modal-lg" style='font-size:14px'>
@@ -97,9 +115,9 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourceID)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlannings.ResourceID)</div>
                                         <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().SelectBoxFor(x => x.ResourceID)
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.ResourcePlannings.ResourceID)
                                                 .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
                                                 .DisplayExpr("FirstNameAndLastNAme")
                                                 .ValueExpr("UserDataID")
@@ -118,9 +136,9 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.PositionID)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlannings.PositionID)</div>
                                         <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().SelectBoxFor(x => x.PositionID)
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.ResourcePlannings.PositionID)
                                                 .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
                                                 .DisplayExpr("Name")
                                                 .ValueExpr("RolesDataID")
@@ -139,9 +157,9 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.PlannedHours)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlannings.PlannedHours)</div>
                                         <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().NumberBoxFor(x => x.PlannedHours)
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.ResourcePlannings.PlannedHours)
                                                 .ID("PlannedHours")
                                                 .Placeholder("Escriba las horas planeadas")
                                                 .InputAttr("aria-label", "Currency Format")
@@ -153,12 +171,216 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.EtcHour)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlannings.EtcHour)</div>
                                         <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().NumberBoxFor(x => x.EtcHour)
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.ResourcePlannings.EtcHour)
                                                 .ID("VaEtcHourlue")
                                                 .Placeholder("Escriba las horas etc")
                                                 .InputAttr("aria-label", "Currency Format")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="id_proyecto_tarea" name="id_proyecto_tarea" value="">
+                        <input type="hidden" id="cod_proyecto" name="cod_proyecto" value="">
+                        @(Html.DevExtreme().Button()
+                            .ElementAttr("class", "validate")
+                            .Text("Guardar")
+                            .Type(ButtonType.Success)
+                            .UseSubmitBehavior(true)
+                            )
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<div class="p-3" style='font-size:14px'>
+    <div class="h5">Real</div>
+    <div class="p-3">
+        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.ResourcePlanningReal>()
+            .ID("gridContainer2")
+            .AllowColumnReordering(true)
+            .RowAlternationEnabled(true)
+            .AllowColumnResizing(true)
+            .ShowRowLines(true)
+            .ShowBorders(true)
+            .WordWrapEnabled(true)
+            .ColumnAutoWidth(true)
+            .ColumnResizingMode(ColumnResizingMode.Widget)
+            .SearchPanel(s => s
+            .Visible(true)
+            .HighlightCaseSensitive(true))
+            .Grouping(grouping => grouping.AutoExpandAll(true))
+            .GroupPanel(groupPanel => groupPanel.Visible(true))
+            .FilterPanel(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Selection(s => s.Mode(SelectionMode.Multiple))
+            .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+            .OnExporting("exporting")
+            .RemoteOperations(true)
+            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
+            .DataSource(ds => ds.Mvc()
+                .LoadParams(new { id = Model.ResourcePlanningReals.ProjectID })
+                .Controller("APIResourcePlanningReals")
+                .LoadAction("Get")
+                .UpdateAction("Put")
+                .DeleteAction("Delete")
+                .Key("ResourcePlanningRealID")
+            )
+            .OnInitNewRow(@<text>
+                function(e) {
+                e.data.ProjectID = $('.ProjectID').val();
+                }
+            </text>)
+            .RemoteOperations(true)
+            .Columns(columns => {
+
+                columns.Add()
+                .Type(GridCommandColumnType.Buttons)
+                .Width(110)
+                .Buttons(b =>
+                {
+                    b.Add().Name(GridColumnButtonName.Edit);
+                    b.Add().Name(GridColumnButtonName.Delete);
+                });
+
+                columns.AddFor(m => m.DateAnalysis);
+
+                columns.AddFor(m => m.ResourceID)
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                .DisplayExpr("FirstNameAndLastNAme")
+                .ValueExpr("UserDataID"));
+
+                columns.AddFor(m => m.PositionID)
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
+                .DisplayExpr("Name")
+                .ValueExpr("RolesDataID"));
+
+                columns.AddFor(m => m.PlannedHours);
+
+                columns.AddFor(m => m.PercentComplete).Format("## %");
+
+                columns.AddFor(m => m.ExpectedPercentage).AllowEditing(false);
+
+            })
+            .Editing(e => e
+                .AllowUpdating(true)
+                .AllowDeleting(true)
+                .Mode(GridEditMode.Popup)
+                .UseIcons(true)
+            )
+        )
+    </div>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalReal" name="openTarea" id="openTarea">Agregar Planificacion Real</button>
+    <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
+</div>
+
+@using (Html.BeginForm("ResourcePlanningReal", "Project", FormMethod.Post))
+{
+    @using (Html.DevExtreme().ValidationGroup())
+    {
+        @Html.HiddenFor(x => x.ResourcePlanningReals.ProjectID, new { @class = "ProjectID" })
+        <!-- Modal -->
+        <div class="modal fade" id="ModalReal" tabindex="-1" data-backdrop="static" data-keyboard="true" role="dialog" aria-labelledby="ModalReal" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style='font-size:14px'>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tareaModalLabel">Agregar Planificacion de Recursos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlanningReals.DateAnalysis)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().DateBoxFor(x => x.ResourcePlanningReals.DateAnalysis)
+                                                .InputAttr("aria-label", "Date")
+                                                .Type(DateBoxType.Date)
+                                                .Value(DateTime.Now)
+                                                .Placeholder("Seleccione la fecha de analisis ...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlanningReals.ResourceID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.ResourcePlanningReals.ResourceID)
+                                                .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                                                .DisplayExpr("FirstNameAndLastNAme")
+                                                .ValueExpr("UserDataID")
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione un usuario...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlanningReals.PositionID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.ResourcePlanningReals.PositionID)
+                                                .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
+                                                .DisplayExpr("Name")
+                                                .ValueExpr("RolesDataID")
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione un cargo...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlanningReals.PlannedHours)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.ResourcePlanningReals.PlannedHours)
+                                                .ID("PlannedHour")
+                                                .Placeholder("Escriba las horas planeadas")
+                                                .InputAttr("aria-label", "Currency Format")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlanningReals.PercentComplete)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.ResourcePlanningReals.PercentComplete)
+                                                .ID("PercentComplete")
+                                                .Placeholder("Escriba las horas etc")
+                                                .InputAttr("aria-label", "Currency Format")
+                                                .Format("## %")
                                                 )
                                         </div>
                                     </div>
@@ -192,4 +414,20 @@
         history.back();
         return false;
     });
+
+    function exporting(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('ListaProyectos');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Proyectos.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
 </script>

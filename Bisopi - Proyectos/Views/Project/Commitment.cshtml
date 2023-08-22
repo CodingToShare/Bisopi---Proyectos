@@ -1,5 +1,9 @@
 ﻿@model ProjectCommitment
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
 <a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Create">
     <img title="Nuevo" style="width:24px;cursor:pointer;" src="~/img/add.png" />
     Nuevo
@@ -31,7 +35,10 @@
             .FilterPanel(f => f.Visible(true))
             .HeaderFilter(h => h.Visible(true))
             .Selection(s => s.Mode(SelectionMode.Multiple))
+            .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+            .OnExporting("exporting")
             .RemoteOperations(true)
+            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
             .DataSource(ds => ds.Mvc()
                 .LoadParams(new { id = Model.ProjectID })
                 .Controller("APIProjectCommitments")
@@ -47,6 +54,15 @@
             </text>)
             .RemoteOperations(true)
             .Columns(columns => {
+
+                columns.Add()
+                .Type(GridCommandColumnType.Buttons)
+                .Width(110)
+                .Buttons(b =>
+                {
+                    b.Add().Name(GridColumnButtonName.Edit);
+                    b.Add().Name(GridColumnButtonName.Delete);
+                });
 
                 columns.AddFor(m => m.CommitmentNumber);
 
@@ -74,6 +90,7 @@
                 .AllowUpdating(true)
                 .AllowDeleting(true)
                 .Mode(GridEditMode.Popup)
+                .UseIcons(true)
             )
         )
     </div>
@@ -187,4 +204,20 @@
         history.back();
         return false;
     });
+
+    function exporting(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('ListaProyectos');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Proyectos.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
 </script>

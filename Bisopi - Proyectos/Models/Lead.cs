@@ -69,5 +69,11 @@ namespace Bisopi___Proyectos.Models
         [ForeignKey("QuoteStatusID")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public QuoteStatus QuoteStatus { get; set; }
+
+        [NotMapped]
+        public double? ProjectedRm { get; set; }
+
+        [NotMapped]
+        public string? Abbreviation { get; set; }
     }
 }

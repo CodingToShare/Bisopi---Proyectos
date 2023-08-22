@@ -68,6 +68,69 @@ namespace Bisopi___Proyectos.Migrations
                     b.ToTable("AllowedViewsForRoles");
                 });
 
+            modelBuilder.Entity("Bisopi___Proyectos.Models.Bill", b =>
+                {
+                    b.Property<Guid>("BillID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConceptInvoice")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("InvoiceData")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime?>("InvoiceShipmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("IssuedDocument")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid>("MilestoneID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("NoteInvoice")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("ProposalDocument")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("RelatedDocument")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("StatusBill")
+                        .HasColumnType("int");
+
+                    b.HasKey("BillID");
+
+                    b.ToTable("Bills");
+                });
+
             modelBuilder.Entity("Bisopi___Proyectos.Models.City", b =>
                 {
                     b.Property<Guid>("Id")
@@ -79,22 +142,20 @@ namespace Bisopi___Proyectos.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(100)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("Modified")
+                    b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(100)");
 
@@ -283,22 +344,20 @@ namespace Bisopi___Proyectos.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(100)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("Modified")
+                    b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(100)");
 
@@ -310,6 +369,98 @@ namespace Bisopi___Proyectos.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("Bisopi___Proyectos.Models.InvoiceReport", b =>
+                {
+                    b.Property<Guid>("InvoiceReportID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BillID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("BilledDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("BillingApprovedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ClientID")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CountryID")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("CurrencyID")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DatePaid")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsItChangeControl")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("MilestoneDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("MilestoneID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("MilestoneNumber")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("ProjectID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProjectName")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("ProjectStatusID")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("StatusBill")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("Value")
+                        .HasColumnType("float");
+
+                    b.HasKey("InvoiceReportID");
+
+                    b.HasIndex("ClientID");
+
+                    b.HasIndex("CountryID");
+
+                    b.HasIndex("CurrencyID");
+
+                    b.HasIndex("ProjectStatusID");
+
+                    b.ToTable("InvoiceReports");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Lead", b =>
@@ -417,9 +568,9 @@ namespace Bisopi___Proyectos.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("Percentage")
+                    b.Property<double?>("Percentage")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("float");
 
                     b.Property<Guid?>("ProjectID")
                         .HasColumnType("uniqueidentifier");
@@ -549,7 +700,8 @@ namespace Bisopi___Proyectos.Migrations
                         .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("TRMProject")
+                    b.Property<double?>("TRMProject")
+                        .IsRequired()
                         .HasColumnType("float");
 
                     b.HasKey("ProjectID");
@@ -949,6 +1101,48 @@ namespace Bisopi___Proyectos.Migrations
                     b.ToTable("QuotesStatus");
                 });
 
+            modelBuilder.Entity("Bisopi___Proyectos.Models.RepresentativeMarketRate", b =>
+                {
+                    b.Property<Guid>("RepresentativeMarketRateID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("CurrencyID")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<double?>("ProjectedRm")
+                        .IsRequired()
+                        .HasColumnType("float");
+
+                    b.Property<int?>("Year")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.HasKey("RepresentativeMarketRateID");
+
+                    b.HasIndex("CurrencyID");
+
+                    b.ToTable("RepresentativeMarketRates");
+                });
+
             modelBuilder.Entity("Bisopi___Proyectos.Models.ResourcePlanning", b =>
                 {
                     b.Property<Guid>("ResourcePlanningID")
@@ -983,7 +1177,8 @@ namespace Bisopi___Proyectos.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<double>("PlannedHours")
+                    b.Property<double?>("PlannedHours")
+                        .IsRequired()
                         .HasColumnType("float");
 
                     b.Property<Guid?>("PositionID")
@@ -999,6 +1194,116 @@ namespace Bisopi___Proyectos.Migrations
                     b.HasKey("ResourcePlanningID");
 
                     b.ToTable("ResourcesPlannings");
+                });
+
+            modelBuilder.Entity("Bisopi___Proyectos.Models.ResourcePlanningReal", b =>
+                {
+                    b.Property<Guid>("ResourcePlanningRealID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime?>("DateAnalysis")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("ExpectedPercentage")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<double?>("PercentComplete")
+                        .IsRequired()
+                        .HasColumnType("float");
+
+                    b.Property<double?>("PlannedHours")
+                        .IsRequired()
+                        .HasColumnType("float");
+
+                    b.Property<Guid?>("PositionID")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ProjectID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ResourceID")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ResourcePlanningRealID");
+
+                    b.ToTable("ResourcePlanningReals");
+                });
+
+            modelBuilder.Entity("Bisopi___Proyectos.Models.RetentionPercentage", b =>
+                {
+                    b.Property<Guid>("RetentionPercentageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CountryID")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime?>("EffectiveStartDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<double?>("Retention")
+                        .IsRequired()
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("ValidEndDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("ValueAddedTax")
+                        .IsRequired()
+                        .HasColumnType("float");
+
+                    b.Property<double?>("ValueAddedTaxWuthholding")
+                        .IsRequired()
+                        .HasColumnType("float");
+
+                    b.HasKey("RetentionPercentageID");
+
+                    b.HasIndex("CountryID");
+
+                    b.ToTable("RetentionPercentages");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.SupportStatus", b =>
@@ -1133,9 +1438,9 @@ namespace Bisopi___Proyectos.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int?>("Percentage")
+                    b.Property<double?>("Percentage")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("float");
 
                     b.Property<Guid?>("ProjectID")
                         .HasColumnType("uniqueidentifier");
@@ -1182,7 +1487,8 @@ namespace Bisopi___Proyectos.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<double>("PlannedHours")
+                    b.Property<double?>("PlannedHours")
+                        .IsRequired()
                         .HasColumnType("float");
 
                     b.Property<Guid?>("PositionID")
@@ -1239,6 +1545,41 @@ namespace Bisopi___Proyectos.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("ProposalStatus");
+                });
+
+            modelBuilder.Entity("Bisopi___Proyectos.Models.InvoiceReport", b =>
+                {
+                    b.HasOne("Bisopi___Proyectos.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bisopi___Proyectos.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bisopi___Proyectos.Models.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bisopi___Proyectos.Models.ProjectStatus", "ProjectStatus")
+                        .WithMany()
+                        .HasForeignKey("ProjectStatusID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("Currency");
+
+                    b.Navigation("ProjectStatus");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Lead", b =>
@@ -1366,6 +1707,28 @@ namespace Bisopi___Proyectos.Migrations
                         .IsRequired();
 
                     b.Navigation("ProjectTask");
+                });
+
+            modelBuilder.Entity("Bisopi___Proyectos.Models.RepresentativeMarketRate", b =>
+                {
+                    b.HasOne("Bisopi___Proyectos.Models.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
+                });
+
+            modelBuilder.Entity("Bisopi___Proyectos.Models.RetentionPercentage", b =>
+                {
+                    b.HasOne("Bisopi___Proyectos.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Project", b =>

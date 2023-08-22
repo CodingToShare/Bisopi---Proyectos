@@ -15,8 +15,11 @@
     <div class="col-12">
         <form asp-controller="Project" asp-action="Edit" method="post" enctype="multipart/form-data">
             @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID" })
+            @Html.HiddenFor(x => x.IsActive, new { @class = "IsActive" })
             @Html.HiddenFor(x => x.Created, new { @class = "Created" })
             @Html.HiddenFor(x => x.CreatedBy, new { @class = "CreatedBy" })
+            @Html.HiddenFor(x => x.Modified, new { @class = "Modified" })
+            @Html.HiddenFor(x => x.ModifiedBy, new { @class = "ModifiedBy" })
             @using (Html.DevExtreme().ValidationGroup())
             {
                 <div class="row">
@@ -381,6 +384,7 @@
                                         .Placeholder("Escriba el valor del proyecto")
                                         .Format("$ #,##0.##")
                                         .InputAttr("aria-label", "Currency Format")
+                                        .OnValueChanged("onProjectValueChange")
                                         )
                                 </div>
                             </div>
@@ -397,6 +401,7 @@
                                         .Placeholder("Escriba el costo del proyecto")
                                         .Format("$ #,##0.##")
                                         .InputAttr("aria-label", "Currency Format")
+                                        .OnValueChanged("onProjectCostChange")
                                         )
                                 </div>
                             </div>
@@ -427,7 +432,7 @@
                                     @(Html.DevExtreme().NumberBoxFor(x => x.GrossMargin)
                                         .ID("grossMargin")
                                         .Disabled(true)
-                                        .Format("$ #,##0.##")
+                                        .Format("## %")
                                         .InputAttr("aria-label", "Currency Format")
                                         )
                                 </div>
@@ -574,5 +579,31 @@
                 // Si el usuario selecciona "Cancelar", no se hace nada
             }
         });
+    }
+
+    function onProjectCostChange(e) {
+        console.log(e.value);
+        console.log($("#projectValue").dxNumberBox("instance").option("value"));
+
+        var valorProyecto = $("#projectValue").dxNumberBox("instance").option("value");
+        var costoProyecto = e.value;
+
+        var calculo = ((valorProyecto - costoProyecto) / valorProyecto) * 100
+
+        $("#grossMargin").dxNumberBox("instance").option("value", calculo);
+
+    }
+
+    function onProjectValueChange(e) {
+        console.log(e.value);
+        console.log($("#projectCost").dxNumberBox("instance").option("value"));
+
+        var valorProyecto = e.value;
+        var costoProyecto = $("#projectCost").dxNumberBox("instance").option("value");
+
+        var calculo = ((valorProyecto - costoProyecto) / valorProyecto) * 100
+
+        $("#grossMargin").dxNumberBox("instance").option("value", calculo);
+
     }
 </script>

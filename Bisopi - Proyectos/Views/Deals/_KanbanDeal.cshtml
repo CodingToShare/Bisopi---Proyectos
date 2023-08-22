@@ -40,7 +40,21 @@
     Func<CardTasks, IHtmlContent> CreateCards = @<div class="card dx-card dx-theme-text-color dx-theme-background-color" data-target-id="@item.Task.DealID" >
         <div class="card-priority priority-2"></div>
         <div class="card-subject">@item.Task.DealName</div>
-        <div class="card-assignee">Fecha: @item.Task.Created</div>
+        @{
+                string[] dayAbbreviations = { "Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb" };
+                var dayOfWeekAbbreviated = dayAbbreviations[(int)item.Task.Created.DayOfWeek];
+                var formattedDate = $"{dayOfWeekAbbreviated} {item.Task.Created:MM} / {item.Task.Created:yyyy}";
+        }
+        <div class="card-assignee">Fecha: @formattedDate</div>
+        @{
+                var LeadValueFormat = String.Format("{0:C}", item.Task.LeadValue);
+        }
+        <div class="card-assignee">Valor (@item.Task.Abbreviation): @LeadValueFormat</div>
+        @{
+                var calclateTRM = item.Task.LeadValue * item.Task.ProjectedRm;
+                var calclateTRMString = String.Format("{0:C}", calclateTRM);
+        }
+        <div class="card-assignee">Valor (COP): @calclateTRMString</div>
 
         <div class="card-buttons">
             <div class="btn-group-horizontal">
@@ -61,7 +75,27 @@
 }
 
 <div class="list">
-    <div class="list-title dx-theme-text-color" style="background-color:@Model.Color ;">@Model.Status</div>
+    @{
+        var totalCalculateTRM = 0.0;
+        foreach (var task in @Model.DealsIEnumerable)
+        {
+            if (task.LeadValue != null && task.ProjectedRm != null)
+            {
+                totalCalculateTRM += (Double)(task.LeadValue * task.ProjectedRm);
+            }
+            else
+            {
+                totalCalculateTRM += 0;
+            }
+            
+        }
+    }
+    <div class="list-title dx-theme-text-color" style="background-color:@Model.Color;">
+        @Model.Status
+    </div>
+    <div class="list-title dx-theme-text-color" style="background-color:@Model.Color;">
+        Total: @(string.Format("{0:C}", totalCalculateTRM))
+    </div>
     @(Html.DevExtreme().ScrollView()
         .ElementAttr("class", "scrollable-list")
         .Direction(ScrollDirection.Vertical)

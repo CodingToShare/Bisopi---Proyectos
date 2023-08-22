@@ -30,7 +30,7 @@ namespace Bisopi___Proyectos.ModelsTemps
 
         [Display(Name = "Porcentaje")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public int? Percentage { get; set; }
+        public double? Percentage { get; set; }
 
         [Display(Name = "Valor")]
         public double? Value { get; set; }

@@ -105,7 +105,7 @@ namespace Bisopi___Proyectos.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            ViewData["Cities"] = new SelectList(_context.Cities, "Id", "Name");
+            ViewData["Cities"] = new SelectList(_context.Cities.Where(x => x.IsActive), "Id", "Name");
 
             await LoadAsync(user);
             return Page();

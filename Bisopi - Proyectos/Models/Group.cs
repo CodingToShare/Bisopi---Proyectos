@@ -20,23 +20,23 @@ namespace Bisopi___Proyectos.Models
         [Display(Name = "Creado por")]
         [Column(TypeName = "varchar(100)")]
         [StringLength(200)]
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
         [Display(Name = "Creado")]
         [DataType(DataType.DateTime)]
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime Created { get; set; }
+        public DateTime? Created { get; set; }
 
         [Display(Name = "Modificado por")]
         [Column(TypeName = "varchar(100)")]
         [StringLength(200)]
-        public string ModifiedBy { get; set; }
+        public string? ModifiedBy { get; set; }
 
         [Display(Name = "Modificado")]
         [DataType(DataType.DateTime)]
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime Modified { get; set; }
+        public DateTime? Modified { get; set; }
     }
 }
