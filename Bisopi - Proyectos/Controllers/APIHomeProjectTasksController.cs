@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bisopi___Proyectos.Data;
 using Bisopi___Proyectos.Models;
+using System.Security.Claims;
 
 namespace Bisopi___Proyectos.Controllers
 {
@@ -26,7 +27,8 @@ namespace Bisopi___Proyectos.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get(DataSourceLoadOptions loadOptions) {
-            var projecttask = _context.ProjectTask.Select(i => new {
+            var user = User.FindFirst(ClaimTypes.NameIdentifier);
+            var projecttask = _context.ProjectTask.Include(x=> x.Project).Where(x=> x.Project != null && x.Project.LeaderID == Guid.Parse(user.Value)).Select(i => new {
                 i.TaskID,
                 i.TaskName,
                 i.TaskGroupID,

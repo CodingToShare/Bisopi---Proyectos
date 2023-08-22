@@ -47,22 +47,8 @@
             .DeleteAction("Delete")
             .Key("TaskID")
             )
-            .ID("gridContainer")
-            .RemoteOperations(true)
-            .AllowColumnResizing(true)
-            .ColumnAutoWidth(true)
             .Columns(columns =>
             {
-
-                columns.Add()
-                .Type(GridCommandColumnType.Buttons)
-                .Width(110)
-                .Buttons(b =>
-                {
-                    b.Add().Name(GridColumnButtonName.Edit);
-                    b.Add().Name(GridColumnButtonName.Delete);
-                });
-
                 columns.AddFor(m => m.TaskName);
 
                 columns.AddFor(m => m.TaskGroupID).Lookup(lookup => lookup
@@ -155,6 +141,9 @@
                     </text>);
                     b.Add().Name(GridColumnButtonName.Delete).Template(@<text>
                         <img src="/img/trash.png" style="width:20px;cursor:pointer;" title="Eliminar">
+                    </text>);
+                    b.Add().Name("History").Template(@<text>
+                        <img src="/img/history_time.png" style="width:20px;cursor:pointer;" title='Historial' onclick="showHistorial('<%- data.TaskID%>')">
                     </text>);
 
                 });
@@ -337,6 +326,19 @@
         </div>
     }
 </form>
+<form name="form2" id="form2" method="post" onsubmit="return false;">
+    <!-- Modal -->
+    <div class="modal fade" id="ModalHistorialRegistro" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="ModalHistorialRegistro" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" style='font-size:14px'>
+            <div class="modal-content" id="div_historial" name='div_historial'>
+            </div>
+        </div>
+    </div>
+</form>
+@{
+    ProjectTaskRegistry partialModel = new();
+}
+<partial name="_ModalRegisterTask" model="@partialModel" />
 <script>
     DevExpress.config({
         editorStylingMode: "filled"
@@ -361,5 +363,41 @@
             });
         });
         e.cancel = true;
+    }
+    function hideHistorialModal() {
+        $('#ModalHistorialRegistro').modal('hide')
+    }
+    function showHistorial(taskID) {
+        $.ajax({
+            type: 'get',
+            url: `/project/task/historial/${taskID}`,
+            success: (res) => {
+                $('#div_historial').html(res)
+                $('#ModalHistorialRegistro').modal('show')
+            }
+        })
+    }
+    function deleteHistorialRecord(historialID, taskID) {
+        DevExpress.ui.dialog.confirm("¿Estás seguro de que deseas eliminar este registro?", "Confirmar eliminación").done(function (dialogResult) {
+            if (dialogResult) {
+                $.ajax({
+                    type: 'delete',
+                    url: `/project/task/history/${historialID}`,
+                    success: (res) => {
+                        DevExpress.ui.notify("Registro eliminado con exito", "success");
+                        $.ajax({
+                            type: 'get',
+                            url: `/project/task/historial/${taskID}`,
+                            success: (res) => {
+                                $('#div_historial').html(res)
+                            }
+                        })
+                    },
+                    error: () => {
+                        DevExpress.ui.notify("Error al eliminar el registro", "error");
+                    }
+                })
+            }
+        });
     }
 </script>
