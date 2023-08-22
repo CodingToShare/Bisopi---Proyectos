@@ -60,6 +60,15 @@ namespace Bisopi___Proyectos.Models
         [Display(Name = "Tiempo estimado")]
         public int EstimateTime { get; set; }
 
+        [NotMapped]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        [Display(Name = "Horas")]
+        public int ExecutionTimeHours { get; set; }
+        [NotMapped]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        [Display(Name = "Minutos")]
+        public int ExecutionTimeMinutes { get; set; }
+
         [Required(ErrorMessage = "El campo {0} es requerido")]
         [Display(Name = "Tiempo ejecución")]
         public int ExecutionTime { get; set; }

@@ -12,27 +12,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bisopi___Proyectos.Data;
 using Bisopi___Proyectos.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace Bisopi___Proyectos.Controllers
 {
     [Route("api/[controller]/[action]")]
-    public class APIProjectTasksController : Controller
+    public class APIHomeProjectTasksController : Controller
     {
         private DataContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public APIProjectTasksController(DataContext context,UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
-        {
+        public APIHomeProjectTasksController(DataContext context) {
             _context = context;
-            _userManager = userManager;
-            _roleManager = roleManager;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(DataSourceLoadOptions loadOptions, Guid projectID) {
-            var projecttask = _context.ProjectTask.Where(x=> x.ProjectID == projectID && x.IsActive == true).Select(i => new {
+        public async Task<IActionResult> Get(DataSourceLoadOptions loadOptions) {
+            var projecttask = _context.ProjectTask.Select(i => new {
                 i.TaskID,
                 i.TaskName,
                 i.TaskGroupID,
@@ -42,6 +36,8 @@ namespace Bisopi___Proyectos.Controllers
                 i.StartDate,
                 i.EndDate,
                 i.EstimateTime,
+                i.ExecutionTimeHours,
+                i.ExecutionTimeMinutes,
                 i.ExecutionTime,
                 i.PositionID,
                 i.ResponsibleID,
@@ -50,7 +46,7 @@ namespace Bisopi___Proyectos.Controllers
                 i.Created,
                 i.ModifiedBy,
                 i.Modified
-            }).OrderBy(x=> x.TaskName);
+            });
 
             // If underlying data is a large SQL table, specify PrimaryKey and PaginateViaPrimaryKey.
             // This can make SQL execution plans more efficient.
@@ -69,12 +65,7 @@ namespace Bisopi___Proyectos.Controllers
 
             if(!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
-            model.TaskID = new Guid();
-            model.IsActive = true;
-            model.Created = DateTime.UtcNow.AddHours(-5);
-            model.CreatedBy = User.Identity.Name;
-            model.Modified = DateTime.UtcNow.AddHours(-5);
-            model.ModifiedBy = User.Identity.Name;
+
             var result = _context.ProjectTask.Add(model);
             await _context.SaveChangesAsync();
 
@@ -93,9 +84,6 @@ namespace Bisopi___Proyectos.Controllers
             if(!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
 
-            model.Modified = DateTime.UtcNow.AddHours(-5);
-            model.ModifiedBy = User.Identity.Name;
-
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -104,11 +92,7 @@ namespace Bisopi___Proyectos.Controllers
         public async Task Delete(Guid key) {
             var model = await _context.ProjectTask.FirstOrDefaultAsync(item => item.TaskID == key);
 
-            model.IsActive = false;
-            model.Modified = DateTime.UtcNow.AddHours(-5);
-            model.ModifiedBy = User.Identity.Name;
             _context.ProjectTask.Remove(model);
-
             await _context.SaveChangesAsync();
         }
 
@@ -123,37 +107,6 @@ namespace Bisopi___Proyectos.Controllers
                          };
             return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
         }
-        [HttpGet]
-        public async Task<IActionResult> ProjectTaskStatusLookup(DataSourceLoadOptions loadOptions)
-        {
-            var lookup = from i in _context.ProjectTaskStatus
-                         orderby i.StatusName
-                         select new
-                         {
-                             Value = i.ProjectTaskStatusID,
-                             Text = i.StatusName
-                         };
-            return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
-        }
-        [HttpGet]
-        public IActionResult ResponsibleLookup()
-        {
-            var usersWithRole = _userManager.Users;
-            var usersData = usersWithRole.Select(u => new { u.Id, u.UserName, u.FirstName, u.LastName }).ToListAsync().Result;
-
-            var resultList = new List<UserData>();
-
-            foreach (var user in usersData)
-            {
-                var result = new UserData();
-
-                result.UserDataID = Guid.Parse(user.Id);
-                result.FirstNameAndLastNAme = $"{user.FirstName} {user.LastName}";
-
-                resultList.Add(result);
-            }
-            return Ok(resultList);
-        }
 
         [HttpGet]
         public async Task<IActionResult> ProjectsLookup(DataSourceLoadOptions loadOptions) {
@@ -167,9 +120,14 @@ namespace Bisopi___Proyectos.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PositionsLookup(DataSourceLoadOptions loadOptions) {
-            var roles =  _roleManager.Roles.OrderBy(x => x.Name).Select(x => new { Value = x.Id, Text = x.Name });
-            return Json(await DataSourceLoader.LoadAsync(roles, loadOptions));
+        public async Task<IActionResult> ProjectTaskStatusLookup(DataSourceLoadOptions loadOptions) {
+            var lookup = from i in _context.ProjectTaskStatus
+                         orderby i.StatusName
+                         select new {
+                             Value = i.ProjectTaskStatusID,
+                             Text = i.StatusName
+                         };
+            return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
         }
 
         private void PopulateModel(ProjectTask model, IDictionary values) {
@@ -182,6 +140,8 @@ namespace Bisopi___Proyectos.Controllers
             string START_DATE = nameof(ProjectTask.StartDate);
             string END_DATE = nameof(ProjectTask.EndDate);
             string ESTIMATE_TIME = nameof(ProjectTask.EstimateTime);
+            string EXECUTION_TIME_HOURS = nameof(ProjectTask.ExecutionTimeHours);
+            string EXECUTION_TIME_MINUTES = nameof(ProjectTask.ExecutionTimeMinutes);
             string EXECUTION_TIME = nameof(ProjectTask.ExecutionTime);
             string POSITION_ID = nameof(ProjectTask.PositionID);
             string RESPONSIBLE_ID = nameof(ProjectTask.ResponsibleID);
@@ -190,47 +150,7 @@ namespace Bisopi___Proyectos.Controllers
             string CREATED = nameof(ProjectTask.Created);
             string MODIFIED_BY = nameof(ProjectTask.ModifiedBy);
             string MODIFIED = nameof(ProjectTask.Modified);
-            string HOURS = nameof(ProjectTask.ExecutionTimeHours);
-            string MINUTES = nameof(ProjectTask.ExecutionTimeMinutes);
-            if(values.Contains(HOURS) || values.Contains(MINUTES))
-            {
-                int hours = model.EstimateTime / 3600;
-                int minutes = (model.EstimateTime % 3600) / 60;
 
-                int hoursUpdate = 0;
-                bool updateHours = false;
-                if(values.Contains(HOURS))
-                {
-                    updateHours = true;
-                    hoursUpdate =  int.Parse(values[HOURS].ToString());
-                }
-                int minutesUpdate = 0;
-                bool updateMinutes = false;
-                if (values.Contains(MINUTES))
-                {
-                    updateMinutes = true;
-                    minutesUpdate = int.Parse(values[MINUTES].ToString());
-                }
-
-                int estimateTime = 0;
-                if(updateHours && hoursUpdate != hours)
-                {
-                    estimateTime = hoursUpdate * 3600;
-                }
-                else
-                {
-                    estimateTime = hours * 3600;
-                }
-                if(updateMinutes && minutesUpdate != minutes)
-                {
-                    estimateTime += minutesUpdate * 60;
-                }
-                else
-                {
-                    estimateTime += minutes * 60;
-                }
-                model.EstimateTime = estimateTime;
-            }
             if(values.Contains(TASK_ID)) {
                 model.TaskID = ConvertTo<System.Guid>(values[TASK_ID]);
             }
@@ -240,7 +160,7 @@ namespace Bisopi___Proyectos.Controllers
             }
 
             if(values.Contains(TASK_GROUP_ID)) {
-                model.TaskGroupID = ConvertTo<System.Guid>(values[TASK_GROUP_ID]);
+                model.TaskGroupID = values[TASK_GROUP_ID] != null ? ConvertTo<System.Guid>(values[TASK_GROUP_ID]) : (Guid?)null;
             }
 
             if(values.Contains(COMMENT)) {
@@ -252,7 +172,7 @@ namespace Bisopi___Proyectos.Controllers
             }
 
             if(values.Contains(TASK_STATUS_ID)) {
-                model.TaskStatusID = ConvertTo<System.Guid>(values[TASK_STATUS_ID]);
+                model.TaskStatusID = values[TASK_STATUS_ID] != null ? ConvertTo<System.Guid>(values[TASK_STATUS_ID]) : (Guid?)null;
             }
 
             if(values.Contains(START_DATE)) {
@@ -267,16 +187,24 @@ namespace Bisopi___Proyectos.Controllers
                 model.EstimateTime = Convert.ToInt32(values[ESTIMATE_TIME]);
             }
 
+            if(values.Contains(EXECUTION_TIME_HOURS)) {
+                model.ExecutionTimeHours = Convert.ToInt32(values[EXECUTION_TIME_HOURS]);
+            }
+
+            if(values.Contains(EXECUTION_TIME_MINUTES)) {
+                model.ExecutionTimeMinutes = Convert.ToInt32(values[EXECUTION_TIME_MINUTES]);
+            }
+
             if(values.Contains(EXECUTION_TIME)) {
                 model.ExecutionTime = Convert.ToInt32(values[EXECUTION_TIME]);
             }
 
             if(values.Contains(POSITION_ID)) {
-                model.PositionID = ConvertTo<System.Guid>(values[POSITION_ID]);
+                model.PositionID = values[POSITION_ID] != null ? ConvertTo<System.Guid>(values[POSITION_ID]) : (Guid?)null;
             }
 
             if(values.Contains(RESPONSIBLE_ID)) {
-                model.ResponsibleID = ConvertTo<System.Guid>(values[RESPONSIBLE_ID]);
+                model.ResponsibleID = values[RESPONSIBLE_ID] != null ? ConvertTo<System.Guid>(values[RESPONSIBLE_ID]) : (Guid?)null;
             }
 
             if(values.Contains(IS_ACTIVE)) {

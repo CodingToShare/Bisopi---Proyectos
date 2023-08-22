@@ -49,6 +49,8 @@
             )
             .ID("gridContainer")
             .RemoteOperations(true)
+            .AllowColumnResizing(true)
+            .ColumnAutoWidth(true)
             .Columns(columns =>
             {
 
@@ -81,9 +83,54 @@
 
                 columns.AddFor(m => m.EndDate);
 
-                columns.AddFor(m => m.EstimateTime).Format("##:## horas");
-
-                columns.AddFor(m => m.ExecutionTime).Format("##:## horas");
+                columns.AddFor(m => m.EstimateTime).CalculateCellValue(@<text>
+                    function(data) {
+                        var timeInSeconds = data['EstimateTime']
+                        var hours = Math.floor(timeInSeconds / 3600);
+                        var minutes = Math.floor((timeInSeconds % 3600) / 60);
+                        var seconds = timeInSeconds % 60;
+                        var formattedTime = "";
+                        if (hours > 0) {
+                        formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} horas`;
+                        } else if (minutes > 0) {
+                        formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} min`;
+                        } else {
+                        formattedTime = `${seconds.toString().padStart(2, '0')} seg`;
+                        }
+                        return formattedTime;
+                    }
+                </text>);
+                columns.AddFor(m => m.ExecutionTimeHours).CalculateCellValue(@<text>
+                    function(data) {
+                    var timeInSeconds = data['EstimateTime']
+                    var hours = Math.floor(timeInSeconds / 3600);
+                    return hours;
+                    }
+                </text>).Visible(false);
+                columns.AddFor(m => m.ExecutionTimeMinutes).CalculateCellValue(@<text>
+                    function(data) {
+                    var timeInSeconds = data['EstimateTime']
+                    var minutes = Math.floor((timeInSeconds % 3600) / 60);
+                    return minutes;
+                    }
+                </text>).Visible(false);
+                columns.AddFor(m => m.ExecutionTime).CalculateCellValue(@<text>
+                    function(data) {
+                        var timeInSeconds = data['ExecutionTime']
+                        var hours = Math.floor(timeInSeconds / 3600);
+                        var minutes = Math.floor((timeInSeconds % 3600) / 60);
+                        var seconds = timeInSeconds % 60;
+                        var formattedTime = "";
+                        if (hours > 0) {
+                        formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} horas`;
+                        } else if (minutes > 0) {
+                        formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} min`;
+                        } else {
+                        formattedTime = `${seconds.toString().padStart(2, '0')} seg`;
+                        }
+                        return formattedTime;
+                    }
+                </text>);
 
                 columns.AddFor(m => m.PositionID).Lookup(lookup => lookup
                 .DataSource(ds => ds.WebApi().Controller("APIProjectTasks").LoadAction("PositionsLookup").Key("Value"))
@@ -98,13 +145,47 @@
                 );
 
                 columns.AddFor(m => m.Created);
+                columns.Add()
+                .Type(GridCommandColumnType.Buttons)
+                .Width(100)
+                .Buttons(b =>
+                {
+                    b.Add().Name(GridColumnButtonName.Edit).Template(@<text>
+                        <img src="/img/edit.png" style="width:20px;cursor:pointer;" title="Editar">
+                    </text>);
+                    b.Add().Name(GridColumnButtonName.Delete).Template(@<text>
+                        <img src="/img/trash.png" style="width:20px;cursor:pointer;" title="Eliminar">
+                    </text>);
+
+                });
             })
             .Editing(e => e
-            .AllowUpdating(true)
-            .AllowDeleting(true)
-            .Mode(GridEditMode.Popup)
-            .UseIcons(true)
-            )
+                .AllowUpdating(true)
+                .AllowDeleting(true)
+                .Mode(GridEditMode.Popup)
+                .Form(f => f.Items(items =>
+                {
+                    items.AddGroup().Items(i =>
+                    {
+                        i.AddSimpleFor(m => m.TaskName);
+                        i.AddSimpleFor(m => m.TaskGroupID);
+                        i.AddSimpleFor(m => m.PositionID);
+                        i.AddSimpleFor(m => m.StartDate);
+                        i.AddSimpleFor(m => m.EndDate);
+                        i.AddSimpleFor(m => m.TaskStatusID);
+                        i.AddSimpleFor(m => m.ResponsibleID);
+                        i.AddSimpleFor(m => m.Comment);
+                    }).ColCount(2);
+                    items.AddGroup().Items(i =>
+                    {
+                        i.AddSimpleFor(m => m.ExecutionTimeHours);
+                        i.AddSimpleFor(m => m.ExecutionTimeMinutes);
+                    }).ColCount(2).Caption("Tiempo estimado");
+                }
+                )
+                .ColCount(1)
+                )
+                )
             )
     </div>
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalTarea" name="openTarea" id="openTarea">Agregar Tarea</button>
@@ -144,7 +225,7 @@
                                             .ValueExpr("Value")
                                             .DataSource(ds => ds.Mvc().Controller("APIProjectTasks").LoadAction("TaskGroupLookup").Key("Value"))
                                             .ID("grupo_tarea")
-                                            
+
                                             )
                                     </div>
                                 </div>

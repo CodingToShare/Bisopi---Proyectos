@@ -1,137 +1,150 @@
-﻿@model List<Project>
-@foreach (Project project in Model)
-{
-    <div>
-        <div class="row"><div class="col-12"><h5>@project.ProjectName (@project.Country.CountryName)</h5></div></div>
-        <table class="table table-striped table-hover">
-            <thead class="thead-dark">
-                <tr style="text-align:center;">
-                    <th class="p-1" scope="col" style="width:130px">Grupo</th>
-                    <th class="p-1" scope="col">Tarea</th>
-                    <th class="p-1" scope="col" style="width:100px">Fecha Inicio</th>
-                    <th class="p-1" scope="col" style="width:100px">Fecha Fin</th>
-                    <th class="p-1" scope="col" style="width:100px">Estimado</th>
-                    <th class="p-1" scope="col" style="width:100px">Reportado</th>
-                    <th class="p-1" scope="col" style="width:100px">Estado</th>
-                    <th class="p-1" scope="col" style="width:80px">Play</th>
-                    <th class="p-1" scope="col" style="width:30px">Reportar</th>
-                    <th class="p-1" scope="col" style="width:30px">Historial</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (project.Tasks != null)
-                {
-                    Guid? previousTaskGroupID = Guid.Empty;
-                    @foreach (ProjectTask task in project.Tasks)
-                    {
-                        <tr style='text-align:left;'>
-                            @if (previousTaskGroupID != task.TaskGroupID)
-                            {
-                                //numero de tareas pertenecientes al mismo grupo
-                                int rowspan = rowspan = project.Tasks.Where(x => x.TaskGroupID == task.TaskGroupID).Count();
-                                <th class="p-1" scope="row" rowspan="@rowspan">@task.TaskGroup.Name</th>
-                            }
-                            <th class="p-1" scope="row"><span style='text-align:center;font-size:medium;' title="">@task.TaskName</span></th>
-                            <td class="p-1" style='text-align:center;font-size:small;' scope="row">@task.StartDate.ToString("yyyy-MM-dd")</td>
-                            <td class="p-1" style='text-align:center;font-size:small;' scope="row">@task.EndDate.ToString("yyyy-MM-dd")</td>
-                            @{
-                                int hours = task.EstimateTime / 3600;
-                                int minutes = (task.EstimateTime % 3600) / 60;
-                                int seconds = task.EstimateTime % 60;
+﻿@(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.ProjectTask>()
+    .DataSource(ds => ds.Mvc()
+        .Controller("APIHomeProjectTasks")
+        .LoadAction("Get")
+        .UpdateAction("Put")
+        .Key("TaskID")
+    )
+    .OnContentReady("init")
+    .RemoteOperations(true)
+    .Columns(columns =>
+    {
 
-                                string estimateTime = "";
+        columns.AddFor(m => m.TaskName).AllowEditing(false);
 
-                                if (hours > 0)
-                                {
-                                    estimateTime = $"{hours:D2}:{minutes:D2}:{seconds:D2} horas";
-                                }
-                                else if (minutes > 0)
-                                {
-                                    estimateTime = $"{minutes:D2}:{seconds:D2} min";
-                                }
-                                else
-                                {
-                                    estimateTime = $"{seconds:D2} seg";
-                                }
-                                hours = task.ExecutionTime / 3600;
-                                minutes = (task.ExecutionTime % 3600) / 60;
-                                seconds = task.ExecutionTime % 60;
+        columns.AddFor(m => m.TaskGroupID).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("APIHomeProjectTasks").LoadAction("TaskGroupLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        ).GroupIndex(1).AllowEditing(false);
 
-                                string executionTime = "";
+        columns.AddFor(m => m.Comment).AllowEditing(false);
 
-                                if (hours > 0)
-                                {
-                                    executionTime = $"{hours:D2}:{minutes:D2}:{seconds:D2} horas";
-                                }
-                                else if (minutes > 0)
-                                {
-                                    executionTime = $"{minutes:D2}:{seconds:D2} min";
-                                }
-                                else
-                                {
-                                    executionTime = $"{seconds:D2} seg";
-                                }
-                            }
-                            <td class="p-1" style='text-align:center;font-size:small;' scope="row">@estimateTime</td>
-                            <td class="p-1" style='text-align:center;font-size:small;' scope="row" id="div_crono_1_@task.TaskID">@executionTime</td>
-                            <td class="p-1" style='text-align:center;' scope="row">
-                                <select class="custom-select" id="cod_estado_tarea" name="cod_estado_tarea" style="font-size:11px;cursor:pointer;" onchange="updateStatus('@task.TaskID',this.value)">
-                                    @if (TempData["listStatus"] != null)
-                                    {
-                                        @foreach (ProjectTaskStatus taskStatus in (List<ProjectTaskStatus>)TempData["listStatus"])
-                                        {
-                                            bool selected = @taskStatus.ProjectTaskStatusID == @task.TaskStatusID ? true : false;
-                                            <option value='@taskStatus.ProjectTaskStatusID' selected="@selected">@taskStatus.StatusName</option>
-                                        }
-                                    }
-                                </select>
-                            </td>
-                            <td class="p-1" style='text-align:center;' scope="row">
-                                <img id="task_@task.TaskID" style='width:24px;cursor:pointer;' src="~/img/play_time.png" title='Iniciar Tarea' onclick="playTask('@task.TaskID')" />
-                            </td>
-                            <td class="p-1" style='text-align:center;' scope="row">
-                                <img style='width:24px;cursor:pointer;' src="~/img/add_time.png" title='Registrar Hora' />
-                            </td>
-                            <td class="p-1" style='text-align:center;' scope="row">
-                                <img style='width:24px;cursor:pointer;' src="~/img/history_time.png" title='Historial' />
-                            </td>
-                        </tr>
-                        previousTaskGroupID = task.TaskGroupID;
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
+        columns.AddFor(m => m.ProjectID).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("APIHomeProjectTasks").LoadAction("ProjectsLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        ).GroupIndex(0).AllowEditing(false);
+
+        columns.AddFor(m => m.TaskStatusID).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("APIHomeProjectTasks").LoadAction("ProjectTaskStatusLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        );
+
+        columns.AddFor(m => m.StartDate).AllowEditing(false);
+
+        columns.AddFor(m => m.EndDate).AllowEditing(false);
+
+        columns.AddFor(m => m.EstimateTime).CalculateCellValue(@<text>
+            function(data) {
+            var timeInSeconds = data['EstimateTime']
+            var hours = Math.floor(timeInSeconds / 3600);
+            var minutes = Math.floor((timeInSeconds % 3600) / 60);
+            var seconds = timeInSeconds % 60;
+            var formattedTime = "";
+            if (hours > 0) {
+            formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} horas`;
+            } else if (minutes > 0) {
+            formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} min`;
+            } else {
+            formattedTime = `${seconds.toString().padStart(2, '0')} seg`;
+            }
+            return formattedTime;
+            }
+        </text>)
+        .AllowEditing(false);
+
+        columns.AddFor(m => m.ExecutionTime)
+        .CalculateCellValue(@<text>
+            function(data) {
+            var timeInSeconds = data['ExecutionTime']
+            var hours = Math.floor(timeInSeconds / 3600);
+            var minutes = Math.floor((timeInSeconds % 3600) / 60);
+            var seconds = timeInSeconds % 60;
+            var formattedTime = "";
+            if (hours > 0) {
+            formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} horas`;
+            } else if (minutes > 0) {
+            formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} min`;
+            } else {
+            formattedTime = `${seconds.toString().padStart(2, '0')} seg`;
+            }
+            return formattedTime;
+            }
+        </text>)
+        .AllowEditing(false);
+
+        columns.Add().CellTemplate(@<text>
+            <img id="task_<%- data.TaskID%>" src="~/img/play_time.png" style='width:24px;cursor:pointer;' name="playOrStop" onclick="playTask('<%- data.TaskID%>')" title="Iniciar tarea" />
+            <img class="mx-1" style='width:24px;cursor:pointer;' src="~/img/add_time.png" title='Registrar Hora' onclick="showRegisterModal('<%- data.TaskID%>')" />
+            <img style='width:24px;cursor:pointer;' src="~/img/history_time.png" title='Historial' onclick="showHistorial('<%- data.TaskID%>')" />
+        </text>).Width(110);
+    })
+    .Editing(editing =>
+    {
+        editing.Mode(GridEditMode.Cell);
+        editing.AllowUpdating(true);
+    })
+)
+
+
+@{
+    ProjectTaskRegistry partialModel = new();
 }
+<partial name="_ModalRegister" model="@partialModel" />
 
-<script asp-append-version="true">
-    function updateStatus(taskID,taskStatusID){
-        console.log(taskID, taskStatusID)
+<form name="form2" id="form2" method="post" onsubmit="return false;">
+    <!-- Modal -->
+    <div class="modal fade" id="ModalHistorialRegistro" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="ModalHistorialRegistro" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" style='font-size:14px'>
+            <div class="modal-content" id="div_historial" name='div_historial'>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<script>
+    function showRegisterModal(taskID) {
+        $('#ProjectTaskID').val(taskID)
+        $('#ModalRegistro').modal('show')
+    }
+    function hideHistorialModal() {
+        $('#ModalHistorialRegistro').modal('hide')
+    }
+    function showHistorial(taskID) {
         $.ajax({
-            type:'put',
-            url:`/project/task/updateStatus/${taskID}/${taskStatusID}`,
-            success: function(res){
-                DevExpress.ui.notify("Actualizado con exito", "success");
-            },
-            error: function(){
-                DevExpress.ui.notify("Hubo un error actualizando el estado de la tarea.", "error");
+            type: 'get',
+            url: `/project/task/historial/${taskID}`,
+            success: (res) => {
+                $('#div_historial').html(res)
+                $('#ModalHistorialRegistro').modal('show')
             }
         })
     }
-    function playTask(taskID){
-        //$.ajax({
-        //    type:'post',
-        //    url: `/project/task/play/${taskID}`,
-        //    success: function (res) {
-        //        image = $('#task_' + taskID)
-        //        images = $('img[title="Iniciar Tarea"]').toArray()
-        //        images.pop(image)
-        //        images.forEach((x)=>{$(x).hide()})
-        //        image.src = '~/img/stop_time.png'
-        //    },
-        //    error: function () {
-        //        DevExpress.ui.notify("Hubo un error iniciando la tarea", "error");
-        //    }
-        //})
+    function deleteHistorialRecord(historialID, taskID) {
+        DevExpress.ui.dialog.confirm("¿Estás seguro de que deseas eliminar este registro?", "Confirmar eliminación").done(function (dialogResult) {
+            if (dialogResult) {
+                $.ajax({
+                    type: 'delete',
+                    url: `/project/task/history/${historialID}`,
+                    success: (res) => {
+                        DevExpress.ui.notify("Registro eliminado con exito", "success");
+                        $.ajax({
+                            type: 'get',
+                            url: `/project/task/historial/${taskID}`,
+                            success: (res) => {
+                                $('#div_historial').html(res)
+                            }
+                        })
+                    },
+                    error: () => {
+                        DevExpress.ui.notify("Error al eliminar el registro", "error");
+                    }
+                })
+            }
+        });
     }
 </script>
