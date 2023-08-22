@@ -27,6 +27,61 @@ namespace Bisopi___Proyectos.Controllers
         public IActionResult Index()
         {
             return View();
-        }  
+        }
+
+        public async Task<IActionResult> GetUsers(DataSourceLoadOptions loadOptions)
+        {
+            var users = await _userManager.Users.ToListAsync();
+            var userGroupsViewModel = new List<UserViewModel>();
+
+            foreach (ApplicationUser user in users)
+            {
+                var city = _context.Cities.Where(x => x.Id == user.CityId).FirstOrDefault();
+
+                if (city != null)
+                {
+                    var thisViewModel = new UserViewModel
+                    {
+                        UserId = user.Id,
+                        Email = user.Email,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        UserName = user.UserName,
+                        Phone = user.PhoneNumber,
+                        City = $"{city.Name} - {city.Abbreviation}",
+                        Groups = await GetUserGroups(user),
+                        Roles = await GetUserRoles(user)
+                    };
+                    userGroupsViewModel.Add(thisViewModel);
+                }
+                else
+                {
+                    var thisViewModel = new UserViewModel
+                    {
+                        UserId = user.Id,
+                        Email = user.Email,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        UserName = user.UserName,
+                        Phone = user.PhoneNumber,
+                        Groups = await GetUserGroups(user),
+                        Roles = await GetUserRoles(user)
+                    };
+                    userGroupsViewModel.Add(thisViewModel);
+                }
+
+            }
+            return Json(DataSourceLoader.Load(userGroupsViewModel, loadOptions));
+        }
+
+        private async Task<List<string>> GetUserGroups(ApplicationUser user)
+        {
+            return await _userManager.GetGroupsAsync(_context, user);
+        }
+
+        private async Task<List<string>> GetUserRoles(ApplicationUser user)
+        {
+            return new List<string>(await _userManager.GetRolesAsync(user));
+        }
     }
 }
