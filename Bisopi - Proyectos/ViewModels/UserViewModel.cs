@@ -18,6 +18,8 @@ namespace Bisopi___Proyectos.ViewModels
         public string? City { get; set; }
         [Display(Name = "Telefono")]
         public string? Phone { get; set; }
+        [Display(Name = "Esta Activo ?")]
+        public bool? IsActive { get; set; }
         [Display(Name = "Grupo")]
         public IEnumerable<string> Groups { get; set; }
         [Display(Name = "Cargo")]

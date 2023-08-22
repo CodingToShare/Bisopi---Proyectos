@@ -86,5 +86,20 @@ namespace Bisopi___Proyectos.Controllers
         {
             return View();
         }
+
+        public IActionResult Study()
+        {
+            return View();
+        }
+        public IActionResult Tool()
+        {
+            return View();
+        }
+
+        public IActionResult Level()
+        {
+            return View();
+        }
+
     }
 }

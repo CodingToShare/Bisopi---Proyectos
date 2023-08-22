@@ -49,6 +49,7 @@ namespace Bisopi___Proyectos.Controllers
                         UserName = user.UserName,
                         Phone = user.PhoneNumber,
                         City = $"{city.Name} - {city.Abbreviation}",
+                        IsActive = user.IsActive,
                         Groups = await GetUserGroups(user),
                         Roles = await GetUserRoles(user)
                     };
@@ -64,6 +65,7 @@ namespace Bisopi___Proyectos.Controllers
                         LastName = user.LastName,
                         UserName = user.UserName,
                         Phone = user.PhoneNumber,
+                        IsActive = user.IsActive,
                         Groups = await GetUserGroups(user),
                         Roles = await GetUserRoles(user)
                     };

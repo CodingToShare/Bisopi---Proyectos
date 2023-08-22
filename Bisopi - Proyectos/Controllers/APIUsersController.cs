@@ -27,7 +27,7 @@ namespace Bisopi___Proyectos.Controllers
         public IActionResult GetUsersByRole(string role)
         {
             var usersWithRole = _userManager.GetUsersInRoleAsync(role).Result;
-            var usersData = usersWithRole.Select(u => new { u.Id, u.UserName, u.FirstName, u.LastName }).ToList();
+            var usersData = usersWithRole.Where(x => x.IsActive).Select(u => new { u.Id, u.UserName, u.FirstName, u.LastName }).ToList();
 
             var resultList = new List<UserData>();
 
@@ -47,7 +47,7 @@ namespace Bisopi___Proyectos.Controllers
         public IActionResult GetUsers()
         {
             var users = _userManager.Users.ToList();
-            var usersData = users.Select(u => new { u.Id, u.UserName, u.FirstName, u.LastName }).ToList();
+            var usersData = users.Where(x => x.IsActive).Select(u => new { u.Id, u.UserName, u.FirstName, u.LastName }).ToList();
 
             var resultList = new List<UserData>();
 

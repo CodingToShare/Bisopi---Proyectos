@@ -21,6 +21,7 @@ namespace Bisopi___Proyectos.Data
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Deal> Deals { get; set; }
         public DbSet<Lead> Leads { get; set; }
+        public DbSet<Level> Levels { get; set; }
         public DbSet<Milestone> Milestones { get; set; }
         public DbSet<MilestoneTemp> MilestonesTemps { get; set; }
         public DbSet<Project> Projects { get; set; }
@@ -35,7 +36,11 @@ namespace Bisopi___Proyectos.Data
         public DbSet<ResourcePlanningReal> ResourcePlanningReals { get; set; }
         public DbSet<ResourcePlanningTemp> ResourcesPlanningsTemps { get; set; }
         public DbSet<RetentionPercentage> RetentionPercentages { get; set; }
+        public DbSet<Study> Studies { get; set; }
         public DbSet<SupportStatus> SupportsStatus { get; set; }
+        public DbSet<Tool> Tools { get; set; }
+        public DbSet<UserStudy> UserStudies { get; set; }
+        public DbSet<UserToolLevel> UserToolLevels { get; set; }
         public DbSet<ProjectTask> ProjectTask{ get; set; }
         public DbSet<TaskGroup> TaskGroup{ get; set; }
         public DbSet<AllowedView> AllowedViews { get; set; }
