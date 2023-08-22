@@ -10,18 +10,27 @@ namespace Bisopi___Proyectos.Models
         public Guid ProjectTaskRegistryID { get; set; }
 
         [Display(Name = "Tarea")]
-        [Required(ErrorMessage = "El campo {0 es requerido}")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid ProjectTaskID { get; set; }
 
         [ForeignKey(nameof(ProjectTaskID))]
         public ProjectTask? ProjectTask { get; set; }
 
         [Display(Name = "Fecha de registro")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime RegistryDate { get; set; }
 
         public int ExecutionTime { get; set; } = 0;
+        [NotMapped]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        [Display(Name = "Horas")]
+        public int ExecutionTimeHours { get; set; }
+        [NotMapped]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        [Display(Name = "Minutos")]
+        public int ExecutionTimeMinutes { get; set; }
 
         public bool? McaExecution { get; set; }
         public bool? McaManual { get; set; }

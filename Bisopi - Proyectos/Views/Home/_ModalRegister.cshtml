@@ -1,0 +1,103 @@
+﻿@model ProjectTaskRegistry
+@using (Html.BeginForm("TaskLog", "Home", FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.ProjectTaskID, new { id = "ProjectTaskID" })
+    @Html.HiddenFor(x => x.ProjectTaskRegistryID, new { id = "ProjectTaskRegistryID" })
+    @using (Html.DevExtreme().ValidationGroup())
+    {
+        <!-- Modal -->
+        <div class="modal fade" id="ModalRegistro" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="ModalRegistro" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style='font-size:14px'>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Agregar Registro</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.RegistryDate)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().DateBoxFor(x => x.RegistryDate)
+                                            .InputAttr("aria-label", "Date")
+                                            .Type(DateBoxType.Date)
+                                            .Value(DateTime.Now)
+                                            .ID("RegistryDate")
+                                            )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="hora">Tiempo Ejecutado</label>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        @(Html.DevExtreme().NumberBoxFor(x => x.ExecutionTimeHours)
+                                            .Min(0.0)
+                                            .Value(null)
+                                            .ID("ExecutionTimeHours")
+                                            )
+                                    </div>
+                                    <div class="form-group col-md-2"><label for="hora">Horas</label></div>
+                                    <div class="form-group col-md-4">
+                                        @(Html.DevExtreme().NumberBoxFor(x => x.ExecutionTimeMinutes)
+                                            .Min(0.0)
+                                            .Max(59.0)
+                                            .Value(null)
+                                            .ID("ExecutionTimeMinutes")
+                                            )
+                                    </div>
+                                    <div class="form-group col-md-2"><label for="minuto">Minutos</label></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="dx-field">
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Comment)</div>
+                                    <div class="dx-field-item-content-location-bottom">
+                                        @(Html.DevExtreme().TextAreaFor(x => x.Comment).ID("Comment"))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        @(Html.DevExtreme().Button()
+                            .Text("Guardar")
+                            .Type(ButtonType.Success)
+                            .UseSubmitBehavior(true)
+                            )
+                        <button type="button" class="btn btn-danger" onclick="closeModal()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+<script>
+    function closeModal() {
+        $('#ModalRegistro').modal('hide')
+        $('#RegistryDate').dxDateBox('option', 'value', new Date())
+        $('#ExecutionTimeHours').dxNumberBox('option', 'value', '')
+        $('#ExecutionTimeMinutes').dxNumberBox('option', 'value', '')
+        $('#Comment').dxTextArea('option', 'value', '')
+    }
+    function editRegister(taskRegistryID){
+        $.ajax({
+            type:'get',
+            url: `/project/task/GetRegistry/${taskRegistryID}`,
+            success:(res)=>{
+                $('#ProjectTaskID').val(res['task'])
+                $('#ProjectTaskRegistryID').val(res['registry'])
+                $('#RegistryDate').dxDateBox('option', 'value', new Date(res['date']))
+                $('#ExecutionTimeHours').dxNumberBox('option', 'value', res['hours'])
+                $('#ExecutionTimeMinutes').dxNumberBox('option', 'value', res['minutes'])
+                $('#Comment').dxTextArea('option', 'value', res['comment'])
+                $('#ModalHistorialRegistro').modal('hide')
+                $('#ModalRegistro').modal('show')
+            },
+            error:()=>{
+                DevExpress.ui.notify("Hubo un error, intente de nuevo", "error");
+            }
+        })
+    }
+</script>

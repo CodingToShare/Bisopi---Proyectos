@@ -75,8 +75,12 @@
                             }
                         }   
                     </ul>
-                    <partial name="_LoginPartial" />
                 </div>
+                @if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="navbar-brand alert alert-success bg-success text-light p-2 d-flex align-items-center d-none" role="alert" id="div_crono_2" style='font-size:12px;'>Cargando...</div>
+                }
+                <partial name="_LoginPartial" />
             </div>
         </nav>
     </header>
@@ -102,4 +106,4 @@
 <script>
     DevExpress.localization.locale('es');
 </script>
-
+<script src="~/js/cron.js" asp-append-version="true"></script>
