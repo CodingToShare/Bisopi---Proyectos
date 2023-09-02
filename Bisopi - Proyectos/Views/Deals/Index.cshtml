@@ -35,11 +35,29 @@
     </div>
 </div>
 
-<h4>Leads</h4>
+<h4>Deals</h4>
 <hr />
 <br />
 
 <div id="kanban">
+    <div class="form-row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class="dx-field">
+                    <div class="dx-field-item-label-location-top">@Html.Label("Filtar Leads")</div>
+                    <div class="dx-field-item-content-location-bottom">
+                        <div class="dx-show-invalid-badge dx-textbox dx-texteditor dx-editor-outlined dx-widget">
+                            <div class="dx-texteditor-container">
+                                <div class="dx-texteditor-input-container">
+                                    <input type="text" id="searchInput" class="dx-texteditor-input" placeholder="Buscar ..." />
+                                </div>
+                            </div>                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @(Html.DevExtreme().ScrollView()
             .ElementAttr("class", "scrollable-board")
             .Direction(ScrollDirection.Horizontal)
@@ -65,3 +83,20 @@
             )
         )
 </div>
+
+<script>
+    $("#searchInput").on("input", function () {
+        var searchTerm = $(this).val().toLowerCase();
+
+        $(".card-subject").each(function () {
+            var cardText = $(this).text().toLowerCase();
+            var card = $(this).closest(".card");
+
+            if (cardText.includes(searchTerm)) {
+                card.removeClass("hidden"); // Mostrar la tarjeta
+            } else {
+                card.addClass("hidden"); // Ocultar la tarjeta
+            }
+        });
+    });
+</script>

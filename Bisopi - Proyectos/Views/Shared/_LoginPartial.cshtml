@@ -6,7 +6,7 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item dropdown">
+    <li class="nav-item dropdown" style="list-style-type: none;">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
             @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
             {
@@ -36,7 +36,7 @@ else
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </li>*@
 
-    <li class="nav-item">
+    <li class="nav-item" style="list-style-type: none;">
             <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Iniciar Sesión</a>
     </li>
 }

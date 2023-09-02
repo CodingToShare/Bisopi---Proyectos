@@ -28,6 +28,19 @@
         background-color: white; /* Fondo blanco para los botones */
         border: 1px solid #ccc; /* Agrega un borde para resaltar el botón */
     }
+
+    /* Agrega una transición suave para la propiedad opacity */
+    .card {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Cuando la tarjeta está oculta, ajusta la opacidad */
+    .card.hidden {
+        opacity: 0;
+        pointer-events: none; /* Evita interacciones con tarjetas ocultas */
+        height: 0; /* Opcional: si quieres que la tarjeta oculta no ocupe espacio */
+    }
 </style>
 
 @functions {
@@ -58,15 +71,15 @@
 
         <div class="card-buttons">
             <div class="btn-group-horizontal">
-                <button class="btn btn-white btn-icon" onclick="redirectToEdit('@item.Task.LeadID.ToString()')">
+                <button class="btn btn-white btn-icon" onclick="redirectToEdit('@item.Task.LeadID.ToString()')" title="Editar">
                     <img class="icon" src="~/img/edit.png">
                 </button>
 
-                <button class="btn btn-white btn-icon" onclick="redirectToLeadToDeal('@item.Task.LeadID.ToString()')">
+                <button class="btn btn-white btn-icon" onclick="redirectToLeadToDeal('@item.Task.LeadID.ToString()')" title="Convertir a Deal">
                     <img class="icon" src="~/img/convert.png">
                 </button>
 
-                <button class="btn btn-white btn-icon" onclick="confirmDelete('@item.Task.LeadID.ToString()')">
+                <button class="btn btn-white btn-icon" onclick="confirmDelete('@item.Task.LeadID.ToString()')" title="Eliminar">
                     <img class="icon" src="~/img/trash.png">
                 </button>
             </div>
@@ -92,8 +105,6 @@
     }
     <div class="list-title dx-theme-text-color" style="background-color:@Model.Color;">
         @Model.Status
-    </div>
-    <div class="list-title dx-theme-text-color" style="background-color:@Model.Color;">
         Total: @(string.Format("{0:C}", totalCalculateTRM))
     </div>
     @(Html.DevExtreme().ScrollView()
