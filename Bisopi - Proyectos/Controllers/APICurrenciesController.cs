@@ -59,7 +59,7 @@ namespace Bisopi___Proyectos.Controllers
                 loadOptions.Filter = filter;
             }
 
-            var currencies = _context.Currencies.Select(i => new {
+            var currencies = _context.Currencies.Where(x => x.IsActive).Select(i => new {
                 i.CurrencyID,
                 i.CurrencyName,
                 i.Abbreviation,

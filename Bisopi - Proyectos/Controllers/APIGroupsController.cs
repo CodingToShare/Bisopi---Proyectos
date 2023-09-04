@@ -45,6 +45,24 @@ namespace Bisopi___Proyectos.Controllers
             return Json(await DataSourceLoader.LoadAsync(groups, loadOptions));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetSelectBox(DataSourceLoadOptions loadOptions)
+        {
+            var currencies = _context.Groups.Where(x => x.IsActive).Select(i => new {
+                i.Id,
+                i.Name,
+                i.IsActive
+            });
+
+            // If underlying data is a large SQL table, specify PrimaryKey and PaginateViaPrimaryKey.
+            // This can make SQL execution plans more efficient.
+            // For more detailed information, please refer to this discussion: https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/336.
+            // loadOptions.PrimaryKey = new[] { "CurrencyID" };
+            // loadOptions.PaginateViaPrimaryKey = true;
+
+            return Json(await DataSourceLoader.LoadAsync(currencies, loadOptions));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post(string values) {
             var model = new Group();

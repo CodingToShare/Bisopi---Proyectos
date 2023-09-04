@@ -1,0 +1,194 @@
+﻿@model Bisopi___Proyectos.ViewModels.UserViewModel
+
+<h4>Crear Recurso</h4>
+<hr />
+<br />
+
+<div class="row">
+    <div class="col-12">
+        <span class="float-right">
+            <a class="btn btn-dark" href="Setup/Users">Volver</a>
+        </span>
+    </div>
+    <div class="col-12">
+        <form asp-controller="Users" asp-action="Add" method="post" enctype="multipart/form-data">
+
+            @using (Html.DevExtreme().ValidationGroup())
+            {
+                <div class="row">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.FirstName)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().TextBoxFor(x => x.FirstName)
+                                        .ID("FirstName")
+                                        .Placeholder("Escriba el nombre del recurso")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.LastName)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().TextBoxFor(x => x.LastName)
+                                        .ID("LastName")
+                                        .Placeholder("Escriba el apellido del recurso")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Area)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.Area)
+                                        .DisplayExpr("Name")
+                                        .ValueExpr("Id")
+                                        .ID("Area")
+                                        .DataSource(d => d.Mvc().Controller("APIGroups").LoadAction("GetSelectBox"))
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione un Area...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Roles)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.Roles)
+                                        .DisplayExpr("Name")
+                                        .ValueExpr("RolesDataID")
+                                        .ID("Roles")
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles"))
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione un cargo...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.IsActive)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().CheckBoxFor(x => x.IsActive)
+                                        .ID("IsActive")
+                                        .Value(true)
+                                        .ElementAttr("aria-label", "Checked")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Phone)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().TextBoxFor(x => x.Phone)
+                                        .ID("Phone")
+                                        .Placeholder("Escriba el Telefono")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.City)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.City)
+                                        .DisplayExpr("Name")
+                                        .ValueExpr("Id")
+                                        .ID("City")
+                                        .DataSource(d => d.Mvc().Controller("APICities").LoadAction("GetSelectBox"))
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione una ciudad...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Email)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().TextBoxFor(x => x.Email)
+                                        .ID("Email")
+                                        .Placeholder("Escriba el correo")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="col-md-12 p-4">
+                        <div class="form-group">
+                            <div class="center">
+                                @(Html.DevExtreme().Button()
+                                    .ElementAttr("class", "validate")
+                                    .Text("Guardar")
+                                    .Type(ButtonType.Success)
+                                    .UseSubmitBehavior(true)
+                                    .OnClick("saveClick")
+                                    )
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+
+                </div>
+            }
+        </form>
+    </div>
+
+</div>
+
+<script>
+    DevExpress.config({
+        editorStylingMode: "filled"
+    });
+
+    function saveClick(e) {
+        var result = e.validationGroup.validate();
+        if (!result.isValid) {
+            DevExpress.ui.notify("Debe diligenciar todos los campos obligatorios.", "error");
+            e.cancel;
+        }
+    }
+
+</script>

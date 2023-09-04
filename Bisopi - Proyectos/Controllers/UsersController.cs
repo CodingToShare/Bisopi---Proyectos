@@ -1,4 +1,5 @@
-﻿using Bisopi___Proyectos.Data;
+﻿using Bisopi___Proyectos.Alerts;
+using Bisopi___Proyectos.Data;
 using Bisopi___Proyectos.Extensions;
 using Bisopi___Proyectos.Models;
 using Bisopi___Proyectos.ViewModels;
@@ -24,9 +25,15 @@ namespace Bisopi___Proyectos.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Add()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Add(UserViewModel model)
+        {
+            return RedirectToAction("Users","Setup").WithSuccess("El recurso se registro satisfactoriamente");
         }
 
         public async Task<IActionResult> GetUsers(DataSourceLoadOptions loadOptions)
