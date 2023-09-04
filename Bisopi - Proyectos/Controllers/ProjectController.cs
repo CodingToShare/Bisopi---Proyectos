@@ -1,4 +1,5 @@
 ﻿using Bisopi___Proyectos.Alerts;
+using Bisopi___Proyectos.Calendar;
 using Bisopi___Proyectos.Data;
 using Bisopi___Proyectos.Models;
 using Bisopi___Proyectos.ModelsTemps;
@@ -7,8 +8,10 @@ using Humanizer.Localisation.TimeToClockNotation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Evaluation;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 using Project = Bisopi___Proyectos.Models.Project;
 
 namespace Bisopi___Proyectos.Controllers
@@ -97,7 +100,7 @@ namespace Bisopi___Proyectos.Controllers
             model.IsActive = true;
             model.Created = DateTime.UtcNow.AddHours(-5);
             model.CreatedBy = User.Identity.Name;
-            model.Modified= DateTime.UtcNow.AddHours(-5);
+            model.Modified = DateTime.UtcNow.AddHours(-5);
             model.ModifiedBy = User.Identity.Name;
 
             var details = _context.MilestonesTemps.Where(x => x.ProjectID == model.ProjectID).ToList();
@@ -195,7 +198,7 @@ namespace Bisopi___Proyectos.Controllers
             _context.SaveChanges();
 
 
-            return RedirectToAction("Index","Project").WithSuccess("El registro ha sido exitoso");
+            return RedirectToAction("Index", "Project").WithSuccess("El registro ha sido exitoso");
         }
 
         [HttpPost]
@@ -215,24 +218,24 @@ namespace Bisopi___Proyectos.Controllers
         public async Task<IActionResult> Task(Guid id)
         {
             Project? project = await _context.Projects
-                .Include(x=> x.Client)
-                .Include(x=> x.Country)
-                .Include(x=> x.ProjectStatus)
-                .Include(x=> x.ProjectType)
-                .Include(x=> x.Currency)
-                .FirstOrDefaultAsync(x=> x.ProjectID == id);
+                .Include(x => x.Client)
+                .Include(x => x.Country)
+                .Include(x => x.ProjectStatus)
+                .Include(x => x.ProjectType)
+                .Include(x => x.Currency)
+                .FirstOrDefaultAsync(x => x.ProjectID == id);
             if (project == null)
                 return RedirectToAction(nameof(Index));
             var leader = await _userManager.FindByIdAsync(project.LeaderID.ToString());
             if (leader != null)
             {
-                if(leader.NormalizedUserName != null)
+                if (leader.NormalizedUserName != null)
                     project.LeaderName = leader.NormalizedUserName;
             }
             var projectManager = await _userManager.FindByIdAsync(project.ProjectManagerID.ToString());
             if (projectManager != null)
             {
-                if(projectManager.NormalizedUserName != null)
+                if (projectManager.NormalizedUserName != null)
                     project.ProjectManagerName = projectManager.NormalizedUserName;
             }
             ProjectTask model = new()
@@ -530,6 +533,119 @@ namespace Bisopi___Proyectos.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Milestone", "Project", new { id = modelProject.ProjectID }).WithSuccess("La factura ha sido aprovada");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Programming(Guid id)
+        {
+            var programmings = _context.Programmings.Where(x => x.ProjectID == id && x.IsActive).ToList();
+
+            var programming = new Programming()
+            {
+                ProjectID = id
+            };
+
+            foreach (var progra in programmings)
+            {
+                var resource = _userManager.FindByIdAsync(progra.ResourceID.ToString());
+
+                progra.ResourceName = resource.Result.FirstName + " " + resource.Result.LastName;
+            }
+
+            Models.Project? project = await _context.Projects
+                .Include(x => x.Client)
+                .Include(x => x.Country)
+                .Include(x => x.ProjectStatus)
+                .Include(x => x.ProjectType)
+                .Include(x => x.Currency)
+                .FirstOrDefaultAsync(x => x.ProjectID == id);
+
+            var actualTime = project.StartDate.Value;
+
+            var months = new List<Month>();
+
+            while (actualTime <= project.EstimatedDeliveryDate)
+            {
+                months.Add(new Month(actualTime.Month, actualTime.Year));
+                actualTime = actualTime.AddMonths(1);
+            }
+
+            var programmingViewModel = new ProgrammingViewModel()
+            {
+                ProgrammingsList = programmings,
+                Programming = programming,
+                Project = project,
+                Months = months
+            };
+
+
+            return View(programmingViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProgramming(ProgrammingViewModel viewModelProgramming)
+        {
+            var model = viewModelProgramming.Programming;
+
+            var project = _context.Projects.Where(x => x.ProjectID == model.ProjectID).FirstOrDefault();
+
+            if (model.StartDate < project.StartDate || model.EndDate > project.EstimatedDeliveryDate)
+            {
+                return RedirectToAction("Programming", "Project", new { id = viewModelProgramming.Programming.ProjectID }).WithError("Las fechas estan por fuera del tiempo estimado del proyecto");
+            }
+
+            var user = _context.Programmings.Where(x => x.ResourceID == model.ResourceID).FirstOrDefault();
+
+            if (user != null)
+            {
+                return RedirectToAction("Programming", "Project", new { id = viewModelProgramming.Programming.ProjectID }).WithError("El recurso ya ha sido registrado");
+            }
+
+            model.ProgrammingID = new Guid();
+            model.IsActive = true;
+            model.Created = DateTime.UtcNow.AddHours(-5);
+            model.CreatedBy = User.Identity.Name;
+            model.Modified = DateTime.UtcNow.AddHours(-5);
+            model.ModifiedBy = User.Identity.Name;
+
+            _context.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("Programming", "Project", new { id = viewModelProgramming.Programming.ProjectID }).WithSuccess("La programacion ha sido registrada");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProgramming(ProgrammingViewModel viewModelProgramming)
+        {
+            var model = viewModelProgramming.Programming;
+
+            var modelUpdate = _context.Programmings.Where(x => x.ResourceID == model.ResourceID && x.ProjectID == model.ProjectID).FirstOrDefault();
+
+            modelUpdate.StartDate = model.StartDate;
+            modelUpdate.EndDate = model.EndDate;
+            modelUpdate.AllocationPercentage = model.AllocationPercentage;
+            modelUpdate.ModifiedBy = User.Identity.Name;
+            modelUpdate.Modified = DateTime.UtcNow.AddHours(-5);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Programming", "Project", new { id = viewModelProgramming.Programming.ProjectID }).WithSuccess("La programacion ha sido actualizada");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteProgramming(ProgrammingViewModel viewModelProgramming)
+        {
+            var model = viewModelProgramming.Programming;
+
+            var modelUpdate = _context.Programmings.Where(x => x.ResourceID == model.ResourceID && x.ProjectID == model.ProjectID).FirstOrDefault();
+
+            modelUpdate.IsActive = false;
+            modelUpdate.ModifiedBy = User.Identity.Name;
+            modelUpdate.Modified = DateTime.UtcNow.AddHours(-5);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Programming", "Project", new { id = viewModelProgramming.Programming.ProjectID }).WithSuccess("La programacion ha sido eliminada");
         }
     }
 }

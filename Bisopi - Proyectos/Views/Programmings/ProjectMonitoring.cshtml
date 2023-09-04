@@ -1,0 +1,160 @@
+﻿@model Bisopi___Proyectos.ViewModels.ProgrammingViewModel
+@using System.Globalization
+
+<style>
+    table, th, td {
+        padding: 0px;
+        border-collapse: collapse;
+    }
+
+    th {
+        min-width: 50px;
+        /* background-color: red; */
+    }
+
+    td {
+        min-width: 50px;
+    }
+
+    .main-table {
+        border: 1px solid black;
+        margin-left: 178px;
+    }
+
+    .name-space {
+        width: 200px;
+    }
+</style>
+
+<h4>Seguimiento Proyectos</h4>
+<hr />
+<br />
+
+<table class="">
+    <tr>
+        <th style="width:300px; color:white;">.</th>
+        @foreach (var month in Model.Months)
+        {
+            <th>
+                @month.Name
+            </th>
+        }
+    </tr>
+    <tr>
+        <td style="width:300px; color:white;">.</td>
+        @foreach (var month in Model.Months)
+        {
+            <td>
+                <table>
+                    <tr>
+                        @foreach (var week in month.Weeks)
+                        {
+                            <th>
+                                @week.StartDate.ToShortDateString()
+                            </th>
+                        }
+                    </tr>
+                    <tr>
+                        @foreach (var week in month.Weeks)
+                        {
+                            <td>
+                                <table>
+                                    <tr>
+                                        @foreach (var day in week.Days)
+                                        {
+                                            <th>
+                                                @day.Abbreviation
+                                            </th>
+                                        }
+                                    </tr>
+                                    <tr>
+                                        @foreach (var day in week.Days)
+                                        {
+                                            <th>
+                                                @day.Number
+                                            </th>
+                                        }
+                                    </tr>
+                                </table>
+                            </td>
+                        }
+                    </tr>
+                </table>
+            </td>
+        }
+    </tr>
+</table>
+@foreach (var project in Model.ProjectsList)
+{
+    <table class="">
+        <tr>
+            <th style="width:300px;">
+                @project.ProjectName
+            </th>
+            @foreach (var month in Model.Months)
+            {
+                @foreach (var week in month.Weeks)
+                {
+                    @foreach (var day in week.Days)
+                    {
+                        <th style="color:white;">
+                            .
+                        </th>
+                    }
+                }
+            }
+        </tr>
+        @foreach (var programming in Model.ProgrammingsList)
+        {
+            @if (project.ProjectID == programming.ProjectID)
+            {
+                <tr>
+                    <td style="width:300px;">
+                        @programming.ResourceName
+                    </td>
+                    @foreach (var month in Model.Months)
+                    {
+                        @foreach (var week in month.Weeks)
+                        {
+                            @foreach (var day in week.Days)
+                            {
+
+                                var porcentaje = programming.AllocationPercentage * 100;
+
+                                <th>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-dark p-0 dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <small>@porcentaje %</small>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <p class="dropdown-item small ">
+                                                <span>Liderazgo</span>
+                                            </p>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item small ">25%</a>
+                                            <a class="dropdown-item small ">50%</a>
+                                            <a class="dropdown-item small ">75%</a>
+                                            <a class="dropdown-item small ">100%</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item small">
+                                                <input type="number" value="@porcentaje">
+                                                %
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item small">Eliminar</a>
+                                        </div>
+                                    </div>
+                                </th>
+                            }
+                        }
+                    }
+                </tr>
+            }           
+        }
+    </table>
+}
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -1,0 +1,512 @@
+﻿@model Bisopi___Proyectos.ViewModels.ProgrammingViewModel
+@using System.Globalization
+
+<style>
+    table, th, td {
+        padding: 0px;
+        border-collapse: collapse;
+    }
+
+    th {
+        min-width: 50px;
+        /* background-color: red; */
+    }
+
+    td {
+        min-width: 50px;
+    }
+
+    .main-table {
+        border: 1px solid black;
+        margin-left: 178px;
+    }
+
+    .name-space {
+        width: 200px;
+    }
+</style>
+
+<a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Create">
+    <img title="Nuevo" style="width:24px;cursor:pointer;" src="~/img/add.png" />
+    Nuevo
+</a>
+<a type="button" class="btn p-1 btn-outline-secondary" href="/Project/Index">
+    <img title="Listado" style="width:24px;cursor:pointer;" src="~/img/list.png" />
+    Listado
+</a>
+
+<div class="p-3" style='font-size:14px'>
+    <div class="h3">Programación</div>
+    <partial name="_ProjectInfo" model="Model.Project" />
+    <div class="p-3">
+
+        <table class="">
+            <tr>
+                <th style="width:300px; color:white;">.</th>
+                @foreach (var month in Model.Months)
+                {
+                    <th>
+                        @month.Name
+                    </th>
+                }
+            </tr>
+            <tr>
+                <td style="width:300px; color:white;">.</td>
+                @foreach (var month in Model.Months)
+                {
+                <td>
+                    <table>
+                        <tr>
+                            @foreach (var week in month.Weeks)
+                            {
+                                <th>
+                                    @week.StartDate.ToShortDateString()
+                                </th>
+                            }
+                        </tr>
+                        <tr>
+                            @foreach (var week in month.Weeks)
+                            {
+                                <td>
+                                    <table>
+                                        <tr>
+                                            @foreach (var day in week.Days)
+                                            {
+                                                <th>
+                                                    @day.Abbreviation
+                                                </th>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            @foreach (var day in week.Days)
+                                            {
+                                            <th>
+                                                @day.Number
+                                            </th>
+                                            }
+                                        </tr>
+                                    </table>
+                                </td>
+                            }
+                        </tr>
+                    </table>
+                </td>
+                }
+            </tr>
+        </table>
+        @foreach (var programming in Model.ProgrammingsList)
+        {
+            <table class="">
+                <tr>               
+                    <td style="width:300px;">
+                        @programming.ResourceName
+                    </td>
+                    @foreach (var month in Model.Months)
+                    {
+                        @foreach (var week in month.Weeks)
+                        {
+                            @foreach (var day in week.Days)
+                            {
+                                
+                                var porcentaje = programming.AllocationPercentage * 100;
+                               
+                                <th>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-dark p-0 dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <small>@porcentaje %</small>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <p class="dropdown-item small ">
+                                                <span>Liderazgo</span>
+                                            </p>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item small ">25%</a>
+                                            <a class="dropdown-item small ">50%</a>
+                                            <a class="dropdown-item small ">75%</a>
+                                            <a class="dropdown-item small ">100%</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item small">
+                                                <input type="number" value="@porcentaje">
+                                                %
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item small">Eliminar</a>
+                                        </div>
+                                    </div>
+                                </th>
+                            }
+                        }
+                    }
+                </tr>
+            </table>
+        }
+
+    </div>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalHito" name="openTarea" id="openTarea">Agregar Programacion</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalHitoActualizar" name="openTarea" id="openTareaUpdate">Actualizar Programacion</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalHitoEliminar" name="openTarea" id="openTareaDelete">Eliminar Programacion</button>
+    <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
+</div>
+
+@using (Html.BeginForm("AddProgramming", "Project", FormMethod.Post))
+{
+    @using (Html.DevExtreme().ValidationGroup())
+    {
+        @Html.HiddenFor(x => x.Programming.ProjectID, new { @class = "ProjectID" })
+        <!-- Modal -->
+        <div class="modal fade" id="ModalHito" tabindex="-1" data-backdrop="static" data-keyboard="true" role="dialog" aria-labelledby="ModalHito" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style='font-size:14px'>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tareaModalLabel">Agregar Programacion</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourceID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.Programming.ResourceID)
+                                                .DisplayExpr("FirstNameAndLastNAme")
+                                                .ValueExpr("UserDataID")
+                                                .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione una recurso...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourcePositionID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.Programming.ResourcePositionID)
+                                                .DisplayExpr("Name")
+                                                .ValueExpr("RolesDataID")
+                                                .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles").Key("ResourceID"))
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione una cargo...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ActivityTypeID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.Programming.ActivityTypeID)
+                                                .DisplayExpr("ActivityTypeName")
+                                                .ValueExpr("ActivityTypeID")
+                                                .DataSource(d => d.Mvc().Controller("APIActivityTypes").LoadAction("GetSelectBox").Key("ActivityTypeID"))
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione una tipo de actividad...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.StartDate)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().DateBoxFor(x => x.Programming.StartDate)
+                                                .InputAttr("aria-label", "Date")
+                                                .Type(DateBoxType.Date)
+                                                .Value(DateTime.Now)
+                                                .Placeholder("Seleccione la fecha de inicio ...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.EndDate)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().DateBoxFor(x => x.Programming.EndDate)
+                                                .InputAttr("aria-label", "Date")
+                                                .Type(DateBoxType.Date)
+                                                .Value(DateTime.Now)
+                                                .Placeholder("Seleccione la fecha de fin ...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.AllocationPercentage)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.Programming.AllocationPercentage)
+                                                .Placeholder("Escriba el porcentaje")
+                                                .Format("## %")
+                                                .InputAttr("aria-label", "Currency Format")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.Comments)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().TextAreaFor(x => x.Programming.Comments)
+                                                .Placeholder("Escriba los comentarios")
+                                                .AutoResizeEnabled(true)
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="id_proyecto_tarea" name="id_proyecto_tarea" value="">
+                        <input type="hidden" id="cod_proyecto" name="cod_proyecto" value="">
+                        @(Html.DevExtreme().Button()
+                            .ElementAttr("class", "validate")
+                            .Text("Guardar")
+                            .Type(ButtonType.Success)
+                            .UseSubmitBehavior(true)
+                            )
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@using (Html.BeginForm("UpdateProgramming", "Project", FormMethod.Post))
+{
+    @using (Html.DevExtreme().ValidationGroup())
+    {
+        @Html.HiddenFor(x => x.Programming.ProjectID, new { @class = "ProjectID" })
+        <!-- Modal -->
+        <div class="modal fade" id="ModalHitoActualizar" tabindex="-1" data-backdrop="static" data-keyboard="true" role="dialog" aria-labelledby="ModalHitoActualizar" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style='font-size:14px'>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tareaModalLabel">Actualizar Programacion</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourceID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.Programming.ResourceID)
+                                                .DisplayExpr("FirstNameAndLastNAme")
+                                                .ValueExpr("UserDataID")
+                                                .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione una recurso...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.AllocationPercentage)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.Programming.AllocationPercentage)
+                                                .Placeholder("Escriba el porcentaje")
+                                                .Format("## %")
+                                                .InputAttr("aria-label", "Currency Format")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.StartDate)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().DateBoxFor(x => x.Programming.StartDate)
+                                                .InputAttr("aria-label", "Date")
+                                                .Type(DateBoxType.Date)
+                                                .Value(DateTime.Now)
+                                                .Placeholder("Seleccione la fecha de inicio ...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.EndDate)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().DateBoxFor(x => x.Programming.EndDate)
+                                                .InputAttr("aria-label", "Date")
+                                                .Type(DateBoxType.Date)
+                                                .Value(DateTime.Now)
+                                                .Placeholder("Seleccione la fecha de fin ...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="id_proyecto_tarea" name="id_proyecto_tarea" value="">
+                        <input type="hidden" id="cod_proyecto" name="cod_proyecto" value="">
+                        @(Html.DevExtreme().Button()
+                            .ElementAttr("class", "validate")
+                            .Text("Guardar")
+                            .Type(ButtonType.Success)
+                            .UseSubmitBehavior(true)
+                            )
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@using (Html.BeginForm("DeleteProgramming", "Project", FormMethod.Post))
+{
+    @using (Html.DevExtreme().ValidationGroup())
+    {
+        @Html.HiddenFor(x => x.Programming.ProjectID, new { @class = "ProjectID" })
+        <!-- Modal -->
+        <div class="modal fade" id="ModalHitoEliminar" tabindex="-1" data-backdrop="static" data-keyboard="true" role="dialog" aria-labelledby="ModalHitoEliminar" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style='font-size:14px'>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tareaModalLabel">Eliminar Programacion</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourceID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.Programming.ResourceID)
+                                                .DisplayExpr("FirstNameAndLastNAme")
+                                                .ValueExpr("UserDataID")
+                                                .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione una recurso...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.StartDate)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().DateBoxFor(x => x.Programming.StartDate)
+                                                .InputAttr("aria-label", "Date")
+                                                .Type(DateBoxType.Date)
+                                                .Value(DateTime.Now)
+                                                .Placeholder("Seleccione la fecha de inicio ...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.EndDate)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().DateBoxFor(x => x.Programming.EndDate)
+                                                .InputAttr("aria-label", "Date")
+                                                .Type(DateBoxType.Date)
+                                                .Value(DateTime.Now)
+                                                .Placeholder("Seleccione la fecha de fin ...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="id_proyecto_tarea" name="id_proyecto_tarea" value="">
+                        <input type="hidden" id="cod_proyecto" name="cod_proyecto" value="">
+                        @(Html.DevExtreme().Button()
+                            .ElementAttr("class", "validate")
+                            .Text("Guardar")
+                            .Type(ButtonType.Success)
+                            .UseSubmitBehavior(true)
+                            )
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<script>
+    DevExpress.config({
+        editorStylingMode: "filled"
+    });
+
+    $("#cancel").click(function () {
+        history.back();
+        return false;
+    });
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

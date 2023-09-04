@@ -101,5 +101,10 @@ namespace Bisopi___Proyectos.Controllers
             return View();
         }
 
+        public IActionResult ActivityType()
+        {
+            return View();
+        }
+
     }
 }

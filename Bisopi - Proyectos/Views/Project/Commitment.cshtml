@@ -97,7 +97,7 @@
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalCompromiso" name="openTarea" id="openTarea">Agregar Compromiso</button>
     <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
 </div>
-@using (Html.BeginForm("Project", "Commitment", FormMethod.Post))
+@using (Html.BeginForm("Commitment", "Project", FormMethod.Post))
 {
     @using (Html.DevExtreme().ValidationGroup())
     {
