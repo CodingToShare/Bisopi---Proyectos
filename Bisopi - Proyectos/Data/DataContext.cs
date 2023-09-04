@@ -11,6 +11,7 @@ namespace Bisopi___Proyectos.Data
             //Database.Migrate();
         }
 
+        public DbSet<ActivityType> ActivityTypes { get; set; }
         public DbSet<Bill> Bills { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -24,6 +25,7 @@ namespace Bisopi___Proyectos.Data
         public DbSet<Level> Levels { get; set; }
         public DbSet<Milestone> Milestones { get; set; }
         public DbSet<MilestoneTemp> MilestonesTemps { get; set; }
+        public DbSet<Programming> Programmings { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectCommitment> ProjectCommitments { get; set; }
         public DbSet<ProjectStatus> ProjectsStatus { get; set; }
