@@ -32,6 +32,12 @@ namespace Bisopi___Proyectos.Models
         [Display(Name = "Horas Etc")]
         public double? EtcHour { get; set; }
 
+        [Display(Name = "Tarifa")]
+        public double? Fee { get; set; }
+
+        [Display(Name = "Costos")]
+        public double? Cost { get; set; }
+
         [Display(Name = "¿Activo?")]
         public bool IsActive { get; set; }
 

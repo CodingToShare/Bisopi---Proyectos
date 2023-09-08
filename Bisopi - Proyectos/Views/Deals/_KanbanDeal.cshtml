@@ -51,7 +51,7 @@
 
 @{
     Func<CardTasks, IHtmlContent> CreateCards = @<div class="card dx-card dx-theme-text-color dx-theme-background-color" data-target-id="@item.Task.DealID" >
-        <div class="card-priority priority-2"></div>
+        <div class="card-priority priority-@item.Task.pripriority"></div>
         <div class="card-subject">@item.Task.DealName</div>
         @{
                 string[] dayAbbreviations = { "Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb" };

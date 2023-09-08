@@ -70,6 +70,74 @@
                         </div>
                     </div>
 
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.AssignedPresaleID)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().SelectBoxFor(x => x.AssignedPresaleID)
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("AssignedPresaleID"))
+                                        .DisplayExpr("FirstNameAndLastNAme")
+                                        .ValueExpr("UserDataID")
+                                        .SearchMode(DropDownSearchMode.Contains)
+                                        .SearchEnabled(true)
+                                        .MinSearchLength(3)
+                                        .ShowDataBeforeSearch(true)
+                                        .ShowDropDownButton(true)
+                                        .DeferRendering(false)
+                                        .Placeholder("Seleccione un usuario...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProposedDeliveryDate)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().DateBoxFor(x => x.ProposedDeliveryDate)
+                                        .InputAttr("aria-label", "Date")
+                                        .Type(DateBoxType.Date)
+                                        .Value(DateTime.Now)
+                                        .Placeholder("Seleccione la fecha de de entrega propuesta ...")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Billable)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().CheckBoxFor(x => x.Billable)
+                                        .ID("billable")
+                                        .Value(true)
+                                        .ElementAttr("aria-label", "Checked")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="dx-fieldPlannedMilestones">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.PlannedMilestones)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.PlannedMilestones)
+                                        .ID("PlannedMilestones")
+                                        .Placeholder("Escriba el numero de hitos")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="dx-field">
@@ -272,19 +340,21 @@
                                     b.Add().Name(GridColumnButtonName.Delete);
                                 });
 
-                                columns.AddFor(m => m.ResourceID)
-                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
-                                .DisplayExpr("FirstNameAndLastNAme")
-                                .ValueExpr("UserDataID"));
-
                                 columns.AddFor(m => m.PositionID)
                                 .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles"))
                                 .DisplayExpr("Name")
                                 .ValueExpr("RolesDataID"));
 
+                                columns.AddFor(m => m.ResourceID)
+                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
+                                .DisplayExpr("FirstNameAndLastNAme")
+                                .ValueExpr("UserDataID"));
+
                                 columns.AddFor(m => m.PlannedHours);
 
-                                columns.AddFor(m => m.EtcHour);
+                                columns.AddFor(m => m.Fee);
+
+                                columns.AddFor(m => m.Cost);
 
                             })
                             .Editing(e => e

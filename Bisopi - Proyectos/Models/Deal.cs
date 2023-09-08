@@ -35,6 +35,22 @@ namespace Bisopi___Proyectos.Models
         [Display(Name = "Valor")]
         public double? LeadValue { get; set; }
 
+        [Display(Name = "Preventa asignado")]
+        [Column(TypeName = "varchar(200)")]
+        public Guid? AssignedPresaleID { get; set; }
+
+        [Display(Name = "Fecha de entrega propuesta")]
+        [DataType(DataType.DateTime)]
+        [ScaffoldColumn(false)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime ProposedDeliveryDate { get; set; }
+
+        [Display(Name = "Facturable (Si/No)")]
+        public bool Billable { get; set; }
+
+        [Display(Name = "Hitos planeados")]
+        public double? PlannedMilestones { get; set; }
+
         [Display(Name = "Comentarios")]
         [Column(TypeName = "varchar(1000)")]
         public string? Comments { get; set; }
@@ -75,5 +91,9 @@ namespace Bisopi___Proyectos.Models
 
         [NotMapped]
         public string? Abbreviation { get; set; }
+
+        [NotMapped]
+        public string pripriority { get; set; }
+
     }
 }

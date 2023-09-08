@@ -4,6 +4,7 @@ using Bisopi___Proyectos.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bisopi___Proyectos.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230906015220_UpdateMilestones")]
+    partial class UpdateMilestones
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -513,12 +516,6 @@ namespace Bisopi___Proyectos.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AssignedPresaleID")
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<bool>("Billable")
-                        .HasColumnType("bit");
-
                     b.Property<Guid?>("ClientID")
                         .IsRequired()
                         .HasColumnType("uniqueidentifier");
@@ -554,12 +551,6 @@ namespace Bisopi___Proyectos.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(100)");
-
-                    b.Property<double?>("PlannedMilestones")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("ProposedDeliveryDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("QuoteStatusID")
                         .IsRequired()

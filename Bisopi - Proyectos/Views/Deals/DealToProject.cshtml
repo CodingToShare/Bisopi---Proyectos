@@ -99,6 +99,7 @@
                         </div>
                     </div>
 
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="dx-field">
@@ -598,19 +599,21 @@
                                     b.Add().Name(GridColumnButtonName.Delete);
                                 });
 
-                                columns.AddFor(m => m.ResourceID)
-                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
-                                .DisplayExpr("FirstNameAndLastNAme")
-                                .ValueExpr("UserDataID"));
-
                                 columns.AddFor(m => m.PositionID)
                                 .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles"))
                                 .DisplayExpr("Name")
                                 .ValueExpr("RolesDataID"));
 
+                                columns.AddFor(m => m.ResourceID)
+                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
+                                .DisplayExpr("FirstNameAndLastNAme")
+                                .ValueExpr("UserDataID"));
+
                                 columns.AddFor(m => m.PlannedHours);
 
-                                columns.AddFor(m => m.EtcHour);
+                                columns.AddFor(m => m.Fee);
+
+                                columns.AddFor(m => m.Cost);
 
                             })
                             .Editing(e => e

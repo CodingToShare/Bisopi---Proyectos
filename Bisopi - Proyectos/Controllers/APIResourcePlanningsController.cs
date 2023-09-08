@@ -35,6 +35,8 @@ namespace Bisopi___Proyectos.Controllers
                 i.PositionID,
                 i.PlannedHours,
                 i.EtcHour,
+                i.Fee,
+                i.Cost,
                 i.IsActive,
                 i.CreatedBy,
                 i.Created,
@@ -123,6 +125,8 @@ namespace Bisopi___Proyectos.Controllers
             string PLANNED_HOURS = nameof(ResourcePlanning.PlannedHours);
             string ETC_HOUR = nameof(ResourcePlanning.EtcHour);
             string IS_ACTIVE = nameof(ResourcePlanning.IsActive);
+            string FEE = nameof(ResourcePlanning.Fee);
+            string COST = nameof(ResourcePlanning.Cost);
             string CREATED_BY = nameof(ResourcePlanning.CreatedBy);
             string CREATED = nameof(ResourcePlanning.Created);
             string MODIFIED_BY = nameof(ResourcePlanning.ModifiedBy);
@@ -160,7 +164,17 @@ namespace Bisopi___Proyectos.Controllers
                 model.EtcHour = values[ETC_HOUR] != null ? Convert.ToDouble(values[ETC_HOUR], CultureInfo.InvariantCulture) : (double?)null;
             }
 
-            if(values.Contains(IS_ACTIVE)) {
+            if (values.Contains(FEE))
+            {
+                model.Fee = values[FEE] != null ? Convert.ToDouble(values[FEE], CultureInfo.InvariantCulture) : (double?)null;
+            }
+
+            if (values.Contains(COST))
+            {
+                model.Cost = values[COST] != null ? Convert.ToDouble(values[COST], CultureInfo.InvariantCulture) : (double?)null;
+            }
+
+            if (values.Contains(IS_ACTIVE)) {
                 model.IsActive = Convert.ToBoolean(values[IS_ACTIVE]);
             }
 

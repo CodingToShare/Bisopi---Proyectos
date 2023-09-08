@@ -36,6 +36,20 @@ namespace Bisopi___Proyectos.Controllers
                     item.ProjectedRm = 0;
                     item.Abbreviation = "";
                 }
+
+                item.pripriority = "2";
+
+                if (item.ProposedDeliveryDate <= DateTime.UtcNow.AddHours(-5).AddDays(2))
+                {
+                    item.pripriority = "1";
+                }
+                else
+                {
+                    if (item.ProposedDeliveryDate <= DateTime.UtcNow.AddHours(-5).AddDays(5))
+                    {
+                        item.pripriority = "3";
+                    }
+                }
             }
 
             var model = new KanbanDealViewModel();
@@ -109,6 +123,8 @@ namespace Bisopi___Proyectos.Controllers
                     newDetail.PositionID = item.PositionID;
                     newDetail.PlannedHours = item.PlannedHours;
                     newDetail.EtcHour = item.EtcHour;
+                    newDetail.Fee = item.Fee;
+                    newDetail.Cost = item.Cost;
                     newDetail.IsActive = item.IsActive;
                     newDetail.Created = item.Created;
                     newDetail.CreatedBy = item.CreatedBy;
@@ -192,6 +208,8 @@ namespace Bisopi___Proyectos.Controllers
                     newDetail.PositionID = item.PositionID;
                     newDetail.PlannedHours = item.PlannedHours;
                     newDetail.EtcHour = item.EtcHour;
+                    newDetail.Fee = item.Fee;
+                    newDetail.Cost = item.Cost;
                     newDetail.IsActive = item.IsActive;
                     newDetail.Created = item.Created;
                     newDetail.CreatedBy = item.CreatedBy;
@@ -273,6 +291,8 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.PositionID = item.PositionID;
                 newDetail.PlannedHours = item.PlannedHours;
                 newDetail.EtcHour = item.EtcHour;
+                newDetail.Fee = item.Fee;
+                newDetail.Cost = item.Cost;
                 newDetail.IsActive = item.IsActive;
                 newDetail.Created = item.Created;
                 newDetail.CreatedBy = item.CreatedBy;
@@ -343,6 +363,8 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.PositionID = item.PositionID;
                 newDetail.PlannedHours = item.PlannedHours;
                 newDetail.EtcHour = item.EtcHour;
+                newDetail.Fee = item.Fee;
+                newDetail.Cost = item.Cost;
                 newDetail.IsActive = item.IsActive;
                 newDetail.Created = item.Created;
                 newDetail.CreatedBy = item.CreatedBy;
@@ -458,6 +480,8 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.PositionID = item.PositionID;
                 newDetail.PlannedHours = item.PlannedHours;
                 newDetail.EtcHour = item.EtcHour;
+                newDetail.Fee = item.Fee;
+                newDetail.Cost = item.Cost;
                 newDetail.IsActive = item.IsActive;
                 newDetail.Created = item.Created;
                 newDetail.CreatedBy = item.CreatedBy;

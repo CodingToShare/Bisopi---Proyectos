@@ -29,6 +29,12 @@ namespace Bisopi___Proyectos.ModelsTemps
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public double? PlannedHours { get; set; }
 
+        [Display(Name = "Tarifa")]
+        public double? Fee { get; set; }
+
+        [Display(Name = "Costos")]
+        public double? Cost { get; set; }
+
         [Display(Name = "Horas Etc")]
         public double? EtcHour { get; set; }
 
