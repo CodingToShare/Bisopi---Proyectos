@@ -25,7 +25,7 @@ namespace Bisopi___Proyectos.Models
         [Display(Name = "Fecha Hasta")]
         public DateTime? DateUntil { get; set; }
 
-        [Display(Name = "Valor Proyecto")]
+        [Display(Name = "Valor Hora")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public double? ProjectValue { get; set; }
 
