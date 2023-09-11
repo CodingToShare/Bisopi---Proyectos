@@ -40,11 +40,15 @@ namespace Bisopi___Proyectos.Controllers
                     item.RetentionValue = item.Value * (modelRetention.Retention/100);
                     item.TotalBill = item.Value * (modelRetention.Retention/100);
                     item.TRM = modelProject.TRMProject;
-                    item.SubTotalBillCOP = modelTRM.ProjectedRm * item.Value;
-                    item.RetentionValueCOP = item.SubTotalBillCOP * (modelRetention.Retention / 100);
-                    item.ValueAddedTax = (modelRetention.ValueAddedTax * item.SubTotalBillCOP)/100;
-                    item.ValueAddedTaxWuthholding = (modelRetention.ValueAddedTax * item.ValueAddedTax) /100;
-                    item.TotalBillCOP = item.SubTotalBillCOP - item.RetentionValueCOP + item.ValueAddedTax - item.ValueAddedTaxWuthholding;
+                    if (item.CurrencyID != null)
+                    {
+                        item.SubTotalBillCOP = modelTRM.ProjectedRm * item.Value;
+                        item.RetentionValueCOP = item.SubTotalBillCOP * (modelRetention.Retention / 100);
+                        item.ValueAddedTax = (modelRetention.ValueAddedTax * item.SubTotalBillCOP) / 100;
+                        item.ValueAddedTaxWuthholding = (modelRetention.ValueAddedTax * item.ValueAddedTax) / 100;
+                        item.TotalBillCOP = item.SubTotalBillCOP - item.RetentionValueCOP + item.ValueAddedTax - item.ValueAddedTaxWuthholding;
+                    }
+                    
 
                 }
                 else
@@ -149,6 +153,7 @@ namespace Bisopi___Proyectos.Controllers
             string VALUE = nameof(Milestone.Value);
             string MILESTONE_NUMBER = nameof(Milestone.MilestoneNumber);
             string IS_IT_CHANGE_CONTROL = nameof(Milestone.IsItChangeControl);
+            string HOURS = nameof(Milestone.Hours);
             string COMMENT = nameof(Milestone.Comment);
             string IS_ACTIVE = nameof(Milestone.IsActive);
             string CREATED_BY = nameof(Milestone.CreatedBy);
@@ -188,15 +193,20 @@ namespace Bisopi___Proyectos.Controllers
                 model.Value = values[VALUE] != null ? Convert.ToDouble(values[VALUE], CultureInfo.InvariantCulture) : (double?)null;
             }
 
-            if(values.Contains(MILESTONE_NUMBER)) {
-                model.MilestoneNumber = Convert.ToInt32(values[MILESTONE_NUMBER]);
+            if(values.Contains(HOURS)) {
+                model.Hours = Convert.ToInt32(values[HOURS]);
             }
 
             if(values.Contains(IS_IT_CHANGE_CONTROL)) {
                 model.IsItChangeControl = Convert.ToBoolean(values[IS_IT_CHANGE_CONTROL]);
             }
 
-            if(values.Contains(COMMENT)) {
+            if (values.Contains(MILESTONE_NUMBER))
+            {
+                model.MilestoneNumber = Convert.ToInt32(values[MILESTONE_NUMBER]);
+            }
+
+            if (values.Contains(COMMENT)) {
                 model.Comment = Convert.ToString(values[COMMENT]);
             }
 

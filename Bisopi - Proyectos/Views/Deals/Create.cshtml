@@ -280,6 +280,8 @@
 
                                 columns.AddFor(m => m.IsItChangeControl);
 
+                                columns.AddFor(m => m.Hours);
+
                                 columns.AddFor(m => m.Comment);
                             })
                             .Editing(e => e
@@ -292,7 +294,7 @@
                             )
                     </div>
 
-                    <h5>Planificacion Recursos</h5>
+                    <h5>Planificación Colaboradores</h5>
 
                     <div class="col-md-12">
                         @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.ResourcePlanningTemp>()

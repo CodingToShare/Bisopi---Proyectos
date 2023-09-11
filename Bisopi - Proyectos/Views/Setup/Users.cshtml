@@ -2,7 +2,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
-<h4>Recursos</h4>
+<h4>Colaboradores</h4>
 <hr />
 <br />
 
@@ -10,7 +10,7 @@
     <div class="col-12">
         <a type="button" class="btn p-1 btn-outline-secondary" href="/Users/Add">
             <img title="Nuevo" style="width:24px;cursor:pointer;" src="~/img/add.png" />
-            Crear Recurso
+            Crear Colaborador
         </a>
     </div>
 
@@ -48,6 +48,8 @@
                 .RemoteOperations(true)
                 .Columns(columns =>
                 {
+
+                    columns.Add().Width(50).CellTemplate(@<text> <a href="/Users/Edit/<%- data.UserId %>" data-toggle="tooltip"><img src="~/img/edit.png" /></a>   </text>);
 
                     columns.AddFor(m => m.FirstName);
 

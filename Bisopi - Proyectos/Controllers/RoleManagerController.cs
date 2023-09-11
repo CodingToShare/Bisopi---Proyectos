@@ -16,6 +16,8 @@ namespace Bisopi___Proyectos.Controllers
             var roles = await _roleManager.Roles.ToListAsync();
             return View(roles);
         }
+
+
         [HttpPost]
         public async Task<IActionResult> AddRole(string roleName)
         {

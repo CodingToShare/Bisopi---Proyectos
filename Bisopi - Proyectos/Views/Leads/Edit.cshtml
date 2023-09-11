@@ -166,7 +166,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
                                 <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CurrencyID)</div>
@@ -175,7 +175,7 @@
                                         .DisplayExpr("CurrencyNameAndAbbreviation")
                                         .ValueExpr("CurrencyID")
                                         .ID("currencyID")
-                                        .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APICurrencies").LoadAction("GetSelectBox").Key("CurrencyID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -298,7 +298,7 @@
                             )
                     </div>
 
-                    <h5>Planificacion Recursos</h5>
+                    <h5>Planificación Colaboradores</h5>
 
                     <div class="col-md-12">
                         @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.ResourcePlanningTemp>()

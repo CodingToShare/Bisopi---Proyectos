@@ -4,6 +4,7 @@ using Bisopi___Proyectos.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bisopi___Proyectos.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230910035700_TestMillestone")]
+    partial class TestMillestone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -235,52 +238,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.HasKey("ClientID");
 
                     b.ToTable("Clients");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.Cost", b =>
-                {
-                    b.Property<Guid>("CostID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<DateTime?>("DateFrom")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateUntil")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<double?>("ProjectValue")
-                        .IsRequired()
-                        .HasColumnType("float");
-
-                    b.Property<Guid?>("SeniorityID")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UserID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CostID");
-
-                    b.ToTable("Costs");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Country", b =>
@@ -669,14 +626,10 @@ namespace Bisopi___Proyectos.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<Guid?>("CurrencyID")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("DealID")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("Hours")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -831,9 +784,6 @@ namespace Bisopi___Proyectos.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int?>("EstimatedHoursLineBase")
-                        .HasColumnType("int");
-
                     b.Property<double?>("GrossMargin")
                         .IsRequired()
                         .HasColumnType("float");
@@ -878,9 +828,6 @@ namespace Bisopi___Proyectos.Migrations
 
                     b.Property<double?>("ProjectValue")
                         .IsRequired()
-                        .HasColumnType("float");
-
-                    b.Property<double?>("ProjectValueLineBase")
                         .HasColumnType("float");
 
                     b.Property<string>("RequestPriority")
@@ -1437,6 +1384,7 @@ namespace Bisopi___Proyectos.Migrations
                         .HasColumnType("float");
 
                     b.Property<double?>("PlannedHours")
+                        .IsRequired()
                         .HasColumnType("float");
 
                     b.Property<Guid?>("PositionID")
@@ -1507,38 +1455,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.HasIndex("CountryID");
 
                     b.ToTable("RetentionPercentages");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.Seniority", b =>
-                {
-                    b.Property<Guid>("SeniorityID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("SeniorityName")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
-
-                    b.HasKey("SeniorityID");
-
-                    b.ToTable("Seniorities");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Study", b =>
@@ -1785,14 +1701,10 @@ namespace Bisopi___Proyectos.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<Guid?>("CurrencyID")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("DealID")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("Hours")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");

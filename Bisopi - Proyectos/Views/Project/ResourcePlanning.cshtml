@@ -14,7 +14,7 @@
 </a>
 
 <div class="p-3" style='font-size:14px'>
-    <div class="h3">Uso de Recursos</div>
+    <div class="h3">Uso de Colaboradores</div>
     <partial name="_ProjectInfo" model="Model.ResourcePlannings.Project" />
     <div class="h5">Planificados</div>
     <div class="p-3">
@@ -66,15 +66,15 @@
                     b.Add().Name(GridColumnButtonName.Delete);
                 });
 
-                columns.AddFor(m => m.ResourceID)
-                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
-                .DisplayExpr("FirstNameAndLastNAme")
-                .ValueExpr("UserDataID"));
-
                 columns.AddFor(m => m.PositionID)
-                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
-                .DisplayExpr("Name")
-                .ValueExpr("RolesDataID"));
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("RolesLookup").Key("Value"))
+                .DisplayExpr("Text")
+                .ValueExpr("Value"));
+
+                columns.AddFor(m => m.ResourceID)
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("UsersLookup").Key("Value"))
+                .DisplayExpr("Text")
+                .ValueExpr("Value"));
 
                 columns.AddFor(m => m.PlannedHours);
 
@@ -89,7 +89,7 @@
             )
             )
     </div>
-    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalHito" name="openTarea" id="openTarea">Agregar Planificacion</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalHito" name="openTarea" id="openTarea">Agregar Planificación</button>
     <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
 </div>
 
@@ -104,7 +104,7 @@
             <div class="modal-dialog modal-lg" style='font-size:14px'>
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="tareaModalLabel">Agregar Planificacion de Recursos</h5>
+                        <h5 class="modal-title" id="tareaModalLabel">Agregar Planificación de Colaboradores</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -112,7 +112,7 @@
                     <div class="modal-body">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="dx-field">
                                         <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlannings.ResourceID)</div>
@@ -133,7 +133,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="dx-field">
                                         <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlannings.PositionID)</div>
@@ -154,7 +154,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="dx-field">
                                         <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlannings.PlannedHours)</div>
@@ -168,7 +168,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="dx-field">
                                         <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlannings.EtcHour)</div>
@@ -254,9 +254,9 @@
                 columns.AddFor(m => m.DateAnalysis);
 
                 columns.AddFor(m => m.ResourceID)
-                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
-                .DisplayExpr("FirstNameAndLastNAme")
-                .ValueExpr("UserDataID"));
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("UsersLookup").Key("Value"))
+                .DisplayExpr("Text")
+                .ValueExpr("Value"));
 
                 columns.AddFor(m => m.PositionID)
                 .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
@@ -278,7 +278,7 @@
             )
         )
     </div>
-    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalReal" name="openTarea" id="openTarea">Agregar Planificacion Real</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalReal" name="openTarea" id="openTarea">Agregar Planificación Real</button>
     <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
 </div>
 
@@ -292,7 +292,7 @@
             <div class="modal-dialog modal-lg" style='font-size:14px'>
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="tareaModalLabel">Agregar Planificacion de Recursos</h5>
+                        <h5 class="modal-title" id="tareaModalLabel">Agregar Planificación de Colaboradores</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -321,7 +321,7 @@
                                         <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlanningReals.ResourceID)</div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().SelectBoxFor(x => x.ResourcePlanningReals.ResourceID)
-                                                .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                                                .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersResourcePlaning").Key("ResourceID").LoadParams(new { id = Model.ResourcePlannings.Project.ProjectID }))
                                                 .DisplayExpr("FirstNameAndLastNAme")
                                                 .ValueExpr("UserDataID")
                                                 .SearchMode(DropDownSearchMode.Contains)
@@ -352,20 +352,6 @@
                                                 .ShowDropDownButton(true)
                                                 .DeferRendering(false)
                                                 .Placeholder("Seleccione un cargo...")
-                                                )
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlanningReals.PlannedHours)</div>
-                                        <div class="dx-field-item-content-location-bottom">
-                                            @(Html.DevExtreme().NumberBoxFor(x => x.ResourcePlanningReals.PlannedHours)
-                                                .ID("PlannedHour")
-                                                .Placeholder("Escriba las horas planeadas")
-                                                .InputAttr("aria-label", "Currency Format")
                                                 )
                                         </div>
                                     </div>

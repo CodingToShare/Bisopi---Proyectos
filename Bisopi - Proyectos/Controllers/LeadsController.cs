@@ -156,6 +156,8 @@ namespace Bisopi___Proyectos.Controllers
             modelDeal.DealName = model.LeadName;
             modelDeal.ClientID = model.ClientID;
             modelDeal.ResponsibleClient = model.ResponsibleClient;
+            modelDeal.AssignedPresaleID = model.AssignedPresaleID;
+            modelDeal.PlannedMilestones = model.PlannedMilestones;
             modelDeal.CurrencyID = model.CurrencyID;
             modelDeal.LeadValue = model.LeadValue;
             modelDeal.Comments = model.Comments;

@@ -1,6 +1,6 @@
 ﻿@model Bisopi___Proyectos.ViewModels.UserViewModel
 
-<h4>Crear Colaborador</h4>
+<h4>Editar Colaborador</h4>
 <hr />
 <br />
 
@@ -11,11 +11,11 @@
         </span>
     </div>
     <div class="col-12">
-        <form asp-controller="Users" asp-action="Add" method="post" enctype="multipart/form-data">
+        <form asp-controller="Users" asp-action="Edit" method="post" enctype="multipart/form-data">
 
             @using (Html.DevExtreme().ValidationGroup())
             {
-                @Html.HiddenFor(x => x.UserId, new { @class = "UserId" })
+                @Html.HiddenFor(x => x.UserId, new { @class = "UserId", @id = "UserId" })
 
                 <div class="row">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -56,7 +56,7 @@
                                         .DisplayExpr("Name")
                                         .ValueExpr("Id")
                                         .ID("Area")
-                                        .DataSource(d => d.Mvc().Controller("APIGroups").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APIGroups").LoadAction("GetSelectBox").Key("Id"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -78,7 +78,7 @@
                                         .DisplayExpr("Name")
                                         .ValueExpr("RolesDataID")
                                         .ID("Roles")
-                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles"))
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles").Key("RolesDataID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -127,7 +127,7 @@
                                         .DisplayExpr("Name")
                                         .ValueExpr("Id")
                                         .ID("City")
-                                        .DataSource(d => d.Mvc().Controller("APICities").LoadAction("GetSelectBox"))
+                                        .DataSource(d => d.Mvc().Controller("APICities").LoadAction("GetSelectBox").Key("Id"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -152,6 +152,81 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <h5>Costos</h5>
+
+                    <div class="col-12">
+
+                        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.Cost>()
+                            .ID("gridContainer")
+                            .AllowColumnReordering(true)
+                            .RowAlternationEnabled(true)
+                            .AllowColumnResizing(true)
+                            .ShowRowLines(true)
+                            .ShowBorders(true)
+                            .WordWrapEnabled(true)
+                            .ColumnAutoWidth(true)
+                            .ColumnResizingMode(ColumnResizingMode.Widget)
+                            .SearchPanel(s => s
+                            .Visible(true)
+                            .HighlightCaseSensitive(true))
+                            .Grouping(grouping => grouping.AutoExpandAll(true))
+                            .GroupPanel(groupPanel => groupPanel.Visible(true))
+                            .FilterPanel(f => f.Visible(true))
+                            .HeaderFilter(h => h.Visible(true))
+                            .Selection(s => s.Mode(SelectionMode.Multiple))
+                            .RemoteOperations(true)
+                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
+                            .DataSource(ds => ds.Mvc()
+                            .LoadParams(new { id = Model.UserId })
+                            .Controller("APICosts")
+                            .LoadAction("Get")
+                            .InsertAction("Post")
+                            .UpdateAction("Put")
+                            .DeleteAction("Delete")
+                            .Key("CostID")
+                            )
+                            .OnInitNewRow(@<text>
+                                function(e) {
+                                e.data.UserID = $('.UserId').val();
+                                }
+                            </text>)
+                            .RemoteOperations(true)
+                            .Columns(columns =>
+                            {
+
+                                columns.Add()
+                                .Type(GridCommandColumnType.Buttons)
+                                .Width(110)
+                                .Buttons(b =>
+                                {
+                                    b.Add().Name(GridColumnButtonName.Edit);
+                                    b.Add().Name(GridColumnButtonName.Delete);
+                                });
+
+                                columns.AddFor(m => m.SeniorityID).Lookup(lookup => lookup
+                                .DataSource(ds => ds.WebApi().Controller("APICosts").LoadAction("SenioritiesLookup").Key("Value"))
+                                .ValueExpr("Value")
+                                .DisplayExpr("Text")
+                                );
+
+                                columns.AddFor(m => m.DateFrom);
+
+                                columns.AddFor(m => m.DateUntil);
+
+                                columns.AddFor(m => m.ProjectValue);
+
+                            })
+                            .Editing(e => e
+                            .AllowAdding(true)
+                            .AllowUpdating(true)
+                            .AllowDeleting(true)
+                            .Mode(GridEditMode.Popup)
+                            .UseIcons(true)
+                            )
+                            )
+
                     </div>
 
                     <br />

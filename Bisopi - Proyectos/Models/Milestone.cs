@@ -25,6 +25,7 @@ namespace Bisopi___Proyectos.Models
         public DateTime MilestoneDate { get; set; }
 
         [Display(Name = "Moneda")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid? CurrencyID { get; set; }
 
         [Display(Name = "Porcentaje")]
@@ -41,6 +42,9 @@ namespace Bisopi___Proyectos.Models
         [Display(Name = "¿Es control de Cambio?")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public bool IsItChangeControl { get; set; }
+
+        [Display(Name = "Horas")]
+        public int? Hours { get; set; }
 
         [Display(Name = "Comentario")]
         [Column(TypeName = "varchar(1000)")]
@@ -109,6 +113,10 @@ namespace Bisopi___Proyectos.Models
         [NotMapped]
         [Display(Name = "Total Factura en Pesos")]
         public double? TotalBillCOP { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Valor Proyecto")]
+        public double? ProjectValue { get; set; }
 
     }
 }

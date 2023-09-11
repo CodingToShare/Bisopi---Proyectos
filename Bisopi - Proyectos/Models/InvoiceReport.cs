@@ -11,11 +11,9 @@ namespace Bisopi___Proyectos.Models
         public Guid InvoiceReportID { get; set; }
 
         [Display(Name = "Factura")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid BillID { get; set; }
 
         [Display(Name = "Hito")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid MilestoneID { get; set; }
 
         [Display(Name = "Proyecto")]
@@ -27,34 +25,27 @@ namespace Bisopi___Proyectos.Models
         public string? ProjectName { get; set; }
 
         [Display(Name = "Pais")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid? CountryID { get; set; }
 
         [Display(Name = "Cliente")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid? ClientID { get; set; }
 
         [Display(Name = "Estado Proyecto")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid? ProjectStatusID { get; set; }
 
         [Display(Name = "¿Es control de Cambio?")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
         public bool IsItChangeControl { get; set; }
 
         [Display(Name = "Nro. Hito")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
         public int? MilestoneNumber { get; set; }
 
         [Display(Name = "Fecha Hito")]
         [DataType(DataType.DateTime)]
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
         public DateTime MilestoneDate { get; set; }
 
         [Display(Name = "Estado Factura")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
         public StatusBill StatusBill { get; set; }
 
         [Display(Name = "Moneda")]
@@ -120,9 +111,6 @@ namespace Bisopi___Proyectos.Models
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Modified { get; set; }
-
-        [ForeignKey("CountryID")]
-        public Country Country { get; set; }
 
         [ForeignKey("ClientID")]
         public Client Client { get; set; }

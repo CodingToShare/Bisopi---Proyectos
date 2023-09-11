@@ -95,6 +95,7 @@ namespace Bisopi___Proyectos.Controllers
                     newDetail.Value = item.Value;
                     newDetail.MilestoneNumber = item.MilestoneNumber;
                     newDetail.IsItChangeControl = item.IsItChangeControl;
+                    newDetail.Hours = item.Hours;
                     newDetail.Comment = item.Comment;
                     newDetail.IsActive = item.IsActive;
                     newDetail.Created = item.Created;
@@ -175,6 +176,7 @@ namespace Bisopi___Proyectos.Controllers
                     newDetail.Value = item.Value;
                     newDetail.MilestoneNumber = item.MilestoneNumber;
                     newDetail.IsItChangeControl = item.IsItChangeControl;
+                    newDetail.Hours = item.Hours;
                     newDetail.Comment = item.Comment;
                     newDetail.IsActive = item.IsActive;
                     newDetail.Created = item.Created;
@@ -230,6 +232,11 @@ namespace Bisopi___Proyectos.Controllers
             return View(modelProject);
         }
 
+        public IActionResult DealToProjectModel(Project model)
+        {
+            return View(model);
+        }
+
         public IActionResult Delete(Guid id)
         {
             var model = _context.Deals.Where(x => x.DealID == id).FirstOrDefault();
@@ -267,6 +274,7 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.Value = item.Value;
                 newDetail.MilestoneNumber = item.MilestoneNumber;
                 newDetail.IsItChangeControl = item.IsItChangeControl;
+                newDetail.Hours = item.Hours;
                 newDetail.Comment = item.Comment;
                 newDetail.IsActive = item.IsActive;
                 newDetail.Created = item.Created;
@@ -335,6 +343,7 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.Value = item.Value;
                 newDetail.MilestoneNumber = item.MilestoneNumber;
                 newDetail.IsItChangeControl = item.IsItChangeControl;
+                newDetail.Hours = item.Hours;
                 newDetail.Comment = item.Comment;
                 newDetail.IsActive = item.IsActive;
                 newDetail.Created = item.Created;
@@ -392,15 +401,18 @@ namespace Bisopi___Proyectos.Controllers
             model.Modified = DateTime.UtcNow.AddHours(-5);
             model.ModifiedBy = User.Identity.Name;
 
+            model.ProjectValueLineBase = model.ProjectValue;
+            model.EstimatedHoursLineBase = model.EstimatedHours;
+
             var detailsOld = _context.Milestones.Where(x => x.DealID == model.DealID).ToList();
 
             _context.Milestones.RemoveRange(detailsOld);
 
             var details = _context.MilestonesTemps.Where(x => x.DealID == model.DealID).ToList();
 
-            if (details.Count == 0)
+            if (model.Billable && details.Count == 0)
             {
-                return RedirectToAction("DealToProject", "Deals").WithError("Tiene que registrar un Hito por lo menos");
+                return RedirectToAction("DealToProjectModel", "Deals", model).WithError("Tiene que registrar mínimo un Hito");
             }
 
             foreach (var item in details)
@@ -416,6 +428,7 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.Value = item.Value;
                 newDetail.MilestoneNumber = item.MilestoneNumber;
                 newDetail.IsItChangeControl = item.IsItChangeControl;
+                newDetail.Hours = item.Hours;
                 newDetail.Comment = item.Comment;
                 newDetail.IsActive = item.IsActive;
                 newDetail.Created = item.Created;
@@ -471,24 +484,24 @@ namespace Bisopi___Proyectos.Controllers
 
             foreach (var item in detailsResources)
             {
-                var newDetail = new ResourcePlanning();
-                newDetail.ProjectID = item.ProjectID;
-                newDetail.DealID = item.DealID;
-                newDetail.LeadID = item.LeadID;
-                newDetail.ResourcePlanningID = item.ResourcePlanningTempID;
-                newDetail.ResourceID = item.ResourceID;
-                newDetail.PositionID = item.PositionID;
-                newDetail.PlannedHours = item.PlannedHours;
-                newDetail.EtcHour = item.EtcHour;
-                newDetail.Fee = item.Fee;
-                newDetail.Cost = item.Cost;
-                newDetail.IsActive = item.IsActive;
-                newDetail.Created = item.Created;
-                newDetail.CreatedBy = item.CreatedBy;
-                newDetail.Modified = item.Modified;
-                newDetail.ModifiedBy = item.ModifiedBy;
+                var newDetailResources = new ResourcePlanning();
+                newDetailResources.ProjectID = model.ProjectID;
+                newDetailResources.DealID = item.DealID;
+                newDetailResources.LeadID = item.LeadID;
+                newDetailResources.ResourcePlanningID = item.ResourcePlanningTempID;
+                newDetailResources.ResourceID = item.ResourceID;
+                newDetailResources.PositionID = item.PositionID;
+                newDetailResources.PlannedHours = item.PlannedHours;
+                newDetailResources.EtcHour = item.EtcHour;
+                newDetailResources.Fee = item.Fee;
+                newDetailResources.Cost = item.Cost;
+                newDetailResources.IsActive = item.IsActive;
+                newDetailResources.Created = item.Created;
+                newDetailResources.CreatedBy = item.CreatedBy;
+                newDetailResources.Modified = item.Modified;
+                newDetailResources.ModifiedBy = item.ModifiedBy;
 
-                _context.Add(newDetail);
+                _context.Add(newDetailResources);
             }
 
             _context.ResourcesPlanningsTemps.RemoveRange(detailsResources);

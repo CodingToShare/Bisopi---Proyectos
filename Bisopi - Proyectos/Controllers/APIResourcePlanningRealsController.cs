@@ -82,6 +82,20 @@ namespace Bisopi___Proyectos.Controllers
             var valuesDict = JsonConvert.DeserializeObject<IDictionary>(values);
             PopulateModel(model, valuesDict);
 
+            model.PlannedHours = 0;
+
+            var tasks = _context.ProjectTask.Where(x => x.ProjectID == model.ProjectID && x.ResponsibleID == model.ResourceID).ToList();
+
+            foreach (var task in tasks)
+            {
+                var taskRegisters = _context.TaskRegistry.Where(x => x.ProjectTaskID == task.TaskID && x.RegistryDate <= model.DateAnalysis).ToList();
+
+                foreach (var taskRegister in taskRegisters)
+                {
+                    model.PlannedHours = model.PlannedHours + (double)taskRegister.ExecutionTime / 3600;
+                }
+            }
+
             model.Modified = DateTime.UtcNow.AddHours(-5);
             model.ModifiedBy = User.Identity.Name;
 

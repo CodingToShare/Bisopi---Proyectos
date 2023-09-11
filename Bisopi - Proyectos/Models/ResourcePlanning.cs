@@ -18,7 +18,7 @@ namespace Bisopi___Proyectos.Models
         [Display(Name = "Lead")]
         public Guid? LeadID { get; set; }
 
-        [Display(Name = "Recurso")]
+        [Display(Name = "Colaborador")]
         public Guid? ResourceID { get; set; }
 
         [Display(Name = "Cargo")]

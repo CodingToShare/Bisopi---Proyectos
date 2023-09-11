@@ -3,50 +3,31 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bisopi___Proyectos.Models
 {
-    public class Programming
+    public class Cost
     {
         [Key]
-        public Guid ProgrammingID { get; set; }
+        public Guid CostID { get; set; }
 
-        [Display(Name = "Proyecto")]
-        public Guid? ProjectID { get; set; }
+        [Display(Name = "Usuario")]
+        public Guid? UserID { get; set; }
 
-        [Display(Name = "Colaborador")]
+        [Display(Name = "Antigüedad")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid? ResourceID { get; set; }
+        public Guid? SeniorityID { get; set; }
 
-        [NotMapped]
-        public string ResourceName { get; set; }
-
-        [Display(Name = "Cargo")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid? ResourcePositionID { get; set; }
-
-        [Display(Name = "Tipo Actividad")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid? ActivityTypeID { get; set; }
-
-        [Display(Name = "Fecha Inicio")]
+        [Display(Name = "Fecha Desde")]
         [DataType(DataType.DateTime)]
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public DateTime? StartDate { get; set; }
+        public DateTime? DateFrom { get; set; }
 
-        [Display(Name = "Fecha Fin")]
-        [DataType(DataType.DateTime)]
-        [ScaffoldColumn(false)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Fecha Hasta")]
+        public DateTime? DateUntil { get; set; }
+
+        [Display(Name = "Valor Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public DateTime? EndDate { get; set; }
-
-        [Display(Name = "% Asignacion")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public double? AllocationPercentage  { get; set; }
-
-        [Display(Name = "Comentarios")]
-        [Column(TypeName = "varchar(1000)")]
-        public string? Comments { get; set; }
+        public double? ProjectValue { get; set; }
 
         [Display(Name = "¿Activo?")]
         public bool IsActive { get; set; }

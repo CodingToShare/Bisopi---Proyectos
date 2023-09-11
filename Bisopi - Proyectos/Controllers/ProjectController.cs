@@ -44,39 +44,6 @@ namespace Bisopi___Proyectos.Controllers
         {
             var model = _context.Projects.Where(x => x.ProjectID == id).FirstOrDefault();
 
-            var details = _context.Milestones.Where(x => x.ProjectID == model.ProjectID).ToList();
-
-            foreach (var item in details)
-            {
-                var detailsCheck = _context.MilestonesTemps.Where(x => x.MilestoneTempID == item.MilestoneID).FirstOrDefault();
-
-                if (detailsCheck == null)
-                {
-                    var newDetail = new MilestoneTemp();
-                    newDetail.DealID = item.DealID;
-                    newDetail.LeadID = item.LeadID;
-                    newDetail.ProjectID = item.ProjectID;
-                    newDetail.MilestoneTempID = item.MilestoneID;
-                    newDetail.MilestoneDate = item.MilestoneDate;
-                    newDetail.CurrencyID = item.CurrencyID;
-                    newDetail.Percentage = item.Percentage;
-                    newDetail.Value = item.Value;
-                    newDetail.MilestoneNumber = item.MilestoneNumber;
-                    newDetail.IsItChangeControl = item.IsItChangeControl;
-                    newDetail.Comment = item.Comment;
-                    newDetail.IsActive = item.IsActive;
-                    newDetail.Created = item.Created;
-                    newDetail.CreatedBy = item.CreatedBy;
-                    newDetail.Modified = item.Modified;
-                    newDetail.ModifiedBy = item.ModifiedBy;
-
-                    _context.Add(newDetail);
-                }
-
-            }
-
-            _context.SaveChanges();
-
             return View(model);
         }
 
@@ -103,11 +70,14 @@ namespace Bisopi___Proyectos.Controllers
             model.Modified = DateTime.UtcNow.AddHours(-5);
             model.ModifiedBy = User.Identity.Name;
 
+            model.ProjectValueLineBase = model.ProjectValue;
+            model.EstimatedHoursLineBase = model.EstimatedHours;
+
             var details = _context.MilestonesTemps.Where(x => x.ProjectID == model.ProjectID).ToList();
 
-            if (details.Count == 0)
+            if (model.Billable && details.Count == 0)
             {
-                return RedirectToAction("Create", "Project").WithError("Tiene que registrar un Hito por lo menos");
+                return RedirectToAction("Create", "Project", model).WithError("Tiene que registrar mínimo un Hito");
             }
 
             foreach (var item in details)
@@ -123,6 +93,7 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.Value = item.Value;
                 newDetail.MilestoneNumber = item.MilestoneNumber;
                 newDetail.IsItChangeControl = item.IsItChangeControl;
+                newDetail.Hours = item.Hours;
                 newDetail.Comment = item.Comment;
                 newDetail.IsActive = item.IsActive;
                 newDetail.Created = item.Created;
@@ -226,6 +197,9 @@ namespace Bisopi___Proyectos.Controllers
                 .FirstOrDefaultAsync(x => x.ProjectID == id);
             if (project == null)
                 return RedirectToAction(nameof(Index));
+
+            project.TRMProject = project.TRMProject;
+
             var leader = await _userManager.FindByIdAsync(project.LeaderID.ToString());
             if (leader != null)
             {
@@ -300,7 +274,8 @@ namespace Bisopi___Proyectos.Controllers
             {
                 Project = project,
                 ProjectID = id,
-                DealID = project.DealID
+                DealID = project.DealID,
+                ProjectValue = project.ProjectValue
             };
 
             return View(model);
@@ -309,6 +284,11 @@ namespace Bisopi___Proyectos.Controllers
         [HttpPost]
         public async Task<IActionResult> Milestone(Milestone model)
         {
+            if (model.CurrencyID.ToString() == "{00000000-0000-0000-0000-000000000000}")
+            {
+                model.CurrencyID = null;
+            }
+
             model.MilestoneID = Guid.NewGuid();
             model.Percentage = model.Percentage * 100;
             model.IsActive = true;
@@ -332,6 +312,13 @@ namespace Bisopi___Proyectos.Controllers
             _context.Add(modelBill);
 
             var modelProject = _context.Projects.Where(x => x.ProjectID == model.ProjectID).FirstOrDefault();
+
+
+            if (model.IsItChangeControl)
+            {
+                modelProject.ProjectValue = modelProject.ProjectValue + model.Value;
+                modelProject.EstimatedHours = modelProject.EstimatedHours + model.Hours;
+            }
 
             var modelInvoiceReport = new InvoiceReport();
             modelInvoiceReport.InvoiceReportID = new Guid();
@@ -503,7 +490,7 @@ namespace Bisopi___Proyectos.Controllers
                 DateAnalysis = modelVM.ResourcePlanningReals.DateAnalysis,
                 ResourceID = modelVM.ResourcePlanningReals.ResourceID,
                 PositionID = modelVM.ResourcePlanningReals.PositionID,
-                PlannedHours = modelVM.ResourcePlanningReals.PlannedHours,
+                
                 PercentComplete = modelVM.ResourcePlanningReals.PercentComplete,
                 ExpectedPercentage = modelVM.ResourcePlanningReals.ExpectedPercentage,
                 IsActive = true,
@@ -512,6 +499,20 @@ namespace Bisopi___Proyectos.Controllers
                 Modified = DateTime.UtcNow.AddHours(-5),
                 ModifiedBy = User.Identity.Name
             };
+
+            model.PlannedHours = 0;
+
+            var tasks = _context.ProjectTask.Where(x => x.ProjectID == model.ProjectID && x.ResponsibleID == model.ResourceID).ToList();
+
+            foreach (var task in tasks)
+            {
+                var taskRegisters = _context.TaskRegistry.Where(x => x.ProjectTaskID == task.TaskID && x.RegistryDate <= model.DateAnalysis).ToList();
+
+                foreach (var taskRegister in taskRegisters)
+                {
+                    model.PlannedHours = model.PlannedHours + (double)taskRegister.ExecutionTime / 3600;
+                }
+            }
 
             _context.Add(model);
             _context.SaveChanges();
@@ -598,7 +599,7 @@ namespace Bisopi___Proyectos.Controllers
 
             if (user != null)
             {
-                return RedirectToAction("Programming", "Project", new { id = viewModelProgramming.Programming.ProjectID }).WithError("El recurso ya ha sido registrado");
+                return RedirectToAction("Programming", "Project", new { id = viewModelProgramming.Programming.ProjectID }).WithError("El Colaborador ya ha sido registrado");
             }
 
             model.ProgrammingID = new Guid();

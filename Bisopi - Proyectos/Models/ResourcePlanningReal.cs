@@ -19,7 +19,7 @@ namespace Bisopi___Proyectos.Models
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public DateTime? DateAnalysis { get; set; }
 
-        [Display(Name = "Recurso")]
+        [Display(Name = "Colaborador")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid? ResourceID { get; set; }
 
@@ -28,7 +28,6 @@ namespace Bisopi___Proyectos.Models
         public Guid? PositionID { get; set; }
 
         [Display(Name = "Horas")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
         public double? PlannedHours { get; set; }
 
         [Display(Name = "% Completado")]

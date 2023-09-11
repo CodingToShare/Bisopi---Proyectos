@@ -54,7 +54,7 @@
 
                 columns.Add().Width(50).CellTemplate(@<text> <a href="/Project/Edit/<%- data.ProjectID %>" data-toggle="tooltip"><img src="~/img/edit.png" /></a>   </text>);
 
-                columns.AddFor(m => m.ProjectName);
+                columns.AddFor(m => m.ProjectName).Width(300);
 
                 columns.AddFor(m => m.CountryID).Lookup(lookup => lookup
                     .DataSource(ds => ds.WebApi().Controller("APIProjects").LoadAction("CountriesLookup").Key("Value"))

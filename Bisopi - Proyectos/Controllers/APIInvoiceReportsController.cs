@@ -26,7 +26,8 @@ namespace Bisopi___Proyectos.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get(DataSourceLoadOptions loadOptions) {
-            var invoicereports = _context.InvoiceReports.Where(x => x.IsActive).ToList();
+
+            var invoicereports = _context.InvoiceReports.Where(x => x.IsActive).AsNoTracking().ToList();
 
             foreach (var item in invoicereports)
             {
@@ -37,11 +38,15 @@ namespace Bisopi___Proyectos.Controllers
                 if (item.Value != null)
                 {
                     item.TRM = modelProject.TRMProject;
-                    item.SubTotalBillCOP = modelTRM.ProjectedRm * item.Value;
-                    item.RetentionValueCOP = item.SubTotalBillCOP * (modelRetention.Retention / 100);
-                    item.ValueAddedTax = (modelRetention.ValueAddedTax * item.SubTotalBillCOP) / 100;
-                    item.ValueAddedTaxWuthholding = (modelRetention.ValueAddedTax * item.ValueAddedTax) / 100;
-                    item.TotalBillCOP = item.SubTotalBillCOP - item.RetentionValueCOP + item.ValueAddedTax - item.ValueAddedTaxWuthholding;
+                    if (item.CurrencyID != null)
+                    {
+                        item.SubTotalBillCOP = modelTRM.ProjectedRm * item.Value;
+                        item.RetentionValueCOP = item.SubTotalBillCOP * (modelRetention.Retention / 100);
+                        item.ValueAddedTax = (modelRetention.ValueAddedTax * item.SubTotalBillCOP) / 100;
+                        item.ValueAddedTaxWuthholding = (modelRetention.ValueAddedTax * item.ValueAddedTax) / 100;
+                        item.TotalBillCOP = item.SubTotalBillCOP - item.RetentionValueCOP + item.ValueAddedTax - item.ValueAddedTaxWuthholding;
+                    }
+                    
 
                 }
                 else

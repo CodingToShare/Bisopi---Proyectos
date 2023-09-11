@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bisopi___Proyectos.Data;
 using Bisopi___Proyectos.ModelsTemps;
+using Bisopi___Proyectos.Models;
 
 namespace Bisopi___Proyectos.Controllers
 {
@@ -37,6 +38,7 @@ namespace Bisopi___Proyectos.Controllers
                 i.Value,
                 i.MilestoneNumber,
                 i.IsItChangeControl,
+                i.Hours,
                 i.Comment,
                 i.IsActive,
                 i.CreatedBy,
@@ -61,6 +63,7 @@ namespace Bisopi___Proyectos.Controllers
             PopulateModel(model, valuesDict);
 
             model.MilestoneTempID = Guid.NewGuid();
+            model.IsActive = true;
             model.Created = DateTime.UtcNow.AddHours(-5);
             model.CreatedBy = User.Identity.Name;
             model.Modified = DateTime.UtcNow.AddHours(-5);
@@ -125,6 +128,7 @@ namespace Bisopi___Proyectos.Controllers
             string VALUE = nameof(MilestoneTemp.Value);
             string MILESTONE_NUMBER = nameof(MilestoneTemp.MilestoneNumber);
             string IS_IT_CHANGE_CONTROL = nameof(MilestoneTemp.IsItChangeControl);
+            string HOURS = nameof(Milestone.Hours);
             string COMMENT = nameof(MilestoneTemp.Comment);
             string IS_ACTIVE = nameof(MilestoneTemp.IsActive);
             string CREATED_BY = nameof(MilestoneTemp.CreatedBy);
@@ -172,7 +176,12 @@ namespace Bisopi___Proyectos.Controllers
                 model.IsItChangeControl = Convert.ToBoolean(values[IS_IT_CHANGE_CONTROL]);
             }
 
-            if(values.Contains(COMMENT)) {
+            if (values.Contains(HOURS))
+            {
+                model.Hours = Convert.ToInt32(values[HOURS]);
+            }
+
+            if (values.Contains(COMMENT)) {
                 model.Comment = Convert.ToString(values[COMMENT]);
             }
 

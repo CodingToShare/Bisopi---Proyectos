@@ -82,7 +82,7 @@
                                 <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.AssignedPresaleID)</div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().SelectBoxFor(x => x.AssignedPresaleID)
-                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("AssignedPresaleID"))
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("UserDataID"))
                                         .DisplayExpr("FirstNameAndLastNAme")
                                         .ValueExpr("UserDataID")
                                         .SearchMode(DropDownSearchMode.Contains)
@@ -132,7 +132,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-fieldPlannedMilestones">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.LeadValue)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.PlannedMilestones)</div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().NumberBoxFor(x => x.PlannedMilestones)
                                         .ID("PlannedMilestones")
@@ -256,6 +256,7 @@
                             .OnInitNewRow(@<text>
                                 function(e) {
                                 e.data.DealID = $('.DealID').val();
+                                e.data.LeadID = $('.LeadID').val();
                                 }
                             </text>)
                             .RemoteOperations(true)
@@ -298,7 +299,7 @@
                             )
                     </div>
 
-                    <h5>Planificacion Recursos</h5>
+                    <h5>Planificación Colaboradores</h5>
 
                     <div class="col-md-12">
                         @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.ResourcePlanningTemp>()
@@ -333,6 +334,7 @@
                             .OnInitNewRow(@<text>
                                 function(e) {
                                 e.data.DealID = $('.DealID').val();
+                                e.data.LeadID = $('.LeadID').val();
                                 }
                             </text>)
                             .RemoteOperations(true)

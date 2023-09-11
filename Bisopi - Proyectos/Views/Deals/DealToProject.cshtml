@@ -15,6 +15,7 @@
     <div class="col-12">
         <form asp-controller="Deals" asp-action="DealToProject" method="post" enctype="multipart/form-data">
             @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID" })
+            @Html.HiddenFor(x => x.DealID, new { @class = "DealID" })
             @Html.HiddenFor(x => x.IsActive, new { @class = "IsActive" })
             @Html.HiddenFor(x => x.Created, new { @class = "Created" })
             @Html.HiddenFor(x => x.CreatedBy, new { @class = "CreatedBy" })
@@ -109,14 +110,14 @@
                                         .DisplayExpr("FirstNameAndLastNAme")
                                         .ValueExpr("UserDataID")
                                         .ID("leaderID")
-                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Admin" }).Key("LeaderID"))
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Líder" }).Key("LeaderID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
                                         .ShowDataBeforeSearch(true)
                                         .ShowDropDownButton(true)
                                         .DeferRendering(false)
-                                        .Placeholder("Seleccione un cliente...")
+                                        .Placeholder("Seleccione un lider...")
                                         )
                                 </div>
                             </div>
@@ -132,7 +133,7 @@
                                         .DisplayExpr("FirstNameAndLastNAme")
                                         .ValueExpr("UserDataID")
                                         .ID("projectManagerID")
-                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Admin" }).Key("LeaderID"))
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Gerente de proyecto" }).Key("LeaderID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -495,7 +496,7 @@
                             .RemoteOperations(true)
                             .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
                             .DataSource(ds => ds.Mvc()
-                            .LoadParams(new { id = Model.ProjectID })
+                            .LoadParams(new { id = Model.DealID })
                             .Controller("APIMilestoneTemps")
                             .LoadAction("Get")
                             .InsertAction("Post")
@@ -506,6 +507,7 @@
                             .OnInitNewRow(@<text>
                                 function(e) {
                                 e.data.ProjectID = $('.ProjectID').val();
+                                e.data.DealID = $('.DealID').val();
                                 }
                             </text>)
                             .RemoteOperations(true)
@@ -537,6 +539,8 @@
 
                                 columns.AddFor(m => m.IsItChangeControl);
 
+                                columns.AddFor(m => m.Hours);
+
                                 columns.AddFor(m => m.Comment);
                             })
                             .Editing(e => e
@@ -549,7 +553,7 @@
                             )
                     </div>
 
-                    <h5>Planificacion Recursos</h5>
+                    <h5>Planificación Colaboradores</h5>
 
                     <div class="col-md-12">
                         @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.ResourcePlanningTemp>()
@@ -573,7 +577,7 @@
                             .RemoteOperations(true)
                             .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
                             .DataSource(ds => ds.Mvc()
-                            .LoadParams(new { id = Model.ProjectID })
+                            .LoadParams(new { id = Model.DealID })
                             .Controller("APIResourcePlanningTemps")
                             .LoadAction("Get")
                             .InsertAction("Post")
@@ -584,6 +588,7 @@
                             .OnInitNewRow(@<text>
                                 function(e) {
                                 e.data.ProjectID = $('.ProjectID').val();
+                                e.data.DealID = $('.DealID').val();
                                 }
                             </text>)
                             .RemoteOperations(true)
@@ -600,14 +605,14 @@
                                 });
 
                                 columns.AddFor(m => m.PositionID)
-                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles"))
-                                .DisplayExpr("Name")
-                                .ValueExpr("RolesDataID"));
+                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("RolesLookup").Key("Value"))
+                                .DisplayExpr("Text")
+                                .ValueExpr("Value"));
 
                                 columns.AddFor(m => m.ResourceID)
-                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
-                                .DisplayExpr("FirstNameAndLastNAme")
-                                .ValueExpr("UserDataID"));
+                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("UsersLookup").Key("Value"))
+                                .DisplayExpr("Text")
+                                .ValueExpr("Value"));
 
                                 columns.AddFor(m => m.PlannedHours);
 
@@ -633,7 +638,7 @@
                             <div class="center">
                                 @(Html.DevExtreme().Button()
                                     .ElementAttr("class", "validate")
-                                    .Text("Guardar")
+                                    .Text("Guardar Linea base")
                                     .Type(ButtonType.Success)
                                     .UseSubmitBehavior(true)
                                     .OnClick("saveClick")
@@ -672,7 +677,7 @@
         var valorProyecto = $("#projectValue").dxNumberBox("instance").option("value");
         var costoProyecto = e.value;
 
-        var calculo = ((valorProyecto - costoProyecto)/valorProyecto) * 100
+        var calculo = ((valorProyecto - costoProyecto)/valorProyecto)
 
         $("#grossMargin").dxNumberBox("instance").option("value", calculo);
 
@@ -685,7 +690,8 @@
         var valorProyecto = e.value;
         var costoProyecto = $("#projectCost").dxNumberBox("instance").option("value");
 
-        var calculo = ((valorProyecto - costoProyecto) / valorProyecto) * 100
+        var calculo = ((valorProyecto - costoProyecto) / valorProyecto)
+        var calculo = ((valorProyecto - costoProyecto) / valorProyecto)
 
         $("#grossMargin").dxNumberBox("instance").option("value", calculo);
 

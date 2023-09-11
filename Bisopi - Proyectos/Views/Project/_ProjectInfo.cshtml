@@ -24,16 +24,20 @@
         <dd class="col-sm-4">@Model.ProjectStatus.ProjectStatusName</dd>
         <dt class="col-sm-2">Tipo Proyecto</dt>
         <dd class="col-sm-4">@Model.ProjectType.ProjectTypeName</dd>
-        <dt class="col-sm-2">Horas Estimadas</dt>
-        <dd class="col-sm-4">@Model.EstimatedHours</dd>
         <dt class="col-sm-2">Moneda</dt>
-        <dd class="col-sm-1">@Model.Currency.Abbreviation</dd>
-        <dt class="col-sm-2">Valor Proyecto</dt>
-        <dd class="col-sm-1">@Model.ProjectValue</dd>
+        <dd class="col-sm-4">@Model.Currency.Abbreviation</dd>
+        <dt class="col-sm-2">Horas Estimadas Linea Base</dt>
+        <dd class="col-sm-1">@Model.EstimatedHoursLineBase</dd>
+        <dt class="col-sm-2">Valor Proyecto Linea Base</dt>
+        <dd class="col-sm-1">@String.Format("{0:0,0.0}", Model.ProjectValueLineBase)</dd>
         <dt class="col-sm-2">Costo Proyecto</dt>
-        <dd class="col-sm-1">@Model.ProjectCost</dd>
+        <dd class="col-sm-1">@String.Format("{0:0,0.0}", Model.ProjectCost)</dd>
         <dt class="col-sm-2">TRM Proyecto</dt>
-        <dd class="col-sm-1">@Model.TRMProject</dd>
+        <dd class="col-sm-1">@String.Format("{0:0,0.0}", Model.TRMProject)</dd>
+        <dt class="col-sm-2">Horas Estimadas Actuales</dt>
+        <dd class="col-sm-1">@Model.EstimatedHours</dd>
+        <dt class="col-sm-2">Valor Proyecto Actual</dt>
+        <dd class="col-sm-1">@String.Format("{0:0,0.0}", Model.ProjectValue)</dd>
         <dt class="col-sm-12">
         </dt>
     </dl>
@@ -49,7 +53,7 @@
                 <img src="~/img/hito.png" style="width:24px" title="Hitos" />
             </a>
             <a class="btn btn-outline-secondary p-1" onclick="redirectToResourcePlanning()">
-                <img src="~/img/recursos.png" style="width:24px" title="Uso Recursos" />
+                <img src="~/img/Colaboradores.png" style="width:24px" title="Uso Colaboradores" />
             </a>
             <a class="btn btn-outline-secondary p-1" onclick="redirectToTask()">
                 <img src="~/img/task.png" style="width:24px" title="Listado de Tareas" />

@@ -81,6 +81,8 @@
 
                 columns.AddFor(m => m.IsItChangeControl);
 
+                columns.AddFor(m => m.Hours);
+
                 columns.AddFor(m => m.Retention);
 
                 columns.AddFor(m => m.RetentionValue).Format("$ #,##0.##");
@@ -200,8 +202,9 @@
 {
     @using (Html.DevExtreme().ValidationGroup())
     {
-        @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID" })
+        @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID", @id = "ProjectID" })
         @Html.HiddenFor(x => x.DealID, new { @class = "DealID" })
+        @Html.HiddenFor(x => x.ProjectValue, new { @class = "ProjectValue", @id = "ProjectValue" })
         <!-- Modal -->
         <div class="modal fade" id="ModalHito" tabindex="-1" data-backdrop="static" data-keyboard="true" role="dialog" aria-labelledby="ModalHito" aria-hidden="true">
             <div class="modal-dialog modal-lg" style='font-size:14px'>
@@ -260,6 +263,8 @@
                                                 .Placeholder("Escriba el porcentaje")
                                                 .Format("## %")
                                                 .InputAttr("aria-label", "Currency Format")
+                                                .OnValueChanged("onMilestonePercentageChange")
+                                                .Max(1)
                                                 )
                                         </div>
                                     </div>
@@ -275,6 +280,8 @@
                                                 .Placeholder("Escriba el valor")
                                                 .Format("$ #,##0.##")
                                                 .InputAttr("aria-label", "Currency Format")
+                                                .Max(Model.ProjectValue.Value)
+                                                .OnValueChanged("onMilestoneValueChange")
                                                 )
                                         </div>
                                     </div>
@@ -308,6 +315,22 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Hours)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.Hours)
+                                                .ID("Hours")
+                                                .Placeholder("Escriba las horas del hito")
+                                                .InputAttr("aria-label", "Currency Format")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="dx-field">
@@ -374,5 +397,33 @@
             return true;
         }
         return false;
+    }
+
+    function onMilestonePercentageChange(e) {
+        console.log(e.value);
+        console.log($("#Value").dxNumberBox("instance").option("value"));
+
+        var valorProyecto = document.getElementById("ProjectValue").value;
+        var valorHito = $("#Value").dxNumberBox("instance").option("value");
+        var porcentajeHito = e.value;
+
+        var calculo = (porcentajeHito * valorProyecto) / 1
+
+        $("#Value").dxNumberBox("instance").option("value", calculo);
+
+    }
+
+    function onMilestoneValueChange(e) {
+        console.log(e.value);
+        console.log($("#Percentage").dxNumberBox("instance").option("value"));
+
+        var valorProyecto = document.getElementById("ProjectValue").value;
+        var valorHito = e.value;
+        var porcentajeHito = $("#Percentage").dxNumberBox("instance").option("value");
+
+        var calculo = (valorHito * 1) / valorProyecto
+
+        $("#Percentage").dxNumberBox("instance").option("value", calculo);
+
     }
 </script>

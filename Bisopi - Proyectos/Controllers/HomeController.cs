@@ -193,6 +193,8 @@ namespace Bisopi___Proyectos.Controllers
             }
             return executionTime;
         }
+
+
         [HttpGet]
         [Route("/project/task/historial/{taskID}")]
         [ApiExplorerSettings(IgnoreApi = true)]

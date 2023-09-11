@@ -106,5 +106,15 @@ namespace Bisopi___Proyectos.Controllers
             return View();
         }
 
+        public IActionResult Roles()
+        {
+            return View();
+        }
+
+        public IActionResult Seniority()
+        {
+            return View();
+        }
+
     }
 }

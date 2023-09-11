@@ -86,6 +86,9 @@ namespace Bisopi___Proyectos.Models
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public int? EstimatedHours { get; set; }
 
+        [Display(Name = "Horas Estimadas Linea Base")]
+        public int? EstimatedHoursLineBase { get; set; }
+
         [Display(Name = "Fecha Inicio")]
         [DataType(DataType.DateTime)]
         [ScaffoldColumn(false)]
@@ -113,6 +116,9 @@ namespace Bisopi___Proyectos.Models
         [Display(Name = "Valor Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public double? ProjectValue { get; set; }
+
+        [Display(Name = "Valor Proyecto Linea Base")]
+        public double? ProjectValueLineBase { get; set; }
 
         [Display(Name = "Costo Proyecto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]

@@ -2,7 +2,7 @@
 
 @model Bisopi___Proyectos.Models.Project
 
-<h4>Editar Proyecto</h4>
+<h4>Deal to Project</h4>
 <hr />
 <br />
 
@@ -13,8 +13,9 @@
         </span>
     </div>
     <div class="col-12">
-        <form asp-controller="Project" asp-action="Edit" method="post" enctype="multipart/form-data">
+        <form asp-controller="Deals" asp-action="DealToProject" method="post" enctype="multipart/form-data">
             @Html.HiddenFor(x => x.ProjectID, new { @class = "ProjectID" })
+            @Html.HiddenFor(x => x.DealID, new { @class = "DealID" })
             @Html.HiddenFor(x => x.IsActive, new { @class = "IsActive" })
             @Html.HiddenFor(x => x.Created, new { @class = "Created" })
             @Html.HiddenFor(x => x.CreatedBy, new { @class = "CreatedBy" })
@@ -78,7 +79,7 @@
                                         .ShowDataBeforeSearch(true)
                                         .ShowDropDownButton(true)
                                         .DeferRendering(false)
-                                        .Placeholder("Seleccione un cliente...")
+                                        .Placeholder("Seleccione un líder...")
                                         )
                                 </div>
                             </div>
@@ -99,6 +100,7 @@
                         </div>
                     </div>
 
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="dx-field">
@@ -115,7 +117,7 @@
                                         .ShowDataBeforeSearch(true)
                                         .ShowDropDownButton(true)
                                         .DeferRendering(false)
-                                        .Placeholder("Seleccione un cliente...")
+                                        .Placeholder("Seleccione un lider...")
                                         )
                                 </div>
                             </div>
@@ -131,7 +133,7 @@
                                         .DisplayExpr("FirstNameAndLastNAme")
                                         .ValueExpr("UserDataID")
                                         .ID("projectManagerID")
-                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Gerente de proyecto" }).Key("UserDataID"))
+                                        .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsersByRole").LoadParams(new { role = "Gerente de proyecto" }).Key("LeaderID"))
                                         .SearchMode(DropDownSearchMode.Contains)
                                         .SearchEnabled(true)
                                         .MinSearchLength(3)
@@ -374,80 +376,39 @@
                         </div>
                     </div>
 
-                    @if (User.IsInRole("Gerente de operaciones") || User.IsInRole("Comercial"))
-                    {
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <div class="dx-field">
-                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectValue)</div>
-                                    <div class="dx-field-item-content-location-bottom">
-                                        @(Html.DevExtreme().NumberBoxFor(x => x.ProjectValue)
-                                            .ID("projectValue")
-                                            .Placeholder("Escriba el valor del proyecto")
-                                            .Format("$ #,##0.##")
-                                            .InputAttr("aria-label", "Currency Format")
-                                            .OnValueChanged("onProjectValueChange")
-                                            )
-                                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectValue)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.ProjectValue)
+                                        .ID("projectValue")
+                                        .Placeholder("Escriba el valor del proyecto")
+                                        .Format("$ #,##0.##")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        .OnValueChanged("onProjectValueChange")
+                                        )
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <div class="dx-field">
-                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectCost)</div>
-                                    <div class="dx-field-item-content-location-bottom">
-                                        @(Html.DevExtreme().NumberBoxFor(x => x.ProjectCost)
-                                            .ID("projectCost")
-                                            .Placeholder("Escriba el costo del proyecto")
-                                            .Format("$ #,##0.##")
-                                            .InputAttr("aria-label", "Currency Format")
-                                            .OnValueChanged("onProjectCostChange")
-                                            )
-                                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectCost)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.ProjectCost)
+                                        .ID("projectCost")
+                                        .Placeholder("Escriba el costo del proyecto")
+                                        .Format("$ #,##0.##")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        .OnValueChanged("onProjectCostChange")
+                                        )
                                 </div>
                             </div>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <div class="dx-field">
-                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectValue)</div>
-                                    <div class="dx-field-item-content-location-bottom">
-                                        @(Html.DevExtreme().NumberBoxFor(x => x.ProjectValue)
-                                            .ID("projectValue")
-                                            .Placeholder("Escriba el valor del proyecto")
-                                            .Format("$ #,##0.##")
-                                            .InputAttr("aria-label", "Currency Format")
-                                            .OnValueChanged("onProjectValueChange")
-                                            .Disabled(true)
-                                            )
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <div class="dx-field">
-                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectCost)</div>
-                                    <div class="dx-field-item-content-location-bottom">
-                                        @(Html.DevExtreme().NumberBoxFor(x => x.ProjectCost)
-                                            .ID("projectCost")
-                                            .Placeholder("Escriba el costo del proyecto")
-                                            .Format("$ #,##0.##")
-                                            .InputAttr("aria-label", "Currency Format")
-                                            .OnValueChanged("onProjectCostChange")
-                                            .Disabled(true)
-                                            )
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }                    
+                    </div>
 
                     <div class="col-md-2">
                         <div class="form-group">
@@ -511,32 +472,163 @@
                         </div>
                     </div>
 
-                    <br />
+                    <h5>Hitos</h5>
 
                     <div class="col-md-12">
-                        <div class="form-group">
-                            <a class="btn btn-outline-secondary p-1" onclick="redirectToEdit()">
-                                <img src="~/img/edit.png" style="width:24px" title="Editar" />
-                            </a>
-                            <a class="btn btn-outline-secondary p-1" onclick="redirectToProgramming()">
-                                <img src="~/img/schedule.png" style="width:24px" title="Programaci�n" />
-                            </a>
-                            <a class="btn btn-outline-secondary p-1" onclick="redirectToMilestone()">
-                                <img src="~/img/hito.png" style="width:24px" title="Hitos" />
-                            </a>
-                            <a class="btn btn-outline-secondary p-1" onclick="redirectToResourcePlanning()">
-                                <img src="~/img/Colaboradores.png" style="width:24px" title="Uso Colaboradores" />
-                            </a>
-                            <a class="btn btn-outline-secondary p-1" onclick="redirectToTask()">
-                                <img src="~/img/task.png" style="width:24px" title="Listado de Tareas" />
-                            </a>
-                            <a class="btn btn-outline-secondary p-1" onclick="redirectToCommitment()">
-                                <img src="~/img/compromise.png" style="width:24px" title="Compromisos" />
-                            </a>
-                            <a class='btn btn-outline-secondary p-1' onclick="confirmDelete()">
-                                <img src="~/img/trash.png" style="width:24px" title="Eliminar" />
-                            </a>
-                        </div>
+                        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.MilestoneTemp>()
+                            .ID("gridContainer")
+                            .AllowColumnReordering(true)
+                            .RowAlternationEnabled(true)
+                            .AllowColumnResizing(true)
+                            .ShowRowLines(true)
+                            .ShowBorders(true)
+                            .WordWrapEnabled(true)
+                            .ColumnAutoWidth(true)
+                            .ColumnResizingMode(ColumnResizingMode.Widget)
+                            .SearchPanel(s => s
+                            .Visible(true)
+                            .HighlightCaseSensitive(true))
+                            .Grouping(grouping => grouping.AutoExpandAll(true))
+                            .GroupPanel(groupPanel => groupPanel.Visible(true))
+                            .FilterPanel(f => f.Visible(true))
+                            .HeaderFilter(h => h.Visible(true))
+                            .Selection(s => s.Mode(SelectionMode.Multiple))
+                            .RemoteOperations(true)
+                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
+                            .DataSource(ds => ds.Mvc()
+                            .LoadParams(new { id = Model.DealID })
+                            .Controller("APIMilestoneTemps")
+                            .LoadAction("Get")
+                            .InsertAction("Post")
+                            .UpdateAction("Put")
+                            .DeleteAction("Delete")
+                            .Key("MilestoneTempID")
+                            )
+                            .OnInitNewRow(@<text>
+                                function(e) {
+                                e.data.ProjectID = $('.ProjectID').val();
+                                e.data.DealID = $('.DealID').val();
+                                }
+                            </text>)
+                            .RemoteOperations(true)
+                            .Columns(columns =>
+                            {
+
+                                columns.Add()
+                                .Type(GridCommandColumnType.Buttons)
+                                .Width(110)
+                                .Buttons(b =>
+                                {
+                                    b.Add().Name(GridColumnButtonName.Edit);
+                                    b.Add().Name(GridColumnButtonName.Delete);
+                                });
+
+                                columns.AddFor(m => m.MilestoneDate);
+
+                                columns.AddFor(m => m.CurrencyID).Lookup(lookup => lookup
+                                .DataSource(ds => ds.WebApi().Controller("APIMilestoneTemps").LoadAction("CurrenciesLookup").Key("Value"))
+                                .ValueExpr("Value")
+                                .DisplayExpr("Text")
+                                );
+
+                                columns.AddFor(m => m.Percentage);
+
+                                columns.AddFor(m => m.Value);
+
+                                columns.AddFor(m => m.MilestoneNumber);
+
+                                columns.AddFor(m => m.IsItChangeControl);
+
+                                columns.AddFor(m => m.Hours);
+
+                                columns.AddFor(m => m.Comment);
+                            })
+                            .Editing(e => e
+                            .AllowAdding(true)
+                            .AllowUpdating(true)
+                            .AllowDeleting(true)
+                            .Mode(GridEditMode.Popup)
+                            .UseIcons(true)
+                            )
+                            )
+                    </div>
+
+                    <h5>Planificación Colaboradores</h5>
+
+                    <div class="col-md-12">
+                        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.ResourcePlanningTemp>()
+                            .ID("gridContainer2")
+                            .AllowColumnReordering(true)
+                            .RowAlternationEnabled(true)
+                            .AllowColumnResizing(true)
+                            .ShowRowLines(true)
+                            .ShowBorders(true)
+                            .WordWrapEnabled(true)
+                            .ColumnAutoWidth(true)
+                            .ColumnResizingMode(ColumnResizingMode.Widget)
+                            .SearchPanel(s => s
+                            .Visible(true)
+                            .HighlightCaseSensitive(true))
+                            .Grouping(grouping => grouping.AutoExpandAll(true))
+                            .GroupPanel(groupPanel => groupPanel.Visible(true))
+                            .FilterPanel(f => f.Visible(true))
+                            .HeaderFilter(h => h.Visible(true))
+                            .Selection(s => s.Mode(SelectionMode.Multiple))
+                            .RemoteOperations(true)
+                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
+                            .DataSource(ds => ds.Mvc()
+                            .LoadParams(new { id = Model.DealID })
+                            .Controller("APIResourcePlanningTemps")
+                            .LoadAction("Get")
+                            .InsertAction("Post")
+                            .UpdateAction("Put")
+                            .DeleteAction("Delete")
+                            .Key("ResourcePlanningTempID")
+                            )
+                            .OnInitNewRow(@<text>
+                                function(e) {
+                                e.data.ProjectID = $('.ProjectID').val();
+                                e.data.DealID = $('.DealID').val();
+                                }
+                            </text>)
+                            .RemoteOperations(true)
+                            .Columns(columns =>
+                            {
+
+                                columns.Add()
+                                .Type(GridCommandColumnType.Buttons)
+                                .Width(110)
+                                .Buttons(b =>
+                                {
+                                    b.Add().Name(GridColumnButtonName.Edit);
+                                    b.Add().Name(GridColumnButtonName.Delete);
+                                });
+
+                                columns.AddFor(m => m.PositionID)
+                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("RolesLookup").Key("Value"))
+                                .DisplayExpr("Text")
+                                .ValueExpr("Value"));
+
+                                columns.AddFor(m => m.ResourceID)
+                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("UsersLookup").Key("Value"))
+                                .DisplayExpr("Text")
+                                .ValueExpr("Value"));
+
+                                columns.AddFor(m => m.PlannedHours);
+
+                                columns.AddFor(m => m.Fee);
+
+                                columns.AddFor(m => m.Cost);
+
+                            })
+                            .Editing(e => e
+                            .AllowAdding(true)
+                            .AllowUpdating(true)
+                            .AllowDeleting(true)
+                            .Mode(GridEditMode.Popup)
+                            .UseIcons(true)
+                            )
+                            )
                     </div>
 
                     <br />
@@ -546,7 +638,7 @@
                             <div class="center">
                                 @(Html.DevExtreme().Button()
                                     .ElementAttr("class", "validate")
-                                    .Text("Guardar")
+                                    .Text("Guardar Linea base")
                                     .Type(ButtonType.Success)
                                     .UseSubmitBehavior(true)
                                     .OnClick("saveClick")
@@ -578,56 +670,6 @@
         }
     }
 
-    function redirectToEdit() {
-        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
-        var url = '/project/edit/' + projectId; // Construye la URL con el ProjectID
-        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
-    }
-
-    function redirectToProgramming() {
-        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
-        var url = '/project/programming/' + projectId; // Construye la URL con el ProjectID
-        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
-    }
-
-    function redirectToMilestone() {
-        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
-        var url = '/project/milestone/' + projectId; // Construye la URL con el ProjectID
-        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
-    }
-
-    function redirectToResourcePlanning() {
-        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
-        var url = '/project/resourceplanning/' + projectId; // Construye la URL con el ProjectID
-        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
-    }
-
-    function redirectToTask() {
-        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
-        var url = '/project/task/' + projectId; // Construye la URL con el ProjectID
-        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
-    }
-
-    function redirectToCommitment() {
-        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
-        var url = '/project/Commitment/' + projectId; // Construye la URL con el ProjectID
-        window.location.href = url; // Redirecciona a la vista project/edit con el ProjectID en la URL
-    }
-
-    function confirmDelete() {
-        var projectId = document.getElementsByClassName("ProjectID")[0].value; // Obtén el valor del ProjectID desde el elemento HiddenFor
-
-        DevExpress.ui.dialog.confirm("¿Estás seguro de que deseas eliminar este proyecto?", "Confirmar eliminación").done(function (dialogResult) {
-            if (dialogResult) {
-                // Si el usuario selecciona "Aceptar", redirecciona a la vista project/delete con el ProjectID en la URL
-                var url = '/project/delete/' + projectId;
-                window.location.href = url;
-            } else {
-                // Si el usuario selecciona "Cancelar", no se hace nada
-            }
-        });
-    }
-
     function onProjectCostChange(e) {
         console.log(e.value);
         console.log($("#projectValue").dxNumberBox("instance").option("value"));
@@ -648,6 +690,7 @@
         var valorProyecto = e.value;
         var costoProyecto = $("#projectCost").dxNumberBox("instance").option("value");
 
+        var calculo = ((valorProyecto - costoProyecto) / valorProyecto)
         var calculo = ((valorProyecto - costoProyecto) / valorProyecto)
 
         $("#grossMargin").dxNumberBox("instance").option("value", calculo);

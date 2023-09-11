@@ -15,13 +15,13 @@ namespace Bisopi___Proyectos.ViewModels
         [Display(Name = "Correo Electronico")]
         public string Email { get; set; }
         [Display(Name = "Ciudad")]
-        public string City { get; set; }
+        public string? City { get; set; }
         [Display(Name = "Area")]
-        public string Area { get; set; }
+        public string? Area { get; set; }
         [Display(Name = "Cargo")]
-        public string Role { get; set; }
+        public string? Role { get; set; }
         [Display(Name = "Telefono")]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         [Display(Name = "Esta Activo ?")]
         public bool IsActive { get; set; }
         [Display(Name = "Grupo")]

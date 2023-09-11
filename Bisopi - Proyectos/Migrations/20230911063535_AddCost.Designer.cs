@@ -4,6 +4,7 @@ using Bisopi___Proyectos.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bisopi___Proyectos.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230911063535_AddCost")]
+    partial class AddCost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -279,6 +282,8 @@ namespace Bisopi___Proyectos.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CostID");
+
+                    b.HasIndex("SeniorityID");
 
                     b.ToTable("Costs");
                 });
@@ -1912,6 +1917,17 @@ namespace Bisopi___Proyectos.Migrations
                         .IsRequired();
 
                     b.Navigation("AllowedView");
+                });
+
+            modelBuilder.Entity("Bisopi___Proyectos.Models.Cost", b =>
+                {
+                    b.HasOne("Bisopi___Proyectos.Models.Seniority", "Seniority")
+                        .WithMany()
+                        .HasForeignKey("SeniorityID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Seniority");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.Deal", b =>
