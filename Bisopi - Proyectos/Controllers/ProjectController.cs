@@ -152,6 +152,7 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.ResourcePlanningID = item.ResourcePlanningTempID;
                 newDetail.ResourceID = item.ResourceID;
                 newDetail.PositionID = item.PositionID;
+                newDetail.SeniorityID = item.SeniorityID;
                 newDetail.PlannedHours = item.PlannedHours;
                 newDetail.EtcHour = item.EtcHour;
                 newDetail.IsActive = item.IsActive;
@@ -439,6 +440,12 @@ namespace Bisopi___Proyectos.Controllers
                 DealID = project.DealID
             };
 
+            ProjectTracking modelPT = new()
+            {
+                Project = project,
+                ProjectID = id
+            };
+
             ResourcePlanningReal modelRPR = new()
             {
                 Project = project,
@@ -448,6 +455,7 @@ namespace Bisopi___Proyectos.Controllers
             var model = new ResourcePlanningViewModel()
             {
                 ResourcePlannings = modelRP,
+                ProjectTrackings = modelPT,
                 ResourcePlanningReals = modelRPR
             };
 
@@ -465,6 +473,7 @@ namespace Bisopi___Proyectos.Controllers
                 LeadID = modelVM.ResourcePlannings.LeadID,
                 ResourceID = modelVM.ResourcePlannings.ResourceID,
                 PositionID = modelVM.ResourcePlannings.PositionID,
+                SeniorityID = modelVM.ResourcePlannings.SeniorityID,
                 PlannedHours = modelVM.ResourcePlannings.PlannedHours,
                 EtcHour = modelVM.ResourcePlannings.EtcHour,
                 IsActive = true,
@@ -490,6 +499,7 @@ namespace Bisopi___Proyectos.Controllers
                 DateAnalysis = modelVM.ResourcePlanningReals.DateAnalysis,
                 ResourceID = modelVM.ResourcePlanningReals.ResourceID,
                 PositionID = modelVM.ResourcePlanningReals.PositionID,
+                SeniorityID = modelVM.ResourcePlanningReals.SeniorityID,
                 
                 PercentComplete = modelVM.ResourcePlanningReals.PercentComplete,
                 ExpectedPercentage = modelVM.ResourcePlanningReals.ExpectedPercentage,
@@ -647,6 +657,31 @@ namespace Bisopi___Proyectos.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Programming", "Project", new { id = viewModelProgramming.Programming.ProjectID }).WithSuccess("La programacion ha sido eliminada");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProjectTracking(ResourcePlanningViewModel modelVM)
+        {
+            var model = new ProjectTracking()
+            {
+                ProjectTrackingID = Guid.NewGuid(),
+                ProjectID = modelVM.ProjectTrackings.ProjectID,
+                MonitoringDate = modelVM.ProjectTrackings.MonitoringDate,
+                PlannedPercentage = modelVM.ProjectTrackings.PlannedPercentage,
+                RealPercentage = modelVM.ProjectTrackings.RealPercentage,
+                Comments = modelVM.ProjectTrackings.Comments,
+
+                IsActive = true,
+                Created = DateTime.UtcNow.AddHours(-5),
+                CreatedBy = User.Identity.Name,
+                Modified = DateTime.UtcNow.AddHours(-5),
+                ModifiedBy = User.Identity.Name
+            };
+
+            _context.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("ResourcePlanning", "Project", new { id = modelVM.ProjectTrackings.ProjectID }).WithSuccess("El registro ha sido exitoso");
         }
     }
 }

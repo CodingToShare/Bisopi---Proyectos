@@ -27,6 +27,10 @@ namespace Bisopi___Proyectos.Models
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid? PositionID { get; set; }
 
+        [Display(Name = "Seniority")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        public Guid? SeniorityID { get; set; }
+
         [Display(Name = "Horas")]
         public double? PlannedHours { get; set; }
 

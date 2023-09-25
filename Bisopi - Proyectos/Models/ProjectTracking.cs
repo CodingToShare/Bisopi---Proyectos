@@ -1,46 +1,34 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bisopi___Proyectos.Models
 {
-    public class ResourcePlanning
+    public class ProjectTracking
     {
         [Key]
-        public Guid ResourcePlanningID { get; set; }
+        public Guid ProjectTrackingID { get; set; }
 
         [Display(Name = "Proyecto")]
         public Guid? ProjectID { get; set; }
 
-        [Display(Name = "Deal")]
-        public Guid? DealID { get; set; }
-
-        [Display(Name = "Lead")]
-        public Guid? LeadID { get; set; }
-
-        [Display(Name = "Colaborador")]
-        public Guid? ResourceID { get; set; }
-
-        [Display(Name = "Cargo")]
+        [Display(Name = "Fecha Seguimiento")]
+        [DataType(DataType.DateTime)]
+        [ScaffoldColumn(false)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid? PositionID { get; set; }
+        public DateTime?  MonitoringDate { get; set; }
 
-        [Display(Name = "Seniority")]
+        [Display(Name = "Porcentaje Planeado")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public Guid? SeniorityID { get; set; }
+        public double? PlannedPercentage { get; set; }
 
-        [Display(Name = "Horas Planificadas")]
+        [Display(Name = "Porcentaje Real")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public double? PlannedHours { get; set; }
+        public double? RealPercentage { get; set; }
 
-        [Display(Name = "Horas Etc")]
-        public double? EtcHour { get; set; }
-
-        [Display(Name = "Tarifa")]
-        public double? Fee { get; set; }
-
-        [Display(Name = "Costos")]
-        public double? Cost { get; set; }
+        [Display(Name = "Comentarios")]
+        [Column(TypeName = "varchar(1000)")]
+        public string? Comments { get; set; }
 
         [Display(Name = "¿Activo?")]
         public bool IsActive { get; set; }

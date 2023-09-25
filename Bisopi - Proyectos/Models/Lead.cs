@@ -49,6 +49,18 @@ namespace Bisopi___Proyectos.Models
         [Display(Name = "Hitos planeados")]
         public double? PlannedMilestones { get; set; }
 
+        [Display(Name = "Total Horas")]
+        public double? TotalHours { get; set; }
+
+        [Display(Name = "Costo Total Lead")]
+        public double? ProjectCost { get; set; }
+
+        [Display(Name = "Margen Bruto")]
+        public double? GrossMargin { get; set; }
+
+        [Display(Name = "Descuento Comercial")]
+        public double? CommercialDiscount { get; set; }
+
         [Display(Name = "Comentarios")]
         [Column(TypeName = "varchar(1000)")]
         public string? Comments { get; set; }

@@ -1,4 +1,4 @@
-﻿using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -16,28 +16,23 @@ using Bisopi___Proyectos.Models;
 namespace Bisopi___Proyectos.Controllers
 {
     [Route("api/[controller]/[action]")]
-    public class APIResourcePlanningsController : Controller
+    public class APIProjectTrackingsController : Controller
     {
         private DataContext _context;
 
-        public APIResourcePlanningsController(DataContext context) {
+        public APIProjectTrackingsController(DataContext context) {
             _context = context;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get(Guid id, DataSourceLoadOptions loadOptions) {
-            var resourcesplannings = _context.ResourcesPlannings.Where(x => x.ProjectID == id && x.IsActive).Select(i => new {
-                i.ResourcePlanningID,
+            var projecttrackings = _context.ProjectTrackings.Where(x => x.ProjectID == id && x.IsActive).Select(i => new {
+                i.ProjectTrackingID,
                 i.ProjectID,
-                i.DealID,
-                i.LeadID,
-                i.ResourceID,
-                i.PositionID,
-                i.SeniorityID,
-                i.PlannedHours,
-                i.EtcHour,
-                i.Fee,
-                i.Cost,
+                i.MonitoringDate,
+                i.PlannedPercentage,
+                i.RealPercentage,
+                i.Comments,
                 i.IsActive,
                 i.CreatedBy,
                 i.Created,
@@ -48,19 +43,19 @@ namespace Bisopi___Proyectos.Controllers
             // If underlying data is a large SQL table, specify PrimaryKey and PaginateViaPrimaryKey.
             // This can make SQL execution plans more efficient.
             // For more detailed information, please refer to this discussion: https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/336.
-            // loadOptions.PrimaryKey = new[] { "ResourcePlanningID" };
+            // loadOptions.PrimaryKey = new[] { "ProjectTrackingID" };
             // loadOptions.PaginateViaPrimaryKey = true;
 
-            return Json(await DataSourceLoader.LoadAsync(resourcesplannings, loadOptions));
+            return Json(await DataSourceLoader.LoadAsync(projecttrackings, loadOptions));
         }
 
         [HttpPost]
         public async Task<IActionResult> Post(string values) {
-            var model = new ResourcePlanning();
+            var model = new ProjectTracking();
             var valuesDict = JsonConvert.DeserializeObject<IDictionary>(values);
             PopulateModel(model, valuesDict);
 
-            model.ResourcePlanningID = Guid.NewGuid();
+            model.ProjectTrackingID = Guid.NewGuid();
             model.IsActive = true;
             model.Created = DateTime.UtcNow.AddHours(-5);
             model.CreatedBy = User.Identity.Name;
@@ -70,15 +65,15 @@ namespace Bisopi___Proyectos.Controllers
             if (!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
 
-            var result = _context.ResourcesPlannings.Add(model);
+            var result = _context.ProjectTrackings.Add(model);
             await _context.SaveChangesAsync();
 
-            return Json(new { result.Entity.ResourcePlanningID });
+            return Json(new { result.Entity.ProjectTrackingID });
         }
 
         [HttpPut]
         public async Task<IActionResult> Put(Guid key, string values) {
-            var model = await _context.ResourcesPlannings.FirstOrDefaultAsync(item => item.ResourcePlanningID == key);
+            var model = await _context.ProjectTrackings.FirstOrDefaultAsync(item => item.ProjectTrackingID == key);
             if(model == null)
                 return StatusCode(409, "Object not found");
 
@@ -97,10 +92,9 @@ namespace Bisopi___Proyectos.Controllers
 
         [HttpDelete]
         public async Task Delete(Guid key) {
-            var model = await _context.ResourcesPlannings.FirstOrDefaultAsync(item => item.ResourcePlanningID == key);
+            var model = await _context.ProjectTrackings.FirstOrDefaultAsync(item => item.ProjectTrackingID == key);
 
-            model.IsActive = false;
-
+            _context.ProjectTrackings.Remove(model);
             await _context.SaveChangesAsync();
         }
 
@@ -116,85 +110,44 @@ namespace Bisopi___Proyectos.Controllers
             return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> SenioritiesLookup(DataSourceLoadOptions loadOptions)
-        {
-            var lookup = from i in _context.Seniorities
-                         orderby i.SeniorityName
-                         select new
-                         {
-                             Value = i.SeniorityID,
-                             Text = i.SeniorityName
-                         };
-            return Json(DataSourceLoader.Load(lookup, loadOptions));
-        }
+        private void PopulateModel(ProjectTracking model, IDictionary values) {
+            string PROJECT_TRACKING_ID = nameof(ProjectTracking.ProjectTrackingID);
+            string PROJECT_ID = nameof(ProjectTracking.ProjectID);
+            string MONITORING_DATE = nameof(ProjectTracking.MonitoringDate);
+            string PLANNED_PERCENTAGE = nameof(ProjectTracking.PlannedPercentage);
+            string REAL_PERCENTAGE = nameof(ProjectTracking.RealPercentage);
+            string COMMENTS = nameof(ProjectTracking.Comments);
+            string IS_ACTIVE = nameof(ProjectTracking.IsActive);
+            string CREATED_BY = nameof(ProjectTracking.CreatedBy);
+            string CREATED = nameof(ProjectTracking.Created);
+            string MODIFIED_BY = nameof(ProjectTracking.ModifiedBy);
+            string MODIFIED = nameof(ProjectTracking.Modified);
 
-        private void PopulateModel(ResourcePlanning model, IDictionary values) {
-            string RESOURCE_PLANNING_ID = nameof(ResourcePlanning.ResourcePlanningID);
-            string PROJECT_ID = nameof(ResourcePlanning.ProjectID);
-            string DEAL_ID = nameof(ResourcePlanning.DealID);
-            string LEAD_ID = nameof(ResourcePlanning.LeadID);
-            string RESOURCE_ID = nameof(ResourcePlanning.ResourceID);
-            string POSITION_ID = nameof(ResourcePlanning.PositionID);
-            string SENIORITY_ID = nameof(ResourcePlanningReal.PositionID);
-            string PLANNED_HOURS = nameof(ResourcePlanning.PlannedHours);
-            string ETC_HOUR = nameof(ResourcePlanning.EtcHour);
-            string IS_ACTIVE = nameof(ResourcePlanning.IsActive);
-            string FEE = nameof(ResourcePlanning.Fee);
-            string COST = nameof(ResourcePlanning.Cost);
-            string CREATED_BY = nameof(ResourcePlanning.CreatedBy);
-            string CREATED = nameof(ResourcePlanning.Created);
-            string MODIFIED_BY = nameof(ResourcePlanning.ModifiedBy);
-            string MODIFIED = nameof(ResourcePlanning.Modified);
-
-            if(values.Contains(RESOURCE_PLANNING_ID)) {
-                model.ResourcePlanningID = ConvertTo<System.Guid>(values[RESOURCE_PLANNING_ID]);
+            if(values.Contains(PROJECT_TRACKING_ID)) {
+                model.ProjectTrackingID = ConvertTo<System.Guid>(values[PROJECT_TRACKING_ID]);
             }
 
             if(values.Contains(PROJECT_ID)) {
                 model.ProjectID = values[PROJECT_ID] != null ? ConvertTo<System.Guid>(values[PROJECT_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(DEAL_ID)) {
-                model.DealID = values[DEAL_ID] != null ? ConvertTo<System.Guid>(values[DEAL_ID]) : (Guid?)null;
+            if(values.Contains(MONITORING_DATE)) {
+                model.MonitoringDate = values[MONITORING_DATE] != null ? Convert.ToDateTime(values[MONITORING_DATE]) : (DateTime?)null;
             }
 
-            if(values.Contains(LEAD_ID)) {
-                model.LeadID = values[LEAD_ID] != null ? ConvertTo<System.Guid>(values[LEAD_ID]) : (Guid?)null;
+            if(values.Contains(PLANNED_PERCENTAGE)) {
+                model.PlannedPercentage = values[PLANNED_PERCENTAGE] != null ? Convert.ToDouble(values[PLANNED_PERCENTAGE], CultureInfo.InvariantCulture) : (double?)null;
             }
 
-            if(values.Contains(RESOURCE_ID)) {
-                model.ResourceID = values[RESOURCE_ID] != null ? ConvertTo<System.Guid>(values[RESOURCE_ID]) : (Guid?)null;
+            if(values.Contains(REAL_PERCENTAGE)) {
+                model.RealPercentage = values[REAL_PERCENTAGE] != null ? Convert.ToDouble(values[REAL_PERCENTAGE], CultureInfo.InvariantCulture) : (double?)null;
             }
 
-            if(values.Contains(POSITION_ID)) {
-                model.PositionID = values[POSITION_ID] != null ? ConvertTo<System.Guid>(values[POSITION_ID]) : (Guid?)null;
+            if(values.Contains(COMMENTS)) {
+                model.Comments = Convert.ToString(values[COMMENTS]);
             }
 
-            if (values.Contains(SENIORITY_ID))
-            {
-                model.SeniorityID = values[SENIORITY_ID] != null ? ConvertTo<System.Guid>(values[SENIORITY_ID]) : (Guid?)null;
-            }
-
-            if (values.Contains(PLANNED_HOURS)) {
-                model.PlannedHours = Convert.ToDouble(values[PLANNED_HOURS], CultureInfo.InvariantCulture);
-            }
-
-            if(values.Contains(ETC_HOUR)) {
-                model.EtcHour = values[ETC_HOUR] != null ? Convert.ToDouble(values[ETC_HOUR], CultureInfo.InvariantCulture) : (double?)null;
-            }
-
-            if (values.Contains(FEE))
-            {
-                model.Fee = values[FEE] != null ? Convert.ToDouble(values[FEE], CultureInfo.InvariantCulture) : (double?)null;
-            }
-
-            if (values.Contains(COST))
-            {
-                model.Cost = values[COST] != null ? Convert.ToDouble(values[COST], CultureInfo.InvariantCulture) : (double?)null;
-            }
-
-            if (values.Contains(IS_ACTIVE)) {
+            if(values.Contains(IS_ACTIVE)) {
                 model.IsActive = Convert.ToBoolean(values[IS_ACTIVE]);
             }
 

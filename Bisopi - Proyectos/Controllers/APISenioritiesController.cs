@@ -45,6 +45,25 @@ namespace Bisopi___Proyectos.Controllers
             return Json(await DataSourceLoader.LoadAsync(seniorities, loadOptions));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetSelectBox(DataSourceLoadOptions loadOptions)
+        {
+            var seniorities = _context.Seniorities.Where(x => x.IsActive).Select(i => new {
+                i.SeniorityID,
+                i.SeniorityName,
+                i.IsActive
+
+            });
+
+            // If underlying data is a large SQL table, specify PrimaryKey and PaginateViaPrimaryKey.
+            // This can make SQL execution plans more efficient.
+            // For more detailed information, please refer to this discussion: https://github.com/DevExpress/DevExtreme.AspNet.Data/issues/336.
+            // loadOptions.PrimaryKey = new[] { "QuoteStatusID" };
+            // loadOptions.PaginateViaPrimaryKey = true;
+
+            return Json(await DataSourceLoader.LoadAsync(seniorities, loadOptions));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post(string values) {
             var model = new Seniority();

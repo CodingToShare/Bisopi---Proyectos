@@ -604,15 +604,23 @@
                                     b.Add().Name(GridColumnButtonName.Delete);
                                 });
 
-                                columns.AddFor(m => m.PositionID)
-                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("RolesLookup").Key("Value"))
-                                .DisplayExpr("Text")
-                                .ValueExpr("Value"));
+                                columns.AddFor(m => m.PositionID).Lookup(x => x.
+                                DataSource(d => d.WebApi().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
+                                .DisplayExpr("Name")
+                                .ValueExpr("RolesDataID")
+                                );
 
-                                columns.AddFor(m => m.ResourceID)
-                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("UsersLookup").Key("Value"))
+                                columns.AddFor(m => m.SeniorityID).Lookup(lookup => lookup
+                                .DataSource(ds => ds.WebApi().Controller("APIResourcePlanningTemps").LoadAction("SenioritiesLookup").Key("Value"))
+                                .ValueExpr("Value")
                                 .DisplayExpr("Text")
-                                .ValueExpr("Value"));
+                                );
+
+                                columns.AddFor(m => m.ResourceID).Lookup(x => x
+                                .DataSource(d => d.WebApi().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                                .DisplayExpr("FirstNameAndLastNAme")
+                                .ValueExpr("UserDataID")
+                                );
 
                                 columns.AddFor(m => m.PlannedHours);
 

@@ -32,6 +32,7 @@ namespace Bisopi___Proyectos.Controllers
                 i.DateAnalysis,
                 i.ResourceID,
                 i.PositionID,
+                i.SeniorityID,
                 i.PlannedHours,
                 i.PercentComplete,
                 i.ExpectedPercentage,
@@ -127,12 +128,26 @@ namespace Bisopi___Proyectos.Controllers
             return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SenioritiesLookup(DataSourceLoadOptions loadOptions)
+        {
+            var lookup = from i in _context.Seniorities
+                         orderby i.SeniorityName
+                         select new
+                         {
+                             Value = i.SeniorityID,
+                             Text = i.SeniorityName
+                         };
+            return Json(DataSourceLoader.Load(lookup, loadOptions));
+        }
+
         private void PopulateModel(ResourcePlanningReal model, IDictionary values) {
             string RESOURCE_PLANNING_REAL_ID = nameof(ResourcePlanningReal.ResourcePlanningRealID);
             string PROJECT_ID = nameof(ResourcePlanningReal.ProjectID);
             string DATE_ANALYSIS = nameof(ResourcePlanningReal.DateAnalysis);
             string RESOURCE_ID = nameof(ResourcePlanningReal.ResourceID);
             string POSITION_ID = nameof(ResourcePlanningReal.PositionID);
+            string SENIORITY_ID = nameof(ResourcePlanningReal.PositionID);
             string PLANNED_HOURS = nameof(ResourcePlanningReal.PlannedHours);
             string PERCENT_COMPLETE = nameof(ResourcePlanningReal.PercentComplete);
             string EXPECTED_PERCENTAGE = nameof(ResourcePlanningReal.ExpectedPercentage);
@@ -162,7 +177,12 @@ namespace Bisopi___Proyectos.Controllers
                 model.PositionID = values[POSITION_ID] != null ? ConvertTo<System.Guid>(values[POSITION_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(PLANNED_HOURS)) {
+            if (values.Contains(SENIORITY_ID))
+            {
+                model.SeniorityID = values[SENIORITY_ID] != null ? ConvertTo<System.Guid>(values[SENIORITY_ID]) : (Guid?)null;
+            }
+
+            if (values.Contains(PLANNED_HOURS)) {
                 model.PlannedHours = values[PLANNED_HOURS] != null ? Convert.ToDouble(values[PLANNED_HOURS], CultureInfo.InvariantCulture) : (double?)null;
             }
 

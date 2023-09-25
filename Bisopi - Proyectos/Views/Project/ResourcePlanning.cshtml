@@ -66,15 +66,23 @@
                     b.Add().Name(GridColumnButtonName.Delete);
                 });
 
-                columns.AddFor(m => m.PositionID)
-                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("RolesLookup").Key("Value"))
-                .DisplayExpr("Text")
-                .ValueExpr("Value"));
+                columns.AddFor(m => m.PositionID).Lookup(x => x.
+                DataSource(d => d.WebApi().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
+                .DisplayExpr("Name")
+                .ValueExpr("RolesDataID")
+                );
 
-                columns.AddFor(m => m.ResourceID)
-                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("UsersLookup").Key("Value"))
+                columns.AddFor(m => m.SeniorityID).Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("APIResourcePlanningTemps").LoadAction("SenioritiesLookup").Key("Value"))
+                .ValueExpr("Value")
                 .DisplayExpr("Text")
-                .ValueExpr("Value"));
+                );
+
+                columns.AddFor(m => m.ResourceID).Lookup(x => x
+                .DataSource(d => d.WebApi().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                .DisplayExpr("FirstNameAndLastNAme")
+                .ValueExpr("UserDataID")
+                );
 
                 columns.AddFor(m => m.PlannedHours);
 
@@ -157,6 +165,27 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlannings.SeniorityID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.ResourcePlannings.SeniorityID)
+                                                .DataSource(d => d.Mvc().Controller("APIResourcePlanningTemps").LoadAction("SenioritiesLookup").Key("SeniorityID"))
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione un seniority...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="dx-field">
                                         <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlannings.PlannedHours)</div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().NumberBoxFor(x => x.ResourcePlannings.PlannedHours)
@@ -202,10 +231,178 @@
 }
 
 <div class="p-3" style='font-size:14px'>
+    <div class="h5">Seguimineto Proyecto</div>
+    <div class="p-3">
+        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.ProjectTracking>()
+            .ID("gridContainer2")
+            .AllowColumnReordering(true)
+            .RowAlternationEnabled(true)
+            .AllowColumnResizing(true)
+            .ShowRowLines(true)
+            .ShowBorders(true)
+            .WordWrapEnabled(true)
+            .ColumnAutoWidth(true)
+            .ColumnResizingMode(ColumnResizingMode.Widget)
+            .SearchPanel(s => s
+            .Visible(true)
+            .HighlightCaseSensitive(true))
+            .Grouping(grouping => grouping.AutoExpandAll(true))
+            .GroupPanel(groupPanel => groupPanel.Visible(true))
+            .FilterPanel(f => f.Visible(true))
+            .HeaderFilter(h => h.Visible(true))
+            .Selection(s => s.Mode(SelectionMode.Multiple))
+            .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+            .OnExporting("exporting")
+            .RemoteOperations(true)
+            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
+            .DataSource(ds => ds.Mvc()
+            .Controller("APIProjectTrackings")
+            .LoadParams(new { id = Model.ProjectTrackings.ProjectID })
+            .LoadAction("Get")
+            .UpdateAction("Put")
+            .DeleteAction("Delete")
+            .Key("ProjectTrackingID")
+            )
+            .OnInitNewRow(@<text>
+                function(e) {
+                e.data.ProjectID = $('.ProjectID').val();
+                }
+            </text>)
+            .RemoteOperations(true)
+            .Columns(columns =>
+            {
+
+                columns.Add()
+                .Type(GridCommandColumnType.Buttons)
+                .Width(110)
+                .Buttons(b =>
+                {
+                    b.Add().Name(GridColumnButtonName.Edit);
+                    b.Add().Name(GridColumnButtonName.Delete);
+                });
+
+                columns.AddFor(m => m.MonitoringDate);
+
+                columns.AddFor(m => m.PlannedPercentage);
+
+                columns.AddFor(m => m.RealPercentage);
+
+                columns.AddFor(m => m.Comments);
+
+            })
+            .Editing(e => e
+            .AllowUpdating(true)
+            .AllowDeleting(true)
+            .Mode(GridEditMode.Popup)
+            .UseIcons(true)
+            )
+            )
+    </div>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ModalSeguimiento" name="openTarea" id="openTarea">Agregar Seguimiento Proyecto</button>
+    <button id="cancel" name='cancel' type="submit" class="btn btn-dark">Cancelar</button>
+</div>
+
+@using (Html.BeginForm("ProjectTracking", "Project", FormMethod.Post))
+{
+    @using (Html.DevExtreme().ValidationGroup())
+    {
+        @Html.HiddenFor(x => x.ProjectTrackings.ProjectID, new { @class = "ProjectID" })
+        <!-- Modal -->
+        <div class="modal fade" id="ModalSeguimiento" tabindex="-1" data-backdrop="static" data-keyboard="true" role="dialog" aria-labelledby="ModalSeguimiento" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style='font-size:14px'>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tareaModalLabel">Agregar Seguimiento de Proyecto</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectTrackings.MonitoringDate)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().DateBoxFor(x => x.ProjectTrackings.MonitoringDate)
+                                                .InputAttr("aria-label", "Date")
+                                                .Type(DateBoxType.Date)
+                                                .Value(DateTime.Now)
+                                                .Placeholder("Seleccione la fecha de seguimiento ...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectTrackings.PlannedPercentage)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.ProjectTrackings.PlannedPercentage)
+                                                .ID("PlannedPercentage")
+                                                .Placeholder("Escriba el porcentaje planeado")
+                                                .InputAttr("aria-label", "Currency Format")
+                                                .Format("## %")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectTrackings.RealPercentage)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().NumberBoxFor(x => x.ProjectTrackings.RealPercentage)
+                                                .ID("RealPercentage")
+                                                .Placeholder("Escriba el porcentaje real")
+                                                .InputAttr("aria-label", "Currency Format")
+                                                .Format("## %")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectTrackings.Comments)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().TextAreaFor(x => x.ProjectTrackings.Comments)
+                                                .ID("justification")
+                                                .Placeholder("Escriba los comentarios")
+                                                .AutoResizeEnabled(true)
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="id_proyecto_tarea" name="id_proyecto_tarea" value="">
+                        <input type="hidden" id="cod_proyecto" name="cod_proyecto" value="">
+                        @(Html.DevExtreme().Button()
+                            .ElementAttr("class", "validate")
+                            .Text("Guardar")
+                            .Type(ButtonType.Success)
+                            .UseSubmitBehavior(true)
+                            )
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<div class="p-3" style='font-size:14px'>
     <div class="h5">Real</div>
     <div class="p-3">
         @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.Models.ResourcePlanningReal>()
-            .ID("gridContainer2")
+            .ID("gridContainer3")
             .AllowColumnReordering(true)
             .RowAlternationEnabled(true)
             .AllowColumnResizing(true)
@@ -253,15 +450,21 @@
 
                 columns.AddFor(m => m.DateAnalysis);
 
-                columns.AddFor(m => m.ResourceID)
-                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("UsersLookup").Key("Value"))
-                .DisplayExpr("Text")
-                .ValueExpr("Value"));
-
                 columns.AddFor(m => m.PositionID)
                 .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
                 .DisplayExpr("Name")
-                .ValueExpr("RolesDataID"));
+                .ValueExpr("RolesDataID")
+                );
+
+                columns.AddFor(m => m.SeniorityID)
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIResourcePlanningTemps").LoadAction("SenioritiesLookup").Key("SeniorityID"))
+                .DisplayExpr("Text")
+                .ValueExpr("Value"));
+
+                columns.AddFor(m => m.ResourceID)
+                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                .DisplayExpr("FirstNameAndLastNAme")
+                .ValueExpr("UserDataID"));
 
                 columns.AddFor(m => m.PlannedHours);
 
@@ -352,6 +555,27 @@
                                                 .ShowDropDownButton(true)
                                                 .DeferRendering(false)
                                                 .Placeholder("Seleccione un cargo...")
+                                                )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="dx-field">
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResourcePlanningReals.SeniorityID)</div>
+                                        <div class="dx-field-item-content-location-bottom">
+                                            @(Html.DevExtreme().SelectBoxFor(x => x.ResourcePlanningReals.SeniorityID)
+                                                .DataSource(d => d.Mvc().Controller("APIResourcePlanningTemps").LoadAction("SenioritiesLookup").Key("SeniorityID"))
+                                                .DisplayExpr("Text")
+                                                .ValueExpr("Value")
+                                                .SearchMode(DropDownSearchMode.Contains)
+                                                .SearchEnabled(true)
+                                                .MinSearchLength(3)
+                                                .ShowDataBeforeSearch(true)
+                                                .ShowDropDownButton(true)
+                                                .DeferRendering(false)
+                                                .Placeholder("Seleccione un seniority...")
                                                 )
                                         </div>
                                     </div>

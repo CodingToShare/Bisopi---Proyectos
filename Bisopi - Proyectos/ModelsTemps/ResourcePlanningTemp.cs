@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Bisopi___Proyectos.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bisopi___Proyectos.ModelsTemps
 {
@@ -24,6 +26,10 @@ namespace Bisopi___Proyectos.ModelsTemps
         [Display(Name = "Cargo")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public Guid? PositionID { get; set; }
+
+        [Display(Name = "Seniority")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        public Guid? SeniorityID { get; set; }
 
         [Display(Name = "Horas Planificadas")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
@@ -62,5 +68,6 @@ namespace Bisopi___Proyectos.ModelsTemps
         [ScaffoldColumn(false)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Modified { get; set; }
+
     }
 }

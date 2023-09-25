@@ -125,6 +125,7 @@ namespace Bisopi___Proyectos.Controllers
                     newDetail.ResourcePlanningTempID = item.ResourcePlanningID;
                     newDetail.ResourceID = item.ResourceID;
                     newDetail.PositionID = item.PositionID;
+                    newDetail.SeniorityID = item.SeniorityID;
                     newDetail.PlannedHours = item.PlannedHours;
                     newDetail.EtcHour = item.EtcHour;
                     newDetail.Fee = item.Fee;
@@ -160,6 +161,10 @@ namespace Bisopi___Proyectos.Controllers
             modelDeal.PlannedMilestones = model.PlannedMilestones;
             modelDeal.CurrencyID = model.CurrencyID;
             modelDeal.LeadValue = model.LeadValue;
+            modelDeal.TotalHours = model.TotalHours;
+            modelDeal.ProjectCost = model.ProjectCost;
+            modelDeal.GrossMargin = model.GrossMargin;
+            modelDeal.CommercialDiscount = model.CommercialDiscount;
             modelDeal.Comments = model.Comments;
 
             var details = _context.Milestones.Where(x => x.LeadID == model.LeadID).ToList();
@@ -210,6 +215,7 @@ namespace Bisopi___Proyectos.Controllers
                     newDetail.ResourcePlanningTempID = item.ResourcePlanningID;
                     newDetail.ResourceID = item.ResourceID;
                     newDetail.PositionID = item.PositionID;
+                    newDetail.SeniorityID = item.SeniorityID;
                     newDetail.PlannedHours = item.PlannedHours;
                     newDetail.EtcHour = item.EtcHour;
                     newDetail.Fee = item.Fee;
@@ -291,6 +297,7 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.ResourcePlanningID = item.ResourcePlanningTempID;
                 newDetail.ResourceID = item.ResourceID;
                 newDetail.PositionID = item.PositionID;
+                newDetail.SeniorityID = item.SeniorityID;
                 newDetail.PlannedHours = item.PlannedHours;
                 newDetail.EtcHour = item.EtcHour;
                 newDetail.Fee = item.Fee;
@@ -361,6 +368,7 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.ResourcePlanningID = item.ResourcePlanningTempID;
                 newDetail.ResourceID = item.ResourceID;
                 newDetail.PositionID = item.PositionID;
+                newDetail.SeniorityID = item.SeniorityID;
                 newDetail.PlannedHours = item.PlannedHours;
                 newDetail.EtcHour = item.EtcHour;
                 newDetail.Fee = item.Fee;
@@ -436,6 +444,7 @@ namespace Bisopi___Proyectos.Controllers
                 newDetail.ResourcePlanningID = item.ResourcePlanningTempID;
                 newDetail.ResourceID = item.ResourceID;
                 newDetail.PositionID = item.PositionID;
+                newDetail.SeniorityID = item.SeniorityID;
                 newDetail.PlannedHours = item.PlannedHours;
                 newDetail.EtcHour = item.EtcHour;
                 newDetail.Fee = item.Fee;

@@ -35,10 +35,11 @@ namespace Bisopi___Proyectos.Controllers
                 i.LeadID,
                 i.ResourceID,
                 i.PositionID,
+                i.SeniorityID,
                 i.PlannedHours,
-                i.EtcHour,
                 i.Fee,
                 i.Cost,
+                i.EtcHour,
                 i.IsActive,
                 i.CreatedBy,
                 i.Created,
@@ -104,54 +105,76 @@ namespace Bisopi___Proyectos.Controllers
             await _context.SaveChangesAsync();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SenioritiesLookup(DataSourceLoadOptions loadOptions)
+        {
+            var lookup = from i in _context.Seniorities
+                         orderby i.SeniorityName
+                         select new
+                         {
+                             Value = i.SeniorityID,
+                             Text = i.SeniorityName
+                         };
+            return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
+        }
 
-        private void PopulateModel(ResourcePlanningTemp model, IDictionary values) {
+        private void PopulateModel(ResourcePlanningTemp model, IDictionary values)
+        {
             string RESOURCE_PLANNING_TEMP_ID = nameof(ResourcePlanningTemp.ResourcePlanningTempID);
             string PROJECT_ID = nameof(ResourcePlanningTemp.ProjectID);
             string DEAL_ID = nameof(ResourcePlanningTemp.DealID);
             string LEAD_ID = nameof(ResourcePlanningTemp.LeadID);
             string RESOURCE_ID = nameof(ResourcePlanningTemp.ResourceID);
             string POSITION_ID = nameof(ResourcePlanningTemp.PositionID);
+            string SENIORITY_ID = nameof(ResourcePlanningTemp.SeniorityID);
             string PLANNED_HOURS = nameof(ResourcePlanningTemp.PlannedHours);
+            string FEE = nameof(ResourcePlanningTemp.Fee);
+            string COST = nameof(ResourcePlanningTemp.Cost);
             string ETC_HOUR = nameof(ResourcePlanningTemp.EtcHour);
-            string FEE = nameof(ResourcePlanning.Fee);
-            string COST = nameof(ResourcePlanning.Cost);
             string IS_ACTIVE = nameof(ResourcePlanningTemp.IsActive);
             string CREATED_BY = nameof(ResourcePlanningTemp.CreatedBy);
             string CREATED = nameof(ResourcePlanningTemp.Created);
             string MODIFIED_BY = nameof(ResourcePlanningTemp.ModifiedBy);
             string MODIFIED = nameof(ResourcePlanningTemp.Modified);
 
-            if(values.Contains(RESOURCE_PLANNING_TEMP_ID)) {
+            if (values.Contains(RESOURCE_PLANNING_TEMP_ID))
+            {
                 model.ResourcePlanningTempID = ConvertTo<System.Guid>(values[RESOURCE_PLANNING_TEMP_ID]);
             }
 
-            if(values.Contains(PROJECT_ID)) {
+            if (values.Contains(PROJECT_ID))
+            {
                 model.ProjectID = values[PROJECT_ID] != null ? ConvertTo<System.Guid>(values[PROJECT_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(DEAL_ID)) {
+            if (values.Contains(DEAL_ID))
+            {
                 model.DealID = values[DEAL_ID] != null ? ConvertTo<System.Guid>(values[DEAL_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(LEAD_ID)) {
+            if (values.Contains(LEAD_ID))
+            {
                 model.LeadID = values[LEAD_ID] != null ? ConvertTo<System.Guid>(values[LEAD_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(RESOURCE_ID)) {
+            if (values.Contains(RESOURCE_ID))
+            {
                 model.ResourceID = values[RESOURCE_ID] != null ? ConvertTo<System.Guid>(values[RESOURCE_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(POSITION_ID)) {
+            if (values.Contains(POSITION_ID))
+            {
                 model.PositionID = values[POSITION_ID] != null ? ConvertTo<System.Guid>(values[POSITION_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(PLANNED_HOURS)) {
-                model.PlannedHours = Convert.ToDouble(values[PLANNED_HOURS], CultureInfo.InvariantCulture);
+            if (values.Contains(SENIORITY_ID))
+            {
+                model.SeniorityID = values[SENIORITY_ID] != null ? ConvertTo<System.Guid>(values[SENIORITY_ID]) : (Guid?)null;
             }
 
-            if(values.Contains(ETC_HOUR)) {
-                model.EtcHour = values[ETC_HOUR] != null ? Convert.ToDouble(values[ETC_HOUR], CultureInfo.InvariantCulture) : (double?)null;
+            if (values.Contains(PLANNED_HOURS))
+            {
+                model.PlannedHours = values[PLANNED_HOURS] != null ? Convert.ToDouble(values[PLANNED_HOURS], CultureInfo.InvariantCulture) : (double?)null;
             }
 
             if (values.Contains(FEE))
@@ -164,42 +187,58 @@ namespace Bisopi___Proyectos.Controllers
                 model.Cost = values[COST] != null ? Convert.ToDouble(values[COST], CultureInfo.InvariantCulture) : (double?)null;
             }
 
-            if (values.Contains(IS_ACTIVE)) {
+            if (values.Contains(ETC_HOUR))
+            {
+                model.EtcHour = values[ETC_HOUR] != null ? Convert.ToDouble(values[ETC_HOUR], CultureInfo.InvariantCulture) : (double?)null;
+            }
+
+            if (values.Contains(IS_ACTIVE))
+            {
                 model.IsActive = Convert.ToBoolean(values[IS_ACTIVE]);
             }
 
-            if(values.Contains(CREATED_BY)) {
+            if (values.Contains(CREATED_BY))
+            {
                 model.CreatedBy = Convert.ToString(values[CREATED_BY]);
             }
 
-            if(values.Contains(CREATED)) {
+            if (values.Contains(CREATED))
+            {
                 model.Created = Convert.ToDateTime(values[CREATED]);
             }
 
-            if(values.Contains(MODIFIED_BY)) {
+            if (values.Contains(MODIFIED_BY))
+            {
                 model.ModifiedBy = Convert.ToString(values[MODIFIED_BY]);
             }
 
-            if(values.Contains(MODIFIED)) {
+            if (values.Contains(MODIFIED))
+            {
                 model.Modified = Convert.ToDateTime(values[MODIFIED]);
             }
         }
 
-        private T ConvertTo<T>(object value) {
+        private T ConvertTo<T>(object value)
+        {
             var converter = System.ComponentModel.TypeDescriptor.GetConverter(typeof(T));
-            if(converter != null) {
+            if (converter != null)
+            {
                 return (T)converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
-            } else {
+            }
+            else
+            {
                 // If necessary, implement a type conversion here
                 throw new NotImplementedException();
             }
         }
 
-        private string GetFullErrorMessage(ModelStateDictionary modelState) {
+        private string GetFullErrorMessage(ModelStateDictionary modelState)
+        {
             var messages = new List<string>();
 
-            foreach(var entry in modelState) {
-                foreach(var error in entry.Value.Errors)
+            foreach (var entry in modelState)
+            {
+                foreach (var error in entry.Value.Errors)
                     messages.Add(error.ErrorMessage);
             }
 

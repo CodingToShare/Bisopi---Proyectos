@@ -30,6 +30,7 @@ namespace Bisopi___Proyectos.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectCommitment> ProjectCommitments { get; set; }
         public DbSet<ProjectStatus> ProjectsStatus { get; set; }
+        public DbSet<ProjectTracking> ProjectTrackings { get; set; }
         public DbSet<ProjectType> ProjectsTypes { get; set; }
         public DbSet<ProposalStatus> ProposalsStatus { get; set; }
         public DbSet<ProjectTaskStatus> ProjectTaskStatus { get; set; }

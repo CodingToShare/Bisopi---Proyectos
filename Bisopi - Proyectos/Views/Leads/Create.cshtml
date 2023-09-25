@@ -187,13 +187,78 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CommercialDiscount)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.CommercialDiscount)
+                                        .ID("CommercialDiscount")
+                                        .Format("$ #,##0.##")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        .OnValueChanged("onCommercialDiscount")
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.TotalHours)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.TotalHours)
+                                        .ID("TotalHours")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        .Disabled(true)
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="dx-field">
                                 <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.LeadValue)</div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().NumberBoxFor(x => x.LeadValue)
                                         .ID("leadValue")
-                                        .Placeholder("Escriba el valor del lead")
                                         .Format("$ #,##0.##")
                                         .InputAttr("aria-label", "Currency Format")
+                                        .OnValueChanged("onProjectValueChange")
+                                        .Disabled(true)
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectCost)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.ProjectCost)
+                                        .ID("projectCost")
+                                        .Format("$ #,##0.##")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        .OnValueChanged("onProjectCostChange")
+                                        .Disabled(true)
+                                        )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="dx-field">
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.GrossMargin)</div>
+                                <div class="dx-field-item-content-location-bottom">
+                                    @(Html.DevExtreme().NumberBoxFor(x => x.GrossMargin)
+                                        .ID("grossMargin")
+                                        .Format("## %")
+                                        .InputAttr("aria-label", "Currency Format")
+                                        .Disabled(true)
                                         )
                                 </div>
                             </div>
@@ -213,6 +278,92 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <h5>Planificación Colaboradores</h5>
+
+                    <div class="col-md-12">
+                        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.ResourcePlanningTemp>()
+                            .ID("gridContainer2")
+                            .AllowColumnReordering(true)
+                            .RowAlternationEnabled(true)
+                            .AllowColumnResizing(true)
+                            .ShowRowLines(true)
+                            .ShowBorders(true)
+                            .WordWrapEnabled(true)
+                            .ColumnAutoWidth(true)
+                            .ColumnResizingMode(ColumnResizingMode.Widget)
+                            .SearchPanel(s => s
+                            .Visible(true)
+                            .HighlightCaseSensitive(true))
+                            .Grouping(grouping => grouping.AutoExpandAll(true))
+                            .GroupPanel(groupPanel => groupPanel.Visible(true))
+                            .FilterPanel(f => f.Visible(true))
+                            .HeaderFilter(h => h.Visible(true))
+                            .Selection(s => s.Mode(SelectionMode.Multiple))
+                            .RemoteOperations(true)
+                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
+                            .OnSaved("calculo")
+                            .DataSource(ds => ds.Mvc()
+                            .LoadParams(new { id = Model.LeadID })
+                            .Controller("APIResourcePlanningTemps")
+                            .LoadAction("Get")
+                            .InsertAction("Post")
+                            .UpdateAction("Put")
+                            .DeleteAction("Delete")
+                            .Key("ResourcePlanningTempID")
+                            )
+                            .OnInitNewRow(@<text>
+                                function(e) {
+                                e.data.LeadID = $('.LeadID').val();
+                                }
+                            </text>)
+                            .RemoteOperations(true)
+                            .Columns(columns =>
+                            {
+
+                                columns.Add()
+                                .Type(GridCommandColumnType.Buttons)
+                                .Width(110)
+                                .Buttons(b =>
+                                {
+                                    b.Add().Name(GridColumnButtonName.Edit);
+                                    b.Add().Name(GridColumnButtonName.Delete);
+                                });
+
+                                columns.AddFor(m => m.PositionID).Lookup(x => x.
+                                DataSource(d => d.WebApi().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
+                                .DisplayExpr("Name")
+                                .ValueExpr("RolesDataID")
+                                );
+
+                                columns.AddFor(m => m.SeniorityID).Lookup(lookup => lookup
+                                .DataSource(ds => ds.WebApi().Controller("APIResourcePlanningTemps").LoadAction("SenioritiesLookup").Key("Value"))
+                                .ValueExpr("Value")
+                                .DisplayExpr("Text")
+                                );
+
+                                columns.AddFor(m => m.ResourceID).Lookup(x => x
+                                .DataSource(d => d.WebApi().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
+                                .DisplayExpr("FirstNameAndLastNAme")
+                                .ValueExpr("UserDataID")
+                                );
+
+                                columns.AddFor(m => m.PlannedHours);
+
+                                columns.AddFor(m => m.Fee);
+
+                                columns.AddFor(m => m.Cost);
+
+                            })
+                            .Editing(e => e
+                            .AllowAdding(true)
+                            .AllowUpdating(true)
+                            .AllowDeleting(true)
+                            .Mode(GridEditMode.Popup)
+                            .UseIcons(true)
+                            )
+                            )
                     </div>
 
                     <h5>Hitos</h5>
@@ -292,81 +443,6 @@
                         )
                     </div>
 
-                    <h5>Planificación Colaboradores</h5>
-
-                    <div class="col-md-12">
-                        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.ResourcePlanningTemp>()
-                            .ID("gridContainer2")
-                            .AllowColumnReordering(true)
-                            .RowAlternationEnabled(true)
-                            .AllowColumnResizing(true)
-                            .ShowRowLines(true)
-                            .ShowBorders(true)
-                            .WordWrapEnabled(true)
-                            .ColumnAutoWidth(true)
-                            .ColumnResizingMode(ColumnResizingMode.Widget)
-                            .SearchPanel(s => s
-                            .Visible(true)
-                            .HighlightCaseSensitive(true))
-                            .Grouping(grouping => grouping.AutoExpandAll(true))
-                            .GroupPanel(groupPanel => groupPanel.Visible(true))
-                            .FilterPanel(f => f.Visible(true))
-                            .HeaderFilter(h => h.Visible(true))
-                            .Selection(s => s.Mode(SelectionMode.Multiple))
-                            .RemoteOperations(true)
-                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
-                            .DataSource(ds => ds.Mvc()
-                                .LoadParams(new { id = Model.LeadID })
-                                .Controller("APIResourcePlanningTemps")
-                                .LoadAction("Get")
-                                .InsertAction("Post")
-                                .UpdateAction("Put")
-                                .DeleteAction("Delete")
-                                .Key("ResourcePlanningTempID")
-                            )
-                            .OnInitNewRow(@<text>
-                                function(e) {
-                                e.data.LeadID = $('.LeadID').val();
-                                }
-                            </text>)
-                            .RemoteOperations(true)
-                            .Columns(columns => {
-
-                                columns.Add()
-                                .Type(GridCommandColumnType.Buttons)
-                                .Width(110)
-                                .Buttons(b => {
-                                    b.Add().Name(GridColumnButtonName.Edit);
-                                    b.Add().Name(GridColumnButtonName.Delete);
-                                });
-
-                                columns.AddFor(m => m.PositionID)
-                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetRoles"))
-                                .DisplayExpr("Name")
-                                .ValueExpr("RolesDataID"));
-
-                                columns.AddFor(m => m.ResourceID)
-                                .Lookup(x => x.DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers"))
-                                .DisplayExpr("FirstNameAndLastNAme")
-                                .ValueExpr("UserDataID"));
-
-                                columns.AddFor(m => m.PlannedHours);
-
-                                columns.AddFor(m => m.Fee);
-
-                                columns.AddFor(m => m.Cost);
-
-                            })
-                            .Editing(e => e
-                                .AllowAdding(true)
-                                .AllowUpdating(true)
-                                .AllowDeleting(true)
-                                .Mode(GridEditMode.Popup)
-                                .UseIcons(true)
-                            )
-                        )
-                    </div>
-
                     <br />
 
                     <div class="col-md-12 p-4">
@@ -405,4 +481,65 @@
             e.cancel;
         }
     }
+
+    function calculo(e){
+        var grid = $('#gridContainer2').dxDataGrid('instance');
+        var rows = grid.getVisibleRows();
+        var totalValue = 0;
+        var totalCost = 0;
+        var totalHours = 0;
+
+        rows.forEach(function (row) {
+            if (row.rowType === "data") {
+
+                totalHours += row.data.PlannedHours;
+                totalValue += row.data.Fee * row.data.PlannedHours;
+                totalCost += row.data.Cost * row.data.PlannedHours;
+
+            }
+        });
+
+        totalValue = totalValue - $("#CommercialDiscount").dxNumberBox("instance").option("value")
+
+        $("#leadValue").dxNumberBox("instance").option("value", totalValue);
+        $("#projectCost").dxNumberBox("instance").option("value", totalCost);
+        $("#TotalHours").dxNumberBox("instance").option("value", totalHours);
+
+
+    }
+
+    function onProjectCostChange(e) {
+        console.log(e.value);
+        console.log($("#leadValue").dxNumberBox("instance").option("value"));
+
+        var valorProyecto = $("#leadValue").dxNumberBox("instance").option("value");
+        var costoProyecto = e.value;
+
+        var calculo = ((valorProyecto - costoProyecto) / valorProyecto)
+
+        $("#grossMargin").dxNumberBox("instance").option("value", calculo);
+
+    }
+
+    function onProjectValueChange(e) {
+        console.log(e.value);
+        console.log($("#projectCost").dxNumberBox("instance").option("value"));
+
+        var valorProyecto = e.value;
+        var costoProyecto = $("#projectCost").dxNumberBox("instance").option("value");
+
+        var calculo = ((valorProyecto - costoProyecto) / valorProyecto)
+
+        $("#grossMargin").dxNumberBox("instance").option("value", calculo);
+
+    }
+
+    function onCommercialDiscount(e) {
+
+        var calculo = $("#leadValue").dxNumberBox("instance").option("value") - e.value;
+
+        $("#leadValue").dxNumberBox("instance").option("value", calculo);
+
+    }
+
 </script>

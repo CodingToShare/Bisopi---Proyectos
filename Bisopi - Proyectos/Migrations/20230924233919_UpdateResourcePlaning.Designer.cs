@@ -4,6 +4,7 @@ using Bisopi___Proyectos.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bisopi___Proyectos.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230924233919_UpdateResourcePlaning")]
+    partial class UpdateResourcePlaning
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1197,52 +1200,6 @@ namespace Bisopi___Proyectos.Migrations
                     b.HasKey("ProjectTaskStatusID");
 
                     b.ToTable("ProjectTaskStatus");
-                });
-
-            modelBuilder.Entity("Bisopi___Proyectos.Models.ProjectTracking", b =>
-                {
-                    b.Property<Guid>("ProjectTrackingID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<DateTime?>("MonitoringDate")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<double?>("PlannedPercentage")
-                        .IsRequired()
-                        .HasColumnType("float");
-
-                    b.Property<Guid?>("ProjectID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double?>("RealPercentage")
-                        .IsRequired()
-                        .HasColumnType("float");
-
-                    b.HasKey("ProjectTrackingID");
-
-                    b.ToTable("ProjectTrackings");
                 });
 
             modelBuilder.Entity("Bisopi___Proyectos.Models.ProjectType", b =>

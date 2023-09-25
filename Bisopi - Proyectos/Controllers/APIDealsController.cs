@@ -35,6 +35,10 @@ namespace Bisopi___Proyectos.Controllers
                 i.CurrencyID,
                 i.LeadValue,
                 i.Comments,
+                i.TotalHours,
+                i.ProjectCost,
+                i.GrossMargin,
+                i.CommercialDiscount,
                 i.IsActive,
                 i.CreatedBy,
                 i.Created,
@@ -134,6 +138,10 @@ namespace Bisopi___Proyectos.Controllers
             string PROPOSAL_STATUS_ID = nameof(Deal.ProposalStatusID);
             string CURRENCY_ID = nameof(Deal.CurrencyID);
             string LEAD_VALUE = nameof(Deal.LeadValue);
+            string TOTAL_HOURS = nameof(Lead.TotalHours);
+            string PROJECT_COST = nameof(Lead.ProjectCost);
+            string GROSS_MARGIN = nameof(Lead.GrossMargin);
+            string COMMERCIAL_DISCOUNT = nameof(Lead.GrossMargin);
             string COMMENTS = nameof(Deal.Comments);
             string IS_ACTIVE = nameof(Deal.IsActive);
             string CREATED_BY = nameof(Deal.CreatedBy);
@@ -169,7 +177,27 @@ namespace Bisopi___Proyectos.Controllers
                 model.LeadValue = values[LEAD_VALUE] != null ? Convert.ToDouble(values[LEAD_VALUE], CultureInfo.InvariantCulture) : (double?)null;
             }
 
-            if(values.Contains(COMMENTS)) {
+            if (values.Contains(TOTAL_HOURS))
+            {
+                model.TotalHours = values[TOTAL_HOURS] != null ? Convert.ToDouble(values[TOTAL_HOURS], CultureInfo.InvariantCulture) : (double?)null;
+            }
+
+            if (values.Contains(PROJECT_COST))
+            {
+                model.ProjectCost = values[PROJECT_COST] != null ? Convert.ToDouble(values[PROJECT_COST], CultureInfo.InvariantCulture) : (double?)null;
+            }
+
+            if (values.Contains(GROSS_MARGIN))
+            {
+                model.GrossMargin = values[GROSS_MARGIN] != null ? Convert.ToDouble(values[GROSS_MARGIN], CultureInfo.InvariantCulture) : (double?)null;
+            }
+
+            if (values.Contains(COMMERCIAL_DISCOUNT))
+            {
+                model.CommercialDiscount = values[COMMERCIAL_DISCOUNT] != null ? Convert.ToDouble(values[COMMERCIAL_DISCOUNT], CultureInfo.InvariantCulture) : (double?)null;
+            }
+
+            if (values.Contains(COMMENTS)) {
                 model.Comments = Convert.ToString(values[COMMENTS]);
             }
 
