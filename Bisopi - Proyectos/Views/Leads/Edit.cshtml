@@ -543,9 +543,27 @@
 
     function onCommercialDiscount(e) {
 
-        var calculo = $("#leadValue").dxNumberBox("instance").option("value") - e.value;
+        var grid = $('#gridContainer2').dxDataGrid('instance');
+        var rows = grid.getVisibleRows();
+        var totalValue = 0;
+        var totalCost = 0;
+        var totalHours = 0;
 
-        $("#leadValue").dxNumberBox("instance").option("value", calculo);
+        rows.forEach(function (row) {
+            if (row.rowType === "data") {
+
+                totalHours += row.data.PlannedHours;
+                totalValue += row.data.Fee * row.data.PlannedHours;
+                totalCost += row.data.Cost * row.data.PlannedHours;
+
+            }
+        });
+
+        totalValue = totalValue - $("#CommercialDiscount").dxNumberBox("instance").option("value")
+
+        $("#leadValue").dxNumberBox("instance").option("value", totalValue);
+        $("#projectCost").dxNumberBox("instance").option("value", totalCost);
+        $("#TotalHours").dxNumberBox("instance").option("value", totalHours);
 
     }
 
