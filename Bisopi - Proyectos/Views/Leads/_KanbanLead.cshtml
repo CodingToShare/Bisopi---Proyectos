@@ -50,7 +50,7 @@
 }
 
 @{
-    Func<CardTasks, IHtmlContent> CreateCards = @<div class="card dx-card dx-theme-text-color dx-theme-background-color" data-target-id="@item.Task.LeadID" >
+    Func<CardTasks, IHtmlContent> CreateCards = @<div class="card dx-card dx-theme-text-color dx-theme-background-color" data-target-id="@item.Task.LeadID">
         <div class="card-priority priority-@item.Task.pripriority"></div>
         <div class="card-subject">@item.Task.LeadName</div>
         @{
@@ -129,17 +129,23 @@
 </div>
 
 <script>
+    function drop(event){
+        console.log(event)
+    }
     function handleDragEnd(e) {
-        var targetId = e.itemElement.data("target-id");
-        var targetStatus = $(e.itemElement).closest(".list").find(".list-title").text();
-
-        console.log(targetId);
-        console.log(targetStatus);
+        //var targetId = e.itemElement.data("target-id");
+        //var targetStatus = $(e.itemElement).closest(".list").find(".list-title").text();
+        console.log('-----------')
+        console.log(e.toComponent._$element.parent().closest(".list").find(".list-title").text())
+        console.log($(e.itemElement).parent().closest(".list").find(".list-title").text())
+        console.log('-----------')
+        //console.log(targetId);
+        //console.log(targetStatus);
     }
 
     function handleScrollViewOptionChanged(e) {
-        console.log("Contenido del ScrollView ha cambiado");
-        console.log("Nuevos elementos:", e);
+        //console.log("Contenido del ScrollView ha cambiado");
+        //console.log("Nuevos elementos:", e);
 
         $(".sortable-cards").each(function() {
             var cardText = $(this).find(".card-subject").text();

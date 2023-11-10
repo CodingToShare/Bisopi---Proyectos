@@ -63,12 +63,11 @@
             .Direction(ScrollDirection.Horizontal)
             .ShowScrollbar(ShowScrollbarMode.Always)
             .Content(
-                Html.DevExtreme().Sortable()
+                Html.DevExtreme().Sortable().ID("card")
                     .ElementAttr("class", "sortable-lists")
                     .ItemOrientation(Orientation.Horizontal)
-                    .MoveItemOnDrop(true)
+                    .MoveItemOnDrop(false)
                     .Handle(".list-title")
-                    .OnDragEnd("function(e) { handleDragEnd(e); }")
                     .Content(@<text>
                         @foreach (var status in Model.QuotesStatus)
                         {
@@ -86,14 +85,6 @@
 </div>
 
 <script>
-    function handleDragEnd(e) {
-        var targetId = e.itemElement.data("target-id");
-        var targetStatus = $(e.itemElement).closest(".list").find(".list-title").text();
-
-        console.log(targetId);
-        console.log(targetStatus);
-    }
-
     $("#searchInput").on("input", function () {
         var searchTerm = $(this).val().toLowerCase();
 
