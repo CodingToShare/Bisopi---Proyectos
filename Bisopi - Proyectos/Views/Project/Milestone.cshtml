@@ -220,7 +220,12 @@
                         <div class="form-row">
                             <div class="form-group col-md-3">
                                 <div class="dx-field">
-                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.MilestoneDate)</div>
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.MilestoneDate)
+                                        @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.MilestoneDate)).IsRequired)
+                                        {
+                                            <span style="color: red;">*</span>
+                                        }
+                                    </div>
                                     <div class="dx-field-item-content-location-bottom">
                                         @(Html.DevExtreme().DateBoxFor(x => x.MilestoneDate)
                                             .InputAttr("aria-label", "Date")
@@ -234,7 +239,12 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CurrencyID)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CurrencyID)
+                                            @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.CurrencyID)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            }
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().SelectBoxFor(x => x.CurrencyID)
                                                 .DisplayExpr("CurrencyNameAndAbbreviation")
@@ -256,7 +266,12 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Percentage)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Percentage)
+                                            @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Percentage)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            }
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().NumberBoxFor(x => x.Percentage)
                                                 .ID("Percentage")
@@ -273,7 +288,12 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Value)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Value)
+                                            @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Value)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            }
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().NumberBoxFor(x => x.Value)
                                                 .ID("Value")
@@ -290,7 +310,12 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.MilestoneNumber)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.MilestoneNumber)
+                                            @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.MilestoneNumber)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            }
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().NumberBoxFor(x => x.MilestoneNumber)
                                                 .ID("MilestoneNumber")
@@ -304,7 +329,12 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.IsItChangeControl)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.IsItChangeControl)
+                                            @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.IsItChangeControl)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            }
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().CheckBoxFor(x => x.IsItChangeControl)
                                                 .ID("IsItChangeControl")
@@ -319,7 +349,12 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Hours)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Hours)
+                                            @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Hours)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            }
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().NumberBoxFor(x => x.Hours)
                                                 .ID("Hours")
@@ -334,7 +369,12 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Comment)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Comment)
+                                            @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Comment)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            }
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().TextAreaFor(x => x.Comment)
                                                 .ID("Comment")

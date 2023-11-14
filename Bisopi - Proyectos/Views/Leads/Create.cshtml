@@ -22,7 +22,12 @@
                     <div class="col-md-12">
                         <div class="form-group">
                         <div class="dx-field">
-                            <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.LeadName)</div>
+                            <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.LeadName)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.LeadName)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().TextBoxFor(x => x.LeadName)
                                     .ID("projectName")
@@ -36,7 +41,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ClientID)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ClientID)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.ClientID)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().SelectBoxFor(x => x.ClientID)
                                         .DisplayExpr("ClientNameAndAbbreviation")
@@ -59,7 +69,12 @@
                     <div class="col-md-7">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResponsibleClient)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ResponsibleClient)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.ResponsibleClient)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().TextBoxFor(x => x.ResponsibleClient)
                                         .ID("customerManager")
@@ -73,7 +88,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.AssignedPresaleID)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.AssignedPresaleID)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.AssignedPresaleID)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().SelectBoxFor(x => x.AssignedPresaleID)
                                         .DataSource(d => d.Mvc().Controller("APIUsers").LoadAction("GetUsers").Key("AssignedPresaleID"))
@@ -95,7 +115,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProposedDeliveryDate)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProposedDeliveryDate)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.ProposedDeliveryDate)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().DateBoxFor(x => x.ProposedDeliveryDate)
                                         .InputAttr("aria-label", "Date")
@@ -111,7 +136,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Billable)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Billable)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Billable)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().CheckBoxFor(x => x.Billable)
                                         .ID("billable")
@@ -126,7 +156,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-fieldPlannedMilestones">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.PlannedMilestones)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.PlannedMilestones)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.PlannedMilestones)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().NumberBoxFor(x => x.PlannedMilestones)
                                         .ID("PlannedMilestones")
@@ -141,7 +176,12 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.QuoteStatusID)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.QuoteStatusID)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.QuoteStatusID)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().SelectBoxFor(x => x.QuoteStatusID)
                                         .DisplayExpr("QuoteStatusNameAndAbbreviation")
@@ -164,7 +204,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CurrencyID)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CurrencyID)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.CurrencyID)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                 @(Html.DevExtreme().SelectBoxFor(x => x.CurrencyID)
                                         .DisplayExpr("CurrencyNameAndAbbreviation")
@@ -187,7 +232,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CommercialDiscount)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.CommercialDiscount)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.CommercialDiscount)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().NumberBoxFor(x => x.CommercialDiscount)
                                         .ID("CommercialDiscount")
@@ -203,7 +253,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.TotalHours)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.TotalHours)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.TotalHours)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().NumberBoxFor(x => x.TotalHours)
                                         .ID("TotalHours")
@@ -218,7 +273,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.LeadValue)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.LeadValue)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.LeadValue)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().NumberBoxFor(x => x.LeadValue)
                                         .ID("leadValue")
@@ -235,7 +295,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectCost)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.ProjectCost)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.ProjectCost)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().NumberBoxFor(x => x.ProjectCost)
                                         .ID("projectCost")
@@ -252,7 +317,12 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.GrossMargin)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.GrossMargin)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.GrossMargin)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().NumberBoxFor(x => x.GrossMargin)
                                         .ID("grossMargin")
@@ -268,7 +338,12 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <div class="dx-field">
-                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Comments)</div>
+                                <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Comments)
+                                    @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Comments)).IsRequired)
+                                    {
+                                        <span style="color: red;">*</span>
+                                    }
+                                </div>
                                 <div class="dx-field-item-content-location-bottom">
                                     @(Html.DevExtreme().TextAreaFor(x => x.Comments)
                                         .ID("justification")
@@ -278,169 +353,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <h5>Planificación Colaboradores</h5>
-
-                    <div class="col-md-12">
-                        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.ResourcePlanningTemp>()
-                            .ID("gridContainer2")
-                            .AllowColumnReordering(true)
-                            .RowAlternationEnabled(true)
-                            .AllowColumnResizing(true)
-                            .ShowRowLines(true)
-                            .ShowBorders(true)
-                            .WordWrapEnabled(true)
-                            .ColumnAutoWidth(true)
-                            .ColumnResizingMode(ColumnResizingMode.Widget)
-                            .SearchPanel(s => s
-                            .Visible(true)
-                            .HighlightCaseSensitive(true))
-                            .Grouping(grouping => grouping.AutoExpandAll(true))
-                            .GroupPanel(groupPanel => groupPanel.Visible(true))
-                            .FilterPanel(f => f.Visible(true))
-                            .HeaderFilter(h => h.Visible(true))
-                            .Selection(s => s.Mode(SelectionMode.Multiple))
-                            .RemoteOperations(true)
-                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
-                            .OnSaved("calculo")
-                            .DataSource(ds => ds.Mvc()
-                            .LoadParams(new { id = Model.LeadID })
-                            .Controller("APIResourcePlanningTemps")
-                            .LoadAction("Get")
-                            .InsertAction("Post")
-                            .UpdateAction("Put")
-                            .DeleteAction("Delete")
-                            .Key("ResourcePlanningTempID")
-                            )
-                            .OnInitNewRow(@<text>
-                                function(e) {
-                                e.data.LeadID = $('.LeadID').val();
-                                }
-                            </text>)
-                            .RemoteOperations(true)
-                            .Columns(columns =>
-                            {
-
-                                columns.Add()
-                                .Type(GridCommandColumnType.Buttons)
-                                .Width(110)
-                                .Buttons(b =>
-                                {
-                                    b.Add().Name(GridColumnButtonName.Edit);
-                                    b.Add().Name(GridColumnButtonName.Delete);
-                                });
-
-                                columns.AddFor(m => m.PositionID).Lookup(x => x.
-                                DataSource(d => d.WebApi().Controller("APIUsers").LoadAction("GetRoles").Key("PositionID"))
-                                .DisplayExpr("Name")
-                                .ValueExpr("RolesDataID")
-                                );
-
-                                columns.AddFor(m => m.SeniorityID).Lookup(lookup => lookup
-                                .DataSource(ds => ds.WebApi().Controller("APIResourcePlanningTemps").LoadAction("SenioritiesLookup").Key("Value"))
-                                .ValueExpr("Value")
-                                .DisplayExpr("Text")
-                                );
-
-                                columns.AddFor(m => m.ResourceID).Lookup(x => x
-                                .DataSource(d => d.WebApi().Controller("APIUsers").LoadAction("GetUsers").Key("ResourceID"))
-                                .DisplayExpr("FirstNameAndLastNAme")
-                                .ValueExpr("UserDataID")
-                                );
-
-                                columns.AddFor(m => m.PlannedHours);
-
-                                columns.AddFor(m => m.Fee);
-
-                                columns.AddFor(m => m.Cost);
-
-                            })
-                            .Editing(e => e
-                            .AllowAdding(true)
-                            .AllowUpdating(true)
-                            .AllowDeleting(true)
-                            .Mode(GridEditMode.Popup)
-                            .UseIcons(true)
-                            )
-                            )
-                    </div>
-
-                    <h5>Hitos</h5>
-
-                    <div class="col-md-12">
-                        @(Html.DevExtreme().DataGrid<Bisopi___Proyectos.ModelsTemps.MilestoneTemp>()
-                            .ID("gridContainer")
-                            .AllowColumnReordering(true)
-                            .RowAlternationEnabled(true)
-                            .AllowColumnResizing(true)
-                            .ShowRowLines(true)
-                            .ShowBorders(true)
-                            .WordWrapEnabled(true)
-                            .ColumnAutoWidth(true)
-                            .ColumnResizingMode(ColumnResizingMode.Widget)
-                            .SearchPanel(s => s
-                            .Visible(true)
-                            .HighlightCaseSensitive(true))
-                            .Grouping(grouping => grouping.AutoExpandAll(true))
-                            .GroupPanel(groupPanel => groupPanel.Visible(true))
-                            .FilterPanel(f => f.Visible(true))
-                            .HeaderFilter(h => h.Visible(true))
-                            .Selection(s => s.Mode(SelectionMode.Multiple))
-                            .RemoteOperations(true)
-                            .Scrolling(scrolling => scrolling.Mode(GridScrollingMode.Virtual))
-                            .DataSource(ds => ds.Mvc()
-                                .LoadParams(new { id = Model.LeadID })
-                                .Controller("APIMilestoneTemps")
-                                .LoadAction("Get")
-                                .InsertAction("Post")
-                                .UpdateAction("Put")
-                                .DeleteAction("Delete")
-                                .Key("MilestoneTempID")
-                            )
-                            .OnInitNewRow(@<text>
-                                function(e) {
-                                e.data.LeadID = $('.LeadID').val();
-                                }
-                            </text>)
-                            .RemoteOperations(true)
-                            .Columns(columns => {
-
-                                columns.Add()
-                                .Type(GridCommandColumnType.Buttons)
-                                .Width(110)
-                                .Buttons(b =>
-                                {
-                                    b.Add().Name(GridColumnButtonName.Edit);
-                                    b.Add().Name(GridColumnButtonName.Delete);
-                                });
-
-                                columns.AddFor(m => m.MilestoneDate);
-
-                                columns.AddFor(m => m.CurrencyID).Lookup(lookup => lookup
-                                    .DataSource(ds => ds.WebApi().Controller("APIMilestoneTemps").LoadAction("CurrenciesLookup").Key("Value"))
-                                    .ValueExpr("Value")
-                                    .DisplayExpr("Text")
-                                );
-
-                                columns.AddFor(m => m.Percentage).Format("## %");
-
-                                columns.AddFor(m => m.Value).Format("$ #,##0.##");
-
-                                columns.AddFor(m => m.MilestoneNumber);
-
-                                columns.AddFor(m => m.IsItChangeControl);
-
-                                columns.AddFor(m => m.Comment);
-                            })
-                            .Editing(e => e
-                                .AllowAdding(true)
-                                .AllowUpdating(true)
-                                .AllowDeleting(true)
-                                .Mode(GridEditMode.Popup)
-                                .UseIcons(true)
-                            )
-                        )
                     </div>
 
                     <br />
@@ -536,21 +448,21 @@
 
     function onCommercialDiscount(e) {
 
-        var grid = $('#gridContainer2').dxDataGrid('instance');
-        var rows = grid.getVisibleRows();
+        // var grid = $('#gridContainer2').dxDataGrid('instance');
+        // var rows = grid.getVisibleRows();
         var totalValue = 0;
         var totalCost = 0;
         var totalHours = 0;
 
-        rows.forEach(function (row) {
-            if (row.rowType === "data") {
+        // rows.forEach(function (row) {
+        //     if (row.rowType === "data") {
 
-                totalHours += row.data.PlannedHours;
-                totalValue += row.data.Fee * row.data.PlannedHours;
-                totalCost += row.data.Cost * row.data.PlannedHours;
+        //         totalHours += row.data.PlannedHours;
+        //         totalValue += row.data.Fee * row.data.PlannedHours;
+        //         totalCost += row.data.Cost * row.data.PlannedHours;
 
-            }
-        });
+        //     }
+        // });
 
         totalValue = totalValue - $("#CommercialDiscount").dxNumberBox("instance").option("value")
 

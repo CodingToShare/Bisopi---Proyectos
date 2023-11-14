@@ -313,6 +313,11 @@ namespace Bisopi___Proyectos.Controllers
 
             _context.ResourcesPlanningsTemps.RemoveRange(detailsResourcePlaning);
 
+            if (model.CommercialDiscount == 0)
+            {
+                model.GrossMargin = 0;
+            }
+
             _context.Add(model);
             _context.SaveChanges();
 
@@ -383,6 +388,11 @@ namespace Bisopi___Proyectos.Controllers
             }
 
             _context.ResourcesPlanningsTemps.RemoveRange(detailsResourcePlaning);
+
+            if (model.CommercialDiscount == 0)
+            {
+                model.GrossMargin = 0;
+            }
 
             _context.Update(model);
             _context.SaveChanges();

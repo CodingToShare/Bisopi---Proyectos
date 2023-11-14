@@ -169,7 +169,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourceID)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourceID)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.ResourceID)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().SelectBoxFor(x => x.Programming.ResourceID)
                                                 .DisplayExpr("FirstNameAndLastNAme")
@@ -190,7 +195,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourcePositionID)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourcePositionID)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.ResourcePositionID)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().SelectBoxFor(x => x.Programming.ResourcePositionID)
                                                 .DisplayExpr("Name")
@@ -211,7 +221,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ActivityTypeID)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ActivityTypeID)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.ActivityTypeID)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().SelectBoxFor(x => x.Programming.ActivityTypeID)
                                                 .DisplayExpr("ActivityTypeName")
@@ -232,7 +247,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.StartDate)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.StartDate)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.StartDate)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().DateBoxFor(x => x.Programming.StartDate)
                                                 .InputAttr("aria-label", "Date")
@@ -247,7 +267,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.EndDate)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.EndDate)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.EndDate)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().DateBoxFor(x => x.Programming.EndDate)
                                                 .InputAttr("aria-label", "Date")
@@ -262,7 +287,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.AllocationPercentage)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.AllocationPercentage)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.AllocationPercentage)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().NumberBoxFor(x => x.Programming.AllocationPercentage)
                                                 .Placeholder("Escriba el porcentaje")
@@ -276,7 +306,12 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.Comments)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.Comments)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.Comments)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().TextAreaFor(x => x.Programming.Comments)
                                                 .Placeholder("Escriba los comentarios")
@@ -326,7 +361,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourceID)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourceID)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.ResourceID)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().SelectBoxFor(x => x.Programming.ResourceID)
                                                 .DisplayExpr("FirstNameAndLastNAme")
@@ -347,7 +387,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.AllocationPercentage)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.AllocationPercentage)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.AllocationPercentage)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().NumberBoxFor(x => x.Programming.AllocationPercentage)
                                                 .Placeholder("Escriba el porcentaje")
@@ -361,7 +406,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.StartDate)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.StartDate)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.StartDate)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().DateBoxFor(x => x.Programming.StartDate)
                                                 .InputAttr("aria-label", "Date")
@@ -376,7 +426,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.EndDate)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.EndDate)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.EndDate)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().DateBoxFor(x => x.Programming.EndDate)
                                                 .InputAttr("aria-label", "Date")
@@ -428,7 +483,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourceID)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.ResourceID)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.ResourceID)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().SelectBoxFor(x => x.Programming.ResourceID)
                                                 .DisplayExpr("FirstNameAndLastNAme")
@@ -449,7 +509,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.StartDate)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.StartDate)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.StartDate)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().DateBoxFor(x => x.Programming.StartDate)
                                                 .InputAttr("aria-label", "Date")
@@ -464,7 +529,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="dx-field">
-                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.EndDate)</div>
+                                        <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Programming.EndDate)
+                                            @* @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Programming.EndDate)).IsRequired)
+                                            {
+                                                <span style="color: red;">*</span>
+                                            } *@
+                                        </div>
                                         <div class="dx-field-item-content-location-bottom">
                                             @(Html.DevExtreme().DateBoxFor(x => x.Programming.EndDate)
                                                 .InputAttr("aria-label", "Date")

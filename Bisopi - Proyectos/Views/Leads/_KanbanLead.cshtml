@@ -118,7 +118,6 @@
                 .MoveItemOnDrop(true)
                 .Group("tasksGroup")
                 .OnDragEnd("function(e) { handleDragEnd(e); }")
-                .OnAdd("handleScrollViewOptionChanged")
                 .Content(@<text>
                     @foreach (var task in @Model.LeadsIEnumerable) {
                         @CreateCards(new CardTasks { Task = task })
@@ -133,13 +132,13 @@
         console.log(event)
     }
     function handleDragEnd(e) {
-        //var targetId = e.itemElement.data("target-id");
+        var targetId = e.itemElement.data("target-id");
         //var targetStatus = $(e.itemElement).closest(".list").find(".list-title").text();
         console.log('-----------')
         console.log(e.toComponent._$element.parent().closest(".list").find(".list-title").text())
         console.log($(e.itemElement).parent().closest(".list").find(".list-title").text())
         console.log('-----------')
-        //console.log(targetId);
+        console.log(targetId);
         //console.log(targetStatus);
     }
 

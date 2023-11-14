@@ -124,11 +124,13 @@ namespace Bisopi___Proyectos.Areas.Identity.Pages.Account
                 }
                 var result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 var userIsActive = await _userManager.FindByNameAsync(userName);
-                if (userIsActive.IsActive == false)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
-                }
+                if (userIsActive != null) {
+                    if (userIsActive.IsActive == false)
+                    {
+                        _logger.LogWarning("User account locked out.");
+                        return RedirectToPage("./Lockout");
+                    }
+                }                
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");

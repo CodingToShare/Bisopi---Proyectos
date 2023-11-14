@@ -16,7 +16,12 @@
                         <div class="form-row">
                             <div class="form-group col-md-3">
                                 <div class="dx-field">
-                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.RegistryDate)</div>
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.RegistryDate)
+                                        @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.RegistryDate)).IsRequired)
+                                        {
+                                            <span style="color: red;">*</span>
+                                        }
+                                    </div>
                                     <div class="dx-field-item-content-location-bottom">
                                         @(Html.DevExtreme().DateBoxFor(x => x.RegistryDate)
                                             .InputAttr("aria-label", "Date")
@@ -29,6 +34,10 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="hora">Tiempo Ejecutado</label>
+                                @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.ExecutionTimeHours)).IsRequired)
+                                {
+                                    <span style="color: red;">*</span>
+                                }
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
                                         @(Html.DevExtreme().NumberBoxFor(x => x.ExecutionTimeHours)
@@ -37,7 +46,12 @@
                                             .ID("ExecutionTimeHours")
                                             )
                                     </div>
-                                    <div class="form-group col-md-2"><label for="hora">Horas</label></div>
+                                    <div class="form-group col-md-2"><label for="hora">Horas</label>
+                                        @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.ExecutionTimeMinutes)).IsRequired)
+                                        {
+                                            <span style="color: red;">*</span>
+                                        }
+                                    </div>
                                     <div class="form-group col-md-4">
                                         @(Html.DevExtreme().NumberBoxFor(x => x.ExecutionTimeMinutes)
                                             .Min(0.0)
@@ -51,7 +65,12 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="dx-field">
-                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Comment)</div>
+                                    <div class="dx-field-item-label-location-top">@Html.LabelFor(x => x.Comment)
+                                        @if (ViewData.ModelMetadata.Properties.FirstOrDefault(p => p.PropertyName == nameof(Model.Comment)).IsRequired)
+                                        {
+                                            <span style="color: red;">*</span>
+                                        }
+                                    </div>
                                     <div class="dx-field-item-content-location-bottom">
                                         @(Html.DevExtreme().TextAreaFor(x => x.Comment).ID("CommentPartial"))
                                     </div>
