@@ -157,6 +157,7 @@ namespace Bisopi___Proyectos.Controllers
             var lastName = user.LastName;
             var city = user.CityId;
             var phone = user.PhoneNumber;
+            var isActive = user.IsActive;
             if (model.FirstName != firstName)
             {
                 user.FirstName = model.FirstName;
@@ -175,6 +176,11 @@ namespace Bisopi___Proyectos.Controllers
             if (model.Phone != phone)
             {
                 user.PhoneNumber = model.Phone;
+                await _userManager.UpdateAsync(user);
+            }
+            if (model.IsActive != isActive)
+            {
+                user.IsActive = model.IsActive;
                 await _userManager.UpdateAsync(user);
             }
 

@@ -135,7 +135,7 @@ namespace Bisopi___Proyectos.Models
         [Display(Name = "Facturable (Si/No)")]
         public bool Billable { get; set; }
 
-        [Display(Name = "Justification")]
+        [Display(Name = "Justificación")]
         [Column(TypeName = "varchar(1000)")]
         public string? Justification { get; set; }
 

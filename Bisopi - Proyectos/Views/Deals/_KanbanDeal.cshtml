@@ -118,7 +118,6 @@
                 .MoveItemOnDrop(true)
                 .Group("tasksGroup")
                 .OnDragEnd("function(e) { handleDragEnd(e); }")
-                .OnAdd("handleScrollViewOptionChanged")
                 .Content(@<text>
                     @foreach (var task in @Model.DealsIEnumerable) {
                         @CreateCards(new CardTasks { Task = task })
@@ -131,10 +130,38 @@
 <script>
     function handleDragEnd(e) {
         var targetId = e.itemElement.data("target-id");
-        var targetStatus = $(e.itemElement).closest(".list").find(".list-title").text();
-
+        var status = e.toComponent._$element.parent().closest(".list").find(".list-title").text();
+        console.log('-----------')
+        console.log(status)
+        console.log($(e.itemElement).parent().closest(".list").find(".list-title").text())
+        console.log('-----------')
         console.log(targetId);
-        console.log(targetStatus);
+
+        // Dividir el string usando "Total" como delimitador
+        let arrayResultado = status.split(" Total");
+
+        // El resultado es un array con dos elementos: ["Waiting for details ", ": $0.00"]
+        // Puedes acceder a la segunda parte del array (después de "Total") usando arrayResultado[1]
+        let resultadoFinal = arrayResultado[0];
+
+        console.log(resultadoFinal.trim()); // Utiliza trim() para eliminar espacios en blanco al principio y al final del resultado
+
+        // Realiza una solicitud HTTP GET para enviar el nuevo estado y el ID al backend
+        fetch(`/api/kanban/updateStatusDeals?id=${targetId}&status=${resultadoFinal}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta del backend:', data);
+                // Aquí puedes manejar la respuesta del backend según sea necesario
+            })
+            .catch(error => {
+                console.error('Error al enviar la solicitud al backend:', error);
+                // Aquí puedes manejar los errores de la solicitud
+            });
     }
 
     function handleScrollViewOptionChanged(e) {

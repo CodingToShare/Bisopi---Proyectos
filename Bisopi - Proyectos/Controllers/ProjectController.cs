@@ -563,13 +563,29 @@ namespace Bisopi___Proyectos.Controllers
                 progra.ResourceName = resource.Result.FirstName + " " + resource.Result.LastName;
             }
 
-            Models.Project? project = await _context.Projects
+            Project? project = await _context.Projects
                 .Include(x => x.Client)
                 .Include(x => x.Country)
                 .Include(x => x.ProjectStatus)
                 .Include(x => x.ProjectType)
                 .Include(x => x.Currency)
                 .FirstOrDefaultAsync(x => x.ProjectID == id);
+
+            var leader = await _userManager.FindByIdAsync(project.LeaderID.ToString());
+
+            if (leader != null)
+            {
+                if (leader.NormalizedUserName != null)
+                    project.LeaderName = leader.NormalizedUserName;
+            }
+
+            var projectManager = await _userManager.FindByIdAsync(project.ProjectManagerID.ToString());
+
+            if (projectManager != null)
+            {
+                if (projectManager.NormalizedUserName != null)
+                    project.ProjectManagerName = projectManager.NormalizedUserName;
+            }
 
             var actualTime = project.StartDate.Value;
 

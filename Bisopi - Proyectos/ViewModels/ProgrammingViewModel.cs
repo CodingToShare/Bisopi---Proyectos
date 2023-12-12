@@ -10,7 +10,7 @@ namespace Bisopi___Proyectos.ViewModels
 
         public Programming Programming { get; set; }
 
-        public Project Project { get; set; }
+        public Project? Project { get; set; }
 
         public List<Month> Months { get; set; }
 

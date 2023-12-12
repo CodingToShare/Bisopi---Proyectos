@@ -308,9 +308,9 @@
 
                 columns.AddFor(m => m.MonitoringDate);
 
-                columns.AddFor(m => m.PlannedPercentage);
+                columns.AddFor(m => m.PlannedPercentage).Format("## %");
 
-                columns.AddFor(m => m.RealPercentage);
+                columns.AddFor(m => m.RealPercentage).Format("## %");
 
                 columns.AddFor(m => m.Comments);
 

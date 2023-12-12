@@ -43,7 +43,7 @@ namespace Bisopi___Proyectos.Controllers
 
                 resultList.Add(result);
             }
-            return Ok(resultList);
+            return Ok(resultList.OrderBy(x => x.FirstNameAndLastNAme));
         }
 
         [HttpGet]
@@ -89,7 +89,7 @@ namespace Bisopi___Proyectos.Controllers
 
                 resultList.Add(result);
             }
-            return Ok(resultList);
+            return Ok(resultList.OrderBy(x => x.FirstNameAndLastNAme));
         }
 
         [HttpGet]

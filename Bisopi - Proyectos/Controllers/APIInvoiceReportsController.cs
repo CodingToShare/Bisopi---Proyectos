@@ -31,28 +31,35 @@ namespace Bisopi___Proyectos.Controllers
 
             foreach (var item in invoicereports)
             {
-                var modelProject = _context.Projects.AsNoTracking().Where(x => x.ProjectID == item.ProjectID).FirstOrDefault();
-                var modelRetention = _context.RetentionPercentages.AsNoTracking().Where(x => x.CountryID == modelProject.CountryID && x.IsActive && (x.EffectiveStartDate < DateTime.UtcNow.AddHours(-5) || x.ValidEndDate > DateTime.UtcNow.AddHours(-5))).FirstOrDefault();
-                var modelTRM = _context.RepresentativeMarketRates.AsNoTracking().Where(x => x.CurrencyID == item.CurrencyID && x.IsActive).FirstOrDefault();
-
-                if (item.Value != null)
+                try
                 {
-                    item.TRM = modelProject.TRMProject;
-                    if (item.CurrencyID != null)
+
+
+                    var modelProject = _context.Projects.AsNoTracking().Where(x => x.ProjectID == item.ProjectID).FirstOrDefault();
+                    var modelRetention = _context.RetentionPercentages.AsNoTracking().Where(x => x.CountryID == modelProject.CountryID && x.IsActive && (x.EffectiveStartDate < DateTime.UtcNow.AddHours(-5) || x.ValidEndDate > DateTime.UtcNow.AddHours(-5))).FirstOrDefault();
+                    var modelTRM = _context.RepresentativeMarketRates.AsNoTracking().Where(x => x.CurrencyID == item.CurrencyID && x.IsActive).FirstOrDefault();
+
+                    if (item.Value != null)
                     {
-                        item.SubTotalBillCOP = modelTRM.ProjectedRm * item.Value;
-                        item.RetentionValueCOP = item.SubTotalBillCOP * (modelRetention.Retention / 100);
-                        item.ValueAddedTax = (modelRetention.ValueAddedTax * item.SubTotalBillCOP) / 100;
-                        item.ValueAddedTaxWuthholding = (modelRetention.ValueAddedTax * item.ValueAddedTax) / 100;
-                        item.TotalBillCOP = item.SubTotalBillCOP - item.RetentionValueCOP + item.ValueAddedTax - item.ValueAddedTaxWuthholding;
-                    }
-                    
+                        item.TRM = modelProject.TRMProject;
+                        if (item.CurrencyID != null)
+                        {
+                            item.SubTotalBillCOP = modelTRM.ProjectedRm * item.Value;
+                            item.RetentionValueCOP = item.SubTotalBillCOP * (modelRetention.Retention / 100);
+                            item.ValueAddedTax = (modelRetention.ValueAddedTax * item.SubTotalBillCOP) / 100;
+                            item.ValueAddedTaxWuthholding = (modelRetention.ValueAddedTax * item.ValueAddedTax) / 100;
+                            item.TotalBillCOP = item.SubTotalBillCOP - item.RetentionValueCOP + item.ValueAddedTax - item.ValueAddedTaxWuthholding;
+                        }
 
+
+                    }
+                    else
+                    {
+                        item.TRM = modelProject.TRMProject;
+                    }
                 }
-                else
-                {
-                    item.TRM = modelProject.TRMProject;
-                }
+                catch(Exception ex) 
+                { }
 
             }
 
